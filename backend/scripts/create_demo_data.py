@@ -34,9 +34,8 @@ def create_demo_data():
             'direccion': 'Calle 23 #512, La Habana, Cuba',
             'telefono': '+53 555-1234',
             'email': 'info@packfy.com',
-            'es_activa': True,
-            'fecha_creacion': datetime.now(),
-            'descripcion': 'Empresa de demostración para Packfy'
+            'activo': True,
+            'ruc': '12345678901'
         }
     )
     
@@ -45,36 +44,37 @@ def create_demo_data():
     else:
         print(f"ℹ️ Empresa ya existente: {empresa.nombre}")
     
-    # Crear usuarios de prueba con diferentes roles
+    # Crear usuarios de prueba con credenciales SIMPLES
     usuarios = {
         'admin': {
             'email': 'admin@packfy.com',
-            'password': 'adminadmin',
+            'password': 'admin123',
             'is_staff': True,
             'is_superuser': True,
             'first_name': 'Admin',
             'last_name': 'Packfy',
             'es_administrador_empresa': True
         },
-        'operador': {
-            'email': 'operador@packfy.com',
-            'password': 'password123',
-            'first_name': 'Operador',
-            'last_name': 'Sistema',
+        'demo': {
+            'email': 'demo@packfy.com',
+            'password': 'demo123',
+            'first_name': 'Demo',
+            'last_name': 'Usuario',
             'es_administrador_empresa': False
         },
-        'encargado': {
-            'email': 'encargado@packfy.com',
-            'password': 'password123',
-            'first_name': 'Encargado',
-            'last_name': 'Distribución',
-            'es_administrador_empresa': True
+        'test': {
+            'email': 'test@test.com',
+            'password': '123456',
+            'first_name': 'Test',
+            'last_name': 'User',
+            'es_administrador_empresa': True,
+            'is_staff': True
         },
-        'repartidor': {
-            'email': 'repartidor@packfy.com',
-            'password': 'password123',
-            'first_name': 'Juan',
-            'last_name': 'Repartidor',
+        'operador': {
+            'email': 'operador@packfy.com',
+            'password': 'operador123',
+            'first_name': 'Operador',
+            'last_name': 'Sistema',
             'es_administrador_empresa': False
         }
     }

@@ -1,23 +1,372 @@
-# 📦 Paquetería Cuba MVP
+# � Packfy Cuba MVP - PWA
 
-Sistema moderno de gestión de envíos para Cuba basado en Django REST Framework y React con TypeScript.
+Sistema moderno de gestión de envíos para Cuba con **Progressive Web App (PWA)** funcional en móvil.
 
-## 🚀 Estado del Proyecto
+## 🎉 **PROYECTO COMPLETADO - V2.0.0**
 
-✅ **Sistema Completamente Funcional**
-- ✅ Backend Django REST API operativo
-- ✅ Frontend React + TypeScript + Vite funcionando
-- ✅ Base de datos PostgreSQL configurada
-- ✅ Sistema de autenticación implementado
-- ✅ Docker Compose completamente configurado
-- ✅ Problema de página en blanco resuelto
+✅ **PWA 100% Funcional en Móvil**  
+✅ **Backend API Completo**  
+✅ **Frontend React Responsive**  
+✅ **Autenticación JWT**  
+✅ **Base de Datos Configurada**  
+✅ **Docker Compose Listo**
 
-## 🎯 Características Principales
+---
+
+## 🚀 **Inicio Rápido**
+
+### **1. Iniciar el proyecto**
+```powershell
+docker-compose up -d
+```
+
+### **2. Acceder a la aplicación**
+- **Web:** http://localhost:5173
+- **Móvil:** http://[TU-IP]:5173
+
+### **3. Credenciales de prueba**
+```
+Email: test@test.com
+Password: 123456
+```
+
+---
+
+## 📱 **Características PWA**
 
 - 🎯 **Gestión completa de envíos** (crear, editar, cancelar, seguimiento)
-- 👥 **Sistema de autenticación y autorización** robusto
+- 👥 **Sistema de autenticación JWT** robusto  
 - 🏢 **Gestión multi-empresa** con middleware de tenant
-- 📧 **Sistema de notificaciones automáticas** por email
+- 📧 **Sistema de notificaciones** automáticas
+- 📱 **PWA instalable** en móviles
+- 🔄 **Service Worker** optimizado
+- 🎨 **UI responsive** para todos los dispositivos
+
+---
+
+## 🛠 **Tecnologías**
+
+### Frontend
+- **React 18** - Framework de UI moderno
+- **TypeScript** - Tipado estático para JavaScript  
+- **Vite** - Build tool ultrarrápido
+- **PWA** - Progressive Web App con Service Worker
+- **Responsive Design** - Adaptable a todos los dispositivos
+
+### Backend  
+- **Django 5.2** - Framework web Python de alto nivel
+- **Django REST Framework** - API REST robusta
+- **JWT Authentication** - Autenticación segura con tokens
+- **PostgreSQL** - Base de datos relacional potente
+- **CORS** - Configurado para desarrollo y producción
+
+### DevOps & Herramientas
+- **Docker** - Containerización completa
+- **Docker Compose** - Orquestación de servicios  
+- **Git** - Control de versiones
+- **PowerShell Scripts** - Automatización de desarrollo
+
+---
+
+## 📋 **Instalación y Configuración**
+
+### Prerequisitos
+- Docker Desktop instalado y en ejecución
+- Git para clonar el repositorio
+- PowerShell (Windows) o Terminal (Linux/Mac)
+
+### Pasos de instalación
+
+1. **Clonar el repositorio**
+   ```bash
+   git clone https://github.com/ppkapiro/packfy-cuba-mvp.git
+   cd packfy-cuba-mvp
+   ```
+
+2. **Iniciar con Docker** (recomendado)
+   ```powershell
+   docker-compose up -d
+   ```
+
+3. **Verificar que todo funcione**
+   ```bash
+   docker-compose ps
+   ```
+
+4. **Acceder a la aplicación**
+   - Frontend: <http://localhost:5173>
+   - Backend API: <http://localhost:8000>
+   - Base de datos: localhost:5433
+
+---
+
+## 🔑 **Usuarios de Prueba**
+
+```text
+Email: test@test.com  
+Password: 123456
+
+Admin: admin@packfy.com
+Password: admin123
+```
+
+---
+
+## 📱 **Acceso Móvil**
+
+### Para probar en móvil (misma red WiFi):
+
+1. **Obtener IP de tu computadora**
+   ```powershell
+   ipconfig
+   ```
+
+2. **Acceder desde móvil**
+   - Reemplaza `[TU-IP]` con tu IP local
+   - Ejemplo: `http://192.168.1.100:5173`
+
+3. **Instalar PWA** (opcional)
+   - El navegador sugerirá instalar la app
+   - Funciona como app nativa una vez instalada
+
+---
+
+## 🚀 **Comandos Útiles**
+
+### Desarrollo
+```powershell
+# Iniciar todos los servicios
+docker-compose up -d
+
+# Ver logs en tiempo real  
+docker-compose logs -f
+
+# Parar todos los servicios
+docker-compose down
+
+# Rebuild completo (si hay cambios)
+.\rebuild-total.ps1
+
+# Limpiar y reiniciar todo
+.\deep-clean.ps1
+```
+
+### Base de Datos
+```powershell
+# Acceder a la base de datos
+docker-compose exec database psql -U packfy_user -d packfy_db
+
+# Crear datos de prueba
+docker-compose exec backend python manage.py shell < scripts/create_demo_data.py
+
+# Migrations
+docker-compose exec backend python manage.py migrate
+```
+
+---
+
+## 📂 **Estructura del Proyecto**
+
+```text
+packfy-cuba-mvp/
+├── 📁 backend/              # Django API
+│   ├── config/             # Configuración principal
+│   ├── usuarios/           # App de usuarios
+│   ├── empresas/           # App de empresas  
+│   ├── envios/             # App de envíos
+│   └── scripts/            # Scripts de inicialización
+├── 📁 frontend/            # React PWA
+│   ├── src/               # Código fuente
+│   │   ├── components/    # Componentes React
+│   │   ├── pages/         # Páginas principales
+│   │   ├── services/      # Servicios API
+│   │   └── stores/        # Estado global
+│   └── public/            # Assets estáticos y PWA
+├── 📁 docs/               # Documentación
+├── 📁 scripts/            # Scripts de desarrollo
+├── compose.yml           # Docker Compose
+└── README.md            # Este archivo
+```
+
+---
+
+## � **Características Destacadas**
+
+### PWA (Progressive Web App)
+- ✅ **Instalable** en dispositivos móviles
+- ✅ **Funciona offline** (básico)
+- ✅ **Service Worker** optimizado
+- ✅ **Responsive** en todos los tamaños de pantalla
+- ✅ **Icons** adaptativos para diferentes dispositivos
+
+### Backend Robusto  
+- ✅ **API REST** completa con documentación automática
+- ✅ **Autenticación JWT** con refresh tokens
+- ✅ **Multi-tenancy** para diferentes empresas
+- ✅ **Validación** de datos exhaustiva
+- ✅ **Health checks** para monitoreo
+
+### Desarrollo Optimizado
+- ✅ **Hot reload** en desarrollo
+- ✅ **TypeScript** para mejor mantenibilidad  
+- ✅ **Docker** para consistency entre entornos
+- ✅ **Scripts automatizados** para tareas comunes
+- ✅ **Logs estructurados** para debugging
+
+---
+
+## 🔧 **Configuración Avanzada**
+
+### Variables de Entorno
+
+#### Frontend (`.env`)
+```env
+VITE_API_BASE_URL=http://localhost:8000
+```
+
+#### Backend (settings.py)
+```python
+DEBUG = True  # Solo para desarrollo
+ALLOWED_HOSTS = ['*']  # Configurar para producción
+```
+
+### Personalización
+- **Logo y branding**: `frontend/public/`
+- **Colores y tema**: `frontend/src/styles/`
+- **Configuración API**: `frontend/src/services/api.ts`
+
+---
+
+## 🧪 **Testing**
+
+### Tests Automáticos
+```powershell
+# Backend tests
+docker-compose exec backend python manage.py test
+
+# Frontend tests (cuando se implementen)
+docker-compose exec frontend npm test
+```
+
+### Testing Manual
+- **Web**: <http://localhost:5173>
+- **API Docs**: <http://localhost:8000/api/swagger/>
+- **Admin**: <http://localhost:8000/admin/>
+
+---
+
+## � **Resolución de Problemas**
+
+### Problemas Comunes
+
+#### "No se puede conectar al servidor"
+```powershell
+# Verificar que los contenedores estén corriendo
+docker-compose ps
+
+# Revisar logs para errores
+docker-compose logs backend
+```
+
+#### "Página en blanco en el frontend"  
+```powershell
+# Reconstruir el frontend
+docker-compose restart frontend
+
+# Verificar logs
+docker-compose logs frontend
+```
+
+#### "Error de base de datos"
+```powershell
+# Recrear la base de datos
+docker-compose down
+docker volume rm packfy-cuba-mvp_postgres_data
+docker-compose up -d
+```
+
+### Scripts de Diagnóstico
+```powershell
+# Test completo del sistema
+.\verificar-pwa.ps1
+
+# Test de conectividad móvil
+.\test-conectividad-movil.ps1
+```
+
+---
+
+## 📈 **Roadmap y Próximas Funcionalidades**
+
+### 🎯 Corto Plazo
+- [ ] Notificaciones push en PWA
+- [ ] Modo offline avanzado
+- [ ] Tests unitarios completos
+- [ ] Optimización de performance
+
+### 🚀 Mediano Plazo  
+- [ ] Geolocalización y mapas
+- [ ] Códigos QR para tracking
+- [ ] Panel de analytics
+- [ ] API pública para integraciones
+
+### 🌟 Largo Plazo
+- [ ] App móvil nativa
+- [ ] Inteligencia artificial para predicciones
+- [ ] Marketplace de paqueterías
+- [ ] Blockchain para tracking inmutable
+
+---
+
+## 🤝 **Contribuir**
+
+### Para desarrolladores
+
+1. **Fork** el repositorio
+2. **Crear** una rama para tu feature: `git checkout -b feature/nueva-funcionalidad`
+3. **Commit** tus cambios: `git commit -m 'Añadir nueva funcionalidad'`  
+4. **Push** a la rama: `git push origin feature/nueva-funcionalidad`
+5. **Abrir** un Pull Request
+
+### Reportar Bugs
+- Usar GitHub Issues
+- Incluir pasos para reproducir
+- Adjuntar logs relevantes
+- Especificar entorno (OS, browser, etc.)
+
+---
+
+## 📄 **Licencia**
+
+Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+
+---
+
+## 👥 **Equipo y Soporte**
+
+**Desarrollado con ❤️ para la comunidad cubana**
+
+### Contacto
+- **GitHub**: [@ppkapiro](https://github.com/ppkapiro)
+- **Issues**: [GitHub Issues](https://github.com/ppkapiro/packfy-cuba-mvp/issues)
+- **Documentación**: [Wiki del proyecto](https://github.com/ppkapiro/packfy-cuba-mvp/wiki)
+
+### Reconocimientos
+- Comunidad Django y React
+- Contributors de código abierto
+- Beta testers y feedback temprano
+
+---
+
+## 🎉 **¡Gracias por usar Packfy!**
+
+Si este proyecto te ha sido útil, considera:
+- ⭐ **Dar una estrella** al repositorio
+- 🐛 **Reportar bugs** que encuentres  
+- 💡 **Sugerir mejoras** vía Issues
+- 🤝 **Contribuir** con código o documentación
+
+**¡Juntos podemos mejorar la logística en Cuba! 🇨🇺**
 - 📊 **Dashboard interactivo** con métricas y estadísticas en tiempo real
 - 🔄 **API REST completa** con documentación automática
 - 🛡️ **Middleware de seguridad** y validación de datos

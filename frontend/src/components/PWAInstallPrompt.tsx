@@ -27,25 +27,19 @@ export const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ className = 
       // Método 3: Android minimal-ui
       const isMinimalUI = window.matchMedia('(display-mode: minimal-ui)').matches;
       
-      // Método 4: Verificar si viene de homescreen (Android)
-      const isFromHomescreen = window.location.search.includes('homescreen=1') ||
-                              document.referrer === '' && 
-                              !window.history.length;
-      
-      // Método 5: User Agent string para Android
-      const isAndroidApp = navigator.userAgent.includes('Android') && 
-                          (isStandalone || isMinimalUI);
+      // Método 4: Check if user agent suggests app context
+      const isInApp = navigator.userAgent.includes('wv') || // WebView
+                     navigator.userAgent.includes('Version') && navigator.userAgent.includes('Mobile');
       
       console.log('🔍 PWA Detection:', {
         isStandalone,
         isIOSStandalone, 
         isMinimalUI,
-        isFromHomescreen,
-        isAndroidApp,
-        userAgent: navigator.userAgent
+        isInApp,
+        userAgent: navigator.userAgent.substring(0, 100)
       });
       
-      if (isStandalone || isIOSStandalone || isMinimalUI || isFromHomescreen || isAndroidApp) {
+      if (isStandalone || isIOSStandalone || isMinimalUI) {
         console.log('✅ PWA: Detectada como instalada');
         setIsInstalled(true);
         return true;
@@ -56,11 +50,11 @@ export const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ className = 
 
     // Verificar soporte PWA
     const checkPWASupport = () => {
-      const isSupported = 'serviceWorker' in navigator && 'BeforeInstallPromptEvent' in window;
+      const isSupported = 'serviceWorker' in navigator;
       setIsSupported(isSupported);
     };
 
-    // Escuchar evento beforeinstallprompt - MEJORADO
+    // Escuchar evento beforeinstallprompt - MEJORADO con throttling
     const handleBeforeInstallPrompt = (e: Event) => {
       // Si ya está instalada, no mostrar prompt
       if (checkIfInstalled()) {
@@ -68,10 +62,17 @@ export const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ className = 
         return;
       }
       
-      e.preventDefault();
-      console.log('📱 PWA: Prompt de instalación disponible');
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setShowInstallButton(true);
+      // Throttling: no mostrar el prompt inmediatamente
+      setTimeout(() => {
+        e.preventDefault();
+        console.log('📱 PWA: Prompt de instalación disponible (con delay)');
+        setDeferredPrompt(e as BeforeInstallPromptEvent);
+        
+        // Solo mostrar después de 3 segundos para evitar molestias
+        setTimeout(() => {
+          setShowInstallButton(true);
+        }, 3000);
+      }, 1000);
     };
 
     // Escuchar cuando la app se instala

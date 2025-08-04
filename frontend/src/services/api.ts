@@ -1,8 +1,38 @@
 import axios from 'axios';
 
+// Función para determinar la URL base correcta
+const getApiBaseURL = () => {
+  // Detectar si estamos en desarrollo y desde qué host
+  const hostname = window.location.hostname;
+  console.log('🌐 API: Detectado hostname:', hostname);
+  
+  // SIEMPRE usar el proxy cuando estamos en desarrollo
+  // Esto funciona tanto para localhost como para IP
+  if (window.location.port === '5173') {
+    console.log('📡 API: Usando proxy de Vite para todas las requests');
+    return ''; // URL vacía = usar proxy relativo
+  }
+  
+  // Si hay una variable de entorno específica para producción
+  if (import.meta.env.VITE_API_BASE_URL) {
+    console.log('🔧 API: Usando variable de entorno:', import.meta.env.VITE_API_BASE_URL);
+    return import.meta.env.VITE_API_BASE_URL;
+  }
+  
+  // Si accedemos desde una IP (móvil), usar esa misma IP para el backend
+  if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+    const apiUrl = `http://${hostname}:8000`;
+    console.log('📱 API: Acceso desde móvil/IP detectado, usando:', apiUrl);
+    return apiUrl;
+  }
+  
+  // En localhost, usar localhost
+  return 'http://localhost:8000';
+};
+
 // Crear instancia de axios con la URL base
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://backend:8000',
+  baseURL: getApiBaseURL(),
   timeout: 15000, // Aumentado a 15 segundos para mayor tolerancia
   headers: {
     'Content-Type': 'application/json'
@@ -17,7 +47,7 @@ const useEjemploTenant = false;
 
 // Instancia para peticiones públicas (sin token)
 export const publicApi = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://backend:8000',
+  baseURL: getApiBaseURL(),
   timeout: 15000, // Aumentado a 15 segundos
   headers: {
     'Content-Type': 'application/json'

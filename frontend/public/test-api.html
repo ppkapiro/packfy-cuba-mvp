@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Test API - Packfy</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <h1>Test de API - Packfy</h1>
+    
+    <div id="info">
+        <h2>Información de Conexión:</h2>
+        <p><strong>Hostname:</strong> <span id="hostname"></span></p>
+        <p><strong>Puerto:</strong> <span id="port"></span></p>
+        <p><strong>URL calculada para API:</strong> <span id="api-url"></span></p>
+    </div>
+    
+    <div id="test-login">
+        <h2>Test de Login:</h2>
+        <button onclick="testLogin()">Probar Login</button>
+        <div id="login-result"></div>
+    </div>
+
+    <script>
+        // Mostrar información actual
+        document.getElementById('hostname').textContent = window.location.hostname;
+        document.getElementById('port').textContent = window.location.port;
+        
+        // Simular la lógica de detección de API del frontend
+        function getApiBaseURL() {
+            const hostname = window.location.hostname;
+            console.log('🌐 API: Detectado hostname:', hostname);
+            
+            // SIEMPRE usar el proxy cuando estamos en desarrollo
+            if (window.location.port === '5173') {
+                console.log('📡 API: Usando proxy de Vite para todas las requests');
+                return ''; // URL vacía = usar proxy relativo
+            }
+            
+            // Si accedemos desde una IP (móvil), usar esa misma IP para el backend
+            if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+                return `http://${hostname}:8000`;
+            }
+            
+            return 'http://localhost:8000';
+        }
+        
+        const apiBaseURL = getApiBaseURL();
+        document.getElementById('api-url').textContent = apiBaseURL || 'PROXY RELATIVO (/api)';
+        
+        // Test de login
+        async function testLogin() {
+            const resultDiv = document.getElementById('login-result');
+            resultDiv.innerHTML = '<p>🔄 Probando login...</p>';
+            
+            try {
+                const url = apiBaseURL ? `${apiBaseURL}/api/auth/login/` : '/api/auth/login/';
+                console.log('🔑 Intentando login en:', url);
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'test@test.com',
+                        password: '123456'
+                    })
+                });
+                
+                console.log('📡 Respuesta:', response.status, response.statusText);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML = '<p style="color: green;">✅ ¡LOGIN EXITOSO!</p><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                } else {
+                    const errorText = await response.text();
+                    resultDiv.innerHTML = `<p style="color: red;">❌ Error ${response.status}: ${errorText}</p>`;
+                }
+            } catch (error) {
+                console.error('❌ Error:', error);
+                resultDiv.innerHTML = `<p style="color: red;">❌ Error de conexión: ${error.message}</p>`;
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        div {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</body>
+</html>
