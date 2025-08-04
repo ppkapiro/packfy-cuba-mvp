@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualización de estado - Envío #{{ numero_guia }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .footer {
+            background-color: #f5f5f5;
+            padding: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+        .tracking-status {
+            background-color: #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .status-label {
+            font-weight: bold;
+            color: #007bff;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .shipment-details {
+            margin-top: 20px;
+        }
+        .detail-item {
+            margin-bottom: 10px;
+        }
+        .detail-label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Paquetería Cuba</h1>
+            <p>Servicio de Seguimiento de Envíos</p>
+        </div>
+        
+        <div class="content">
+            <h2>Actualización de Estado</h2>
+            <p>Hola,</p>
+            <p>Le informamos que el estado de su envío ha sido actualizado:</p>
+            
+            <div class="tracking-status">
+                <p>Número de Guía: <strong>{{ numero_guia }}</strong></p>
+                <p>Estado actual: <span class="status-label">{{ estado_actual }}</span></p>
+                {% if estado_anterior %}
+                <p>Estado anterior: {{ estado_anterior }}</p>
+                {% endif %}
+                <p>Fecha de actualización: {{ fecha_actualizacion }}</p>
+            </div>
+            
+            <div class="shipment-details">
+                <h3>Detalles del Envío</h3>
+                <div class="detail-item">
+                    <span class="detail-label">Remitente:</span> {{ envio.remitente_nombre }}
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Destinatario:</span> {{ envio.destinatario_nombre }}
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Descripción:</span> {{ envio.descripcion }}
+                </div>
+                {% if envio.fecha_estimada_entrega %}
+                <div class="detail-item">
+                    <span class="detail-label">Fecha estimada de entrega:</span> {{ envio.fecha_estimada_entrega }}
+                </div>
+                {% endif %}
+            </div>
+            
+            <p>Puede hacer seguimiento de su envío en cualquier momento con su número de guía.</p>
+            
+            <a href="{{ url_seguimiento }}" class="btn">Ver estado del envío</a>
+        </div>
+        
+        <div class="footer">
+            <p>Este es un mensaje automático, por favor no responda a este correo.</p>
+            <p>© {% now "Y" %} Paquetería Cuba - Todos los derechos reservados</p>
+        </div>
+    </div>
+</body>
+</html>

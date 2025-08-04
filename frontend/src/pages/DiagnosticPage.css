@@ -1,0 +1,85 @@
+/* Página de Diagnóstico - Sistema de Depuración */
+.diagnostic-page {
+  padding: 20px;
+  font-family: 'Courier New', monospace;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #fafafa;
+  min-height: 100vh;
+}
+
+.diagnostic-section {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.diagnostic-credentials {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #e8f4fd;
+  border-radius: 8px;
+  border-left: 4px solid #2196f3;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.diagnostic-page h1 {
+  color: #2c3e50;
+  margin-bottom: 25px;
+  text-align: center;
+  font-size: 2em;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
+}
+
+.diagnostic-page h2 {
+  color: #34495e;
+  margin-bottom: 15px;
+  font-size: 1.3em;
+  border-bottom: 1px solid #bdc3c7;
+  padding-bottom: 5px;
+}
+
+.diagnostic-page p {
+  margin: 10px 0;
+  line-height: 1.6;
+  font-size: 0.95em;
+}
+
+.diagnostic-page strong {
+  font-weight: bold;
+  color: #2c3e50;
+  margin-right: 8px;
+}
+
+/* Estilos para indicadores de estado */
+.diagnostic-page p:has-text("✅") {
+  color: #27ae60;
+}
+
+.diagnostic-page p:has-text("❌") {
+  color: #e74c3c;
+}
+
+.diagnostic-page p:has-text("⏳") {
+  color: #f39c12;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .diagnostic-page {
+    padding: 15px;
+  }
+  
+  .diagnostic-section,
+  .diagnostic-credentials {
+    padding: 12px;
+  }
+  
+  .diagnostic-page h1 {
+    font-size: 1.5em;
+  }
+}

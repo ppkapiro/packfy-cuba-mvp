@@ -1,0 +1,13 @@
+/* 📊 Dashboard Stats Styles */
+
+.status-bar {
+  width: calc(var(--percentage, 0) * 1%);
+  transition: width 0.3s ease;
+  height: 20px;
+  background: linear-gradient(90deg, #4f46e5, #7c3aed);
+  border-radius: 4px;
+}
+
+.status-bar[data-percentage] {
+  width: calc(attr(data-percentage number, 0) * 1%);
+}
