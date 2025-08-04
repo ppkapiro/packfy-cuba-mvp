@@ -15,7 +15,7 @@ $requiredFiles = @(
     "frontend/src/__tests__/App.test.tsx",
     "frontend/vitest.config.ts",
     "backend/test_basic.py",
-    "docker-compose.yml",
+    "compose.yml",
     "docker-compose.prod.yml",
     "deploy.ps1"
 )
