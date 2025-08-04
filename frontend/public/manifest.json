@@ -2,7 +2,7 @@
   "name": "Packfy - Paqueteria Cuba",
   "short_name": "Packfy",
   "description": "Sistema de gestion de envios para Cuba",
-  "start_url": "/",
+  "start_url": "/?homescreen=1",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3b82f6",

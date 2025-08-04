@@ -16,19 +16,42 @@ export const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ className = 
   const [isSupported, setIsSupported] = useState(false);
 
   useEffect(() => {
-    // Verificar si PWA está instalada
+    // Verificar si PWA está instalada - MEJORADO para móvil
     const checkIfInstalled = () => {
-      if (window.matchMedia('(display-mode: standalone)').matches || 
-          (window.navigator as any).standalone === true) {
+      // Método 1: Display mode standalone (más confiable)
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+      
+      // Método 2: iOS standalone
+      const isIOSStandalone = (window.navigator as any).standalone === true;
+      
+      // Método 3: Android minimal-ui
+      const isMinimalUI = window.matchMedia('(display-mode: minimal-ui)').matches;
+      
+      // Método 4: Verificar si viene de homescreen (Android)
+      const isFromHomescreen = window.location.search.includes('homescreen=1') ||
+                              document.referrer === '' && 
+                              !window.history.length;
+      
+      // Método 5: User Agent string para Android
+      const isAndroidApp = navigator.userAgent.includes('Android') && 
+                          (isStandalone || isMinimalUI);
+      
+      console.log('🔍 PWA Detection:', {
+        isStandalone,
+        isIOSStandalone, 
+        isMinimalUI,
+        isFromHomescreen,
+        isAndroidApp,
+        userAgent: navigator.userAgent
+      });
+      
+      if (isStandalone || isIOSStandalone || isMinimalUI || isFromHomescreen || isAndroidApp) {
+        console.log('✅ PWA: Detectada como instalada');
         setIsInstalled(true);
-        return;
+        return true;
       }
-
-      // Para Android Chrome
-      if (window.matchMedia('(display-mode: minimal-ui)').matches) {
-        setIsInstalled(true);
-        return;
-      }
+      
+      return false;
     };
 
     // Verificar soporte PWA
@@ -37,9 +60,16 @@ export const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ className = 
       setIsSupported(isSupported);
     };
 
-    // Escuchar evento beforeinstallprompt
+    // Escuchar evento beforeinstallprompt - MEJORADO
     const handleBeforeInstallPrompt = (e: Event) => {
+      // Si ya está instalada, no mostrar prompt
+      if (checkIfInstalled()) {
+        console.log('🚫 PWA: Ya instalada, omitiendo prompt');
+        return;
+      }
+      
       e.preventDefault();
+      console.log('📱 PWA: Prompt de instalación disponible');
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       setShowInstallButton(true);
     };
@@ -50,6 +80,13 @@ export const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ className = 
       setIsInstalled(true);
       setShowInstallButton(false);
       setDeferredPrompt(null);
+      
+      // Agregar parámetro para detectar en próximas cargas
+      if ('URLSearchParams' in window) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('homescreen', '1');
+        window.history.replaceState({}, '', url.toString());
+      }
     };
 
     checkIfInstalled();
@@ -124,13 +161,21 @@ export const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ className = 
     };
   };
 
-  // No mostrar nada si ya está instalada
+  // Mostrar indicador claro cuando está instalada
   if (isInstalled) {
     return (
       <div className={`pwa-status installed ${className}`}>
-        <div className="flex items-center gap-2 text-green-600">
-          <span className="text-lg">✅</span>
-          <span className="text-sm font-medium">App instalada</span>
+        <div className="bg-green-100 border border-green-500 rounded-lg p-3 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-green-700">
+              <span className="text-xl">📱</span>
+              <div>
+                <div className="font-semibold text-sm">Packfy App</div>
+                <div className="text-xs opacity-75">Instalada y funcionando</div>
+              </div>
+            </div>
+            <div className="text-green-600 text-xl">✅</div>
+          </div>
         </div>
       </div>
     );

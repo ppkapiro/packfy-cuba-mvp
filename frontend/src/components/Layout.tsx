@@ -1,6 +1,7 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { InstallPWAButton } from './InstallPWAButton';
+import PWAStatusIndicator from './PWAStatusIndicator';
 
 const Layout = () => {
   const { user, logout } = useAuth();
@@ -18,6 +19,7 @@ const Layout = () => {
         <div className="container">
           <div className="logo">
             <h1>Paquetería Cuba</h1>
+            <PWAStatusIndicator />
           </div>          <nav className="main-nav">
             <ul>
               <li><Link to="/dashboard">Dashboard</Link></li>

@@ -608,6 +608,97 @@ table {
     width: 100%;
     justify-content: center;
   }
+  
+  /* MEJORAS MÓVIL - LOGIN FORM */
+  .form-control {
+    font-size: 16px !important; /* Evita zoom en iOS */
+    min-height: 44px; /* Touch target mínimo */
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    border: 2px solid #d1d5db !important;
+    background-color: white !important;
+    transition: border-color 0.2s ease !important;
+    -webkit-appearance: none; /* Remover estilos iOS */
+    -webkit-border-radius: 8px; /* iOS border radius */
+  }
+  
+  .form-control:focus {
+    border-color: #3b82f6 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  }
+  
+  /* Evitar zoom en inputs */
+  input[type="email"],
+  input[type="password"],
+  input[type="text"],
+  input[type="tel"],
+  input[type="number"] {
+    font-size: 16px !important;
+  }
+  
+  /* Botones móvil optimizados */
+  .btn {
+    min-height: 44px !important;
+    font-size: 16px !important;
+    padding: 12px 24px !important;
+    border-radius: 8px !important;
+    cursor: pointer;
+    transition: all 0.2s ease !important;
+  }
+  
+  .btn:active {
+    transform: scale(0.98);
+  }
+  
+  /* Login específico móvil */
+  .login-container {
+    padding: 20px !important;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  }
+  
+  .login-form {
+    max-width: 100% !important;
+    padding: 24px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+    background: white !important;
+  }
+  
+  /* PWA - Evitar interferencias con forms */
+  .pwa-install-prompt.fixed {
+    z-index: 999 !important; /* Menor que modales pero mayor que contenido */
+  }
+  
+  /* Standalone mode - ajustes adicionales */
+  @media (display-mode: standalone) {
+    .form-control {
+      -webkit-user-select: text !important;
+      user-select: text !important;
+    }
+    
+    /* Evitar problemas táctiles en standalone */
+    input {
+      -webkit-tap-highlight-color: transparent;
+    }
+  }
+}
+
+/* Logo con indicador PWA */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo h1 {
+  margin: 0;
+}
+
+/* PWA Status Indicator */
+.pwa-status-indicator {
+  flex-shrink: 0;
 }
 
 /* Estados de carga mejorados para PWA */
