@@ -8,6 +8,8 @@ import ShipmentDetail from './pages/ShipmentDetail';
 import TrackingPage from './pages/TrackingPage';
 import PublicTrackingPage from './pages/PublicTrackingPage';
 import DiagnosticPage from './pages/DiagnosticPage';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
+import NetworkStatusBanner from './components/NetworkStatusBanner';
 import './App.css';
 
 // Componente protegido que redirecciona a login si no hay autenticación
@@ -39,28 +41,39 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>          <Route path="/login" element={<LoginPage />} />
-          <Route path="/diagnostico" element={<DiagnosticPage />} />
-          <Route path="/rastrear" element={<PublicTrackingPage />} />
-            <Route 
-            path="/" 
-            element={
-              <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<Navigate to="/dashboard" />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="envios/nuevo" element={<NewShipment />} />
-            <Route path="envios/:id" element={<ShipmentDetail />} />
-            <Route path="seguimiento" element={<TrackingPage />} />
-          </Route>
+      <div className="app-container">
+        {/* Banner de estado de conexión */}
+        <NetworkStatusBanner />
+        
+        <BrowserRouter>
+          <div className="app-content">
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/diagnostico" element={<DiagnosticPage />} />
+              <Route path="/rastrear" element={<PublicTrackingPage />} />
+              <Route 
+                path="/" 
+                element={
+                  <ProtectedRoute>
+                    <Layout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<Navigate to="/dashboard" />} />
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="envios/nuevo" element={<NewShipment />} />
+                <Route path="envios/:id" element={<ShipmentDetail />} />
+                <Route path="seguimiento" element={<TrackingPage />} />
+              </Route>
+              
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          </div>
           
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </BrowserRouter>
+          {/* Prompt de instalación PWA */}
+          <PWAInstallPrompt className="fixed bottom-4 right-4 z-50" />
+        </BrowserRouter>
+      </div>
     </AuthProvider>
   );
 }
