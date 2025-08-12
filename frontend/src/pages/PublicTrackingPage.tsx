@@ -22,15 +22,15 @@ const PublicTrackingPage = () => {
   const [envio, setEnvio] = useState<EnvioPublico | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!numeroGuia.trim()) return;
-    
+
     setLoading(true);
     setError('');
     setEnvio(null);
-    
+
     try {
       const response = await enviosAPI.rastrearPublico(numeroGuia);
       setEnvio(response.data);
@@ -40,7 +40,7 @@ const PublicTrackingPage = () => {
       setLoading(false);
     }
   };
-  
+
   return (
     <div className="public-tracking-page">
       <header className="tracking-header">
@@ -53,13 +53,13 @@ const PublicTrackingPage = () => {
           </div>
         </div>
       </header>
-      
+
       <main className="tracking-content">
         <div className="container">
           <div className="tracking-hero">
-            <h2>Seguimiento de Envíos</h2>
+            <h2>Rastreo de Envíos</h2>
             <p>Consulta el estado de tus envíos en tiempo real</p>
-            
+
             <div className="tracking-search">
               <form onSubmit={handleSubmit}>
                 <div className="form-row">
@@ -71,9 +71,9 @@ const PublicTrackingPage = () => {
                     className="form-control"
                     disabled={loading}
                   />
-                  <button 
-                    type="submit" 
-                    className="btn" 
+                  <button
+                    type="submit"
+                    className="btn"
                     disabled={loading}
                   >
                     {loading ? 'Buscando...' : 'Rastrear'}
@@ -82,13 +82,13 @@ const PublicTrackingPage = () => {
               </form>
             </div>
           </div>
-          
+
           {error && (
             <div className="tracking-result error">
               <div className="alert alert-error">{error}</div>
             </div>
           )}
-          
+
           {envio && (
             <div className="tracking-result">
               <div className="tracking-summary">
@@ -98,7 +98,7 @@ const PublicTrackingPage = () => {
                     {envio.estado_display}
                   </span>
                 </div>
-                
+
                 <div className="shipment-info">
                   <div className="info-item">
                     <span className="label">Remitente:</span>
@@ -110,9 +110,9 @@ const PublicTrackingPage = () => {
                   </div>
                   <div className="info-item">
                     <span className="label">Última actualización:</span>
-                    <span className="value">{new Date(envio.fecha_actualizacion).toLocaleDateString('es-ES', { 
-                      day: '2-digit', 
-                      month: '2-digit', 
+                    <span className="value">{new Date(envio.fecha_actualizacion).toLocaleDateString('es-ES', {
+                      day: '2-digit',
+                      month: '2-digit',
                       year: 'numeric',
                       hour: '2-digit',
                       minute: '2-digit'
@@ -120,16 +120,16 @@ const PublicTrackingPage = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="tracking-history">
-                <h4>Historial de seguimiento</h4>
+                <h4>Historial de rastreo</h4>
                 <div className="timeline">
                   {envio.historial?.map((item, index) => (
                     <div key={index} className="timeline-item">
                       <div className="timeline-date">
-                        {new Date(item.fecha).toLocaleDateString('es-ES', { 
-                          day: '2-digit', 
-                          month: '2-digit', 
+                        {new Date(item.fecha).toLocaleDateString('es-ES', {
+                          day: '2-digit',
+                          month: '2-digit',
                           year: 'numeric',
                           hour: '2-digit',
                           minute: '2-digit'
@@ -148,7 +148,7 @@ const PublicTrackingPage = () => {
           )}
         </div>
       </main>
-      
+
       <footer className="tracking-footer">
         <div className="container">
           <p>&copy; {new Date().getFullYear()} Paquetería Cuba - Todos los derechos reservados</p>
