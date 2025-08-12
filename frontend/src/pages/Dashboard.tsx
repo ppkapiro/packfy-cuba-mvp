@@ -14,7 +14,7 @@ import '../styles/dashboard.css';
 // Función auxiliar para formatear fechas de forma segura
 const formatearFechaSafe = (fecha: string | null | undefined): string => {
   if (!fecha) return 'No disponible';
-  
+
   try {
     const fechaObj = new Date(fecha);
     if (isNaN(fechaObj.getTime())) {
@@ -45,7 +45,7 @@ const Dashboard: React.FC = () => {
   const [filtroEstado, setFiltroEstado] = useState('');
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
-  
+
   // Estado para paginación
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -54,17 +54,17 @@ const Dashboard: React.FC = () => {
     // Sistema mejorado para recuperar mensajes de éxito de múltiples fuentes
     // 1. Verificar sessionStorage (volátil)
     const successFromSession = sessionStorage.getItem('_lastEnvioSuccess');
-    
+
     // 2. Verificar localStorage (más persistente)
     const successFromLocalStorage = localStorage.getItem('_temp_success_message');
     const successTimestamp = localStorage.getItem('_temp_success_timestamp');
-    
+
     // 3. Verificar parámetros de URL
     const successFromUrl = new URLSearchParams(location.search).get('success');
-    
+
     // 4. Verificar state de react-router
     const successFromState = location.state?.success;
-    
+
     // Lógica para determinar cuál mensaje usar y limpiar almacenamiento
     if (successFromSession) {
       console.log('Dashboard: Usando mensaje de éxito de sessionStorage');
@@ -79,12 +79,12 @@ const Dashboard: React.FC = () => {
       const timestamp = new Date(successTimestamp);
       const now = new Date();
       const ageInMinutes = (now.getTime() - timestamp.getTime()) / (1000 * 60);
-      
+
       if (ageInMinutes < 5) {
         console.log('Dashboard: Usando mensaje de éxito de localStorage (edad: ' + ageInMinutes.toFixed(2) + ' minutos)');
         setSuccessMessage(successFromLocalStorage);
       }
-      
+
       // Limpiar localStorage en cualquier caso
       localStorage.removeItem('_temp_success_message');
       localStorage.removeItem('_temp_success_timestamp');
@@ -93,7 +93,7 @@ const Dashboard: React.FC = () => {
       setSuccessMessage('Operación completada exitosamente');
       navigate(location.pathname, { replace: true });
     }
-    
+
     // Verificar si hay token antes de intentar cargar los envíos
     const token = localStorage.getItem('token');
     if (!token) {
@@ -102,7 +102,7 @@ const Dashboard: React.FC = () => {
       win.location.href = '/login';
       return;
     }
-    
+
     console.log('Dashboard: Iniciando carga de envíos');
     cargarEnvios();
   }, [filtroEstado, fechaInicio, fechaFin, currentPage, pageSize, location]);
@@ -113,53 +113,53 @@ const Dashboard: React.FC = () => {
       try {
       console.log('Dashboard: Intentando cargar envíos...');
       const params: Record<string, any> = {};
-      
+
       if (filtroEstado) {
         params.estado = filtroEstado;
       }
-      
+
       if (fechaInicio) {
         params.fecha_registro_after = fechaInicio;
       }
-      
+
       if (fechaFin) {
         params.fecha_registro_before = fechaFin;
       }
-      
+
       console.log('Dashboard: Parámetros de consulta:', params);
-      
+
       // Verificar si la autenticación fue exitosa recientemente
       const authSuccess = sessionStorage.getItem('_auth_success');
       const authTimestamp = sessionStorage.getItem('_auth_timestamp');
       const authAge = authTimestamp ? (new Date().getTime() - new Date(authTimestamp).getTime()) / 1000 : null;
-      
-      console.log('Dashboard: Estado de autenticación:', { 
-        authSuccess, 
-        authTimestamp, 
+
+      console.log('Dashboard: Estado de autenticación:', {
+        authSuccess,
+        authTimestamp,
         authAge,
         hasToken: !!localStorage.getItem('token')
       });
-      
+
       console.log('Dashboard: Realizando llamada a enviosAPI.getAll', currentPage, pageSize);
-      
+
       // Manejar errores de conexión explícitamente
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 15000);
-      
+
       try {
         const response = await enviosAPI.getAll(currentPage, pageSize, params);
         clearTimeout(timeout);
-        
+
         console.log('Dashboard: Respuesta API recibida:', response);
         const data = response.data as PaginatedResponse;
-        
+
         if (!data || !data.results) {
           console.error('Dashboard: Respuesta sin datos válidos:', data);
           setError('La respuesta del servidor no contiene datos válidos');
           setEnvios([]);
           return;
         }
-        
+
         setEnvios(data.results);
         setTotalItems(data.count);
         setTotalPages(Math.ceil(data.count / pageSize));
@@ -169,16 +169,16 @@ const Dashboard: React.FC = () => {
       }
     } catch (err: any) {
       console.error('Dashboard: Error al cargar los envíos:', err);
-      
+
       // Mostrar un mensaje de error más descriptivo y detallado
       if (axios.isAxiosError(err)) {
         if (err.response) {
           const statusCode = err.response.status;
           const statusText = err.response.statusText;
           const errorData = err.response.data;
-          
+
           console.error(`Dashboard: Error de respuesta ${statusCode}:`, errorData);
-          
+
           if (statusCode === 401) {
             setError('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
             // Podríamos redirigir a la página de login aquí
@@ -232,7 +232,7 @@ const Dashboard: React.FC = () => {
         {successMessage && (
           <div className="alert alert-success">
             {successMessage}
-            <button 
+            <button
               onClick={() => setSuccessMessage('')}
               className="close-button"
               title="Cerrar"
@@ -241,19 +241,19 @@ const Dashboard: React.FC = () => {
             </button>
           </div>
         )}
-        
+
         {error && (
           <div className="alert alert-error">
             {error}
             <div className="error-actions">
-              <button 
+              <button
                 onClick={() => setError('')}
                 className="close-button"
                 title="Cerrar"
               >
                 ×
               </button>
-              <button 
+              <button
                 onClick={handleClearCacheAndRefresh}
                 className="btn btn-secondary btn-sm"
                 title="Limpiar caché y recargar página"
@@ -263,17 +263,17 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
         )}
-        
+
         {/* Sección de estadísticas - Con manejo de errores */}
         <div className="stats-container">
           <React.Suspense fallback={<div className="dashboard-loading">Cargando estadísticas...</div>}>            <ErrorBoundary fallback={
               <div className="dashboard-error">
                 No se pudieron cargar las estadísticas.
-                <button 
+                <button
                   onClick={() => {
                     const win = window as Window;
                     win.location.reload();
-                  }} 
+                  }}
                   className="btn-retry"
                 >
                   Reintentar
@@ -287,11 +287,11 @@ const Dashboard: React.FC = () => {
           <div className="dashboard-header">
           <h1>Dashboard de Envíos</h1>
           <div className="dashboard-actions">
-            <button 
+            <button
               onClick={() => {
                 console.log("Recargando dashboard manualmente");
                 cargarEnvios();
-              }} 
+              }}
               className="btn-refresh"
               title="Recargar lista de envíos"
             >
@@ -300,12 +300,15 @@ const Dashboard: React.FC = () => {
             <Link to="/envios/nuevo" className="btn">Nuevo Envío</Link>
           </div>
         </div>
-        
+
         {/* Accesos rápidos a modos de envío */}
         <div className="quick-actions">
           <h3>🚀 Accesos Rápidos</h3>
           <div className="quick-actions-grid">
-            <Link to="/envios" className="quick-action-btn quick-action-selector">
+            <Link to="/envios" className="quick-action-btn quick-action-main">
+              📋 Gestión de Envíos
+            </Link>
+            <Link to="/envios/modo" className="quick-action-btn quick-action-selector">
               🎯 Seleccionar Modo
             </Link>
             <Link to="/envios/simple" className="quick-action-btn quick-action-simple">
@@ -319,10 +322,10 @@ const Dashboard: React.FC = () => {
           <div className="filtros">
           <div className="form-group">
             <label htmlFor="filtroEstado">Estado:</label>
-            <select 
+            <select
               id="filtroEstado"
               name="filtroEstado"
-              value={filtroEstado} 
+              value={filtroEstado}
               onChange={(e: ChangeEvent<HTMLSelectElement>) => setFiltroEstado(e.target.value)}
               className="form-control"
               aria-label="Filtrar por estado de envío"
@@ -340,25 +343,25 @@ const Dashboard: React.FC = () => {
           </div>
             <div className="form-group">
             <label htmlFor="fechaInicio">Desde:</label>
-            <input 
+            <input
               id="fechaInicio"
               name="fechaInicio"
-              type="date" 
-              value={fechaInicio} 
+              type="date"
+              value={fechaInicio}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setFechaInicio(e.target.value)}
               className="form-control"
               aria-label="Fecha inicial para filtrar envíos"
               title="Seleccionar fecha inicial"
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="fechaFin">Hasta:</label>
-            <input 
+            <input
               id="fechaFin"
               name="fechaFin"
-              type="date" 
-              value={fechaFin} 
+              type="date"
+              value={fechaFin}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setFechaFin(e.target.value)}
               className="form-control"
               aria-label="Fecha final para filtrar envíos"
@@ -366,7 +369,7 @@ const Dashboard: React.FC = () => {
             />
           </div>
         </div>
-        
+
         {error && (
           <div className="dashboard-error">
             <div className="error-icon">⚠️</div>
@@ -381,7 +384,7 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
         )}
-        
+
         {loading ? (
           <div className="dashboard-loading">
             <div className="loading-spinner dashboard-spinner"></div>
@@ -432,12 +435,12 @@ const Dashboard: React.FC = () => {
                 )}
               </tbody>
             </table>
-            
+
             {/* Componente de paginación */}
             {envios.length > 0 && (              <div className="pagination-container">
                 <div className="items-per-page">
                   <label htmlFor="pageSize">Mostrar:</label>
-                  <select 
+                  <select
                     id="pageSize"
                     name="pageSize"
                     value={pageSize}
@@ -456,7 +459,7 @@ const Dashboard: React.FC = () => {
                   </select>
                   <span>por página</span>
                 </div>
-                
+
                 <Pagination
                   currentPage={currentPage}
                   totalPages={totalPages}

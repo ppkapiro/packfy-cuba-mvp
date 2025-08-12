@@ -128,7 +128,7 @@ class PackfyApiClient {
   }
 
   async getCurrentUser() {
-    return this.makeRequest("/auth/user/");
+    return this.makeRequest("/usuarios/me/");
   }
 
   async register(userData: any) {

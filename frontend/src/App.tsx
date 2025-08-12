@@ -11,6 +11,8 @@ import DiagnosticPage from './pages/DiagnosticPage';
 import EnvioModePage from './pages/EnvioModePage';
 import SimpleAdvancedPage from './pages/SimpleAdvancedPage';
 import ModernAdvancedPage from './pages/ModernAdvancedPage';
+import GestionEnvios from './pages/GestionEnvios';
+import EditarEnvio from './pages/EditarEnvio';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import NetworkStatusBanner from './components/NetworkStatusBanner';
 
@@ -56,9 +58,12 @@ function App() {
               >
                 <Route index element={<Navigate to="/dashboard" />} />
                 <Route path="dashboard" element={<Dashboard />} />
+                <Route path="envios" element={<EnvioModePage />} />
+                <Route path="gestion/gratuita" element={<GestionEnvios />} />
+                <Route path="gestion/premium" element={<GestionEnvios />} />
                 <Route path="envios/nuevo" element={<NewShipment />} />
                 <Route path="envios/:id" element={<ShipmentDetail />} />
-                <Route path="envios" element={<EnvioModePage />} />
+                <Route path="envios/:id/editar" element={<EditarEnvio />} />
                 <Route path="envios/simple" element={<SimpleAdvancedPage />} />
                 <Route path="envios/premium" element={<ModernAdvancedPage />} />
                 <Route path="envios/moderno" element={<ModernAdvancedPage />} />
