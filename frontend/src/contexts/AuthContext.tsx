@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { api, authAPI } from '../services/api';
+import { authAPI } from '../services/api';
 
 interface User {
   id: number;
@@ -45,7 +45,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       localStorage.setItem('token', access);
       setToken(access);
-      api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
       
       console.log('Token renovado correctamente');
       return true;
@@ -64,7 +63,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     sessionStorage.removeItem('_lastEnvioSuccess');
     setToken(null);
     setUser(null);
-    delete api.defaults.headers.common['Authorization'];
   };
 
   // Función para obtener datos del usuario
@@ -74,7 +72,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.log('AuthContext: Obteniendo datos del usuario...');
       const response = await authAPI.getCurrentUser();
       console.log('AuthContext: Datos del usuario obtenidos:', response.data);
-      setUser(response.data);
+      setUser(response.data as User);
     } catch (error) {
       console.error('AuthContext: Error al obtener datos del usuario:', error);
       // Si hay un error, probablemente el token expiró
@@ -91,9 +89,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const storedToken = localStorage.getItem('token');
       
       if (storedToken) {
-        // Establecer el token en el estado y en el header de Axios
+        // Establecer el token en el estado
         setToken(storedToken);
-        api.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
         
         try {
           // Intentar decodificar el token para verificar su validez
@@ -139,9 +136,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.log('Iniciando login con:', { email });
       
       const response = await authAPI.login(email, password);
-      console.log('Respuesta de login:', response.data);
+      console.log('Respuesta de login:', response);
       
-      const { access, refresh } = response.data;
+      // Verificar si la respuesta es exitosa
+      if (response.error) {
+        throw new Error(response.error);
+      }
+      
+      const { access, refresh } = response.data as { access: string; refresh: string };
       
       // Limpiar tokens anteriores para evitar problemas
       localStorage.removeItem('token');
@@ -151,10 +153,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem('token', access);
       localStorage.setItem('refreshToken', refresh);
         
-      // Actualizar estado y headers
+      // Actualizar estado
       setToken(access);
-      api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
-      console.log('Token establecido en headers:', api.defaults.headers.common['Authorization']);
+      console.log('Token guardado en localStorage');
       
       console.log('Token guardado, obteniendo datos del usuario...');
         // Obtener datos del usuario

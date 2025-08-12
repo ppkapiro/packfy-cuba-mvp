@@ -1,0 +1,356 @@
+/* 📱 ESTILOS PWA MÓVIL - PACKFY CUBA v2.0 */
+
+/* Optimizaciones generales para dispositivos móviles */
+@media screen and (max-width: 768px) {
+  
+  /* 🔧 Configuración base PWA */
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior: none;
+    -webkit-user-select: none;
+    user-select: none; /* Prevenir selección accidental */
+  }
+
+  /* 🎯 Área segura para notch/cutout */
+  .safe-area {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* 📱 Botones touch-friendly */
+  .btn, button, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn:active {
+    transform: scale(0.98);
+    opacity: 0.8;
+  }
+
+  /* 🇨🇺 Botón principal estilo cubano */
+  .btn-primary-cuba {
+    background: linear-gradient(135deg, #d52b1e 0%, #0f40a0 50%, #ffffff 100%);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 4px 12px rgba(213, 43, 30, 0.3);
+  }
+
+  .btn-primary-cuba:active {
+    box-shadow: 0 2px 6px rgba(213, 43, 30, 0.5);
+  }
+
+  /* 📋 Formularios móviles */
+  .form-control, input, textarea, select {
+    font-size: 16px; /* Prevenir zoom en iOS */
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+    transition: border-color 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .form-control:focus {
+    border-color: #d52b1e;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(213, 43, 30, 0.1);
+  }
+
+  /* 📦 Cards responsivas */
+  .card {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin: 8px;
+    overflow: hidden;
+    background: #ffffff;
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, #d52b1e 0%, #0f40a0 100%);
+    color: white;
+    padding: 16px;
+    font-weight: 600;
+  }
+
+  /* 🔄 Loading spinner cubano */
+  .loading-cuba {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f4f6;
+    border-top: 3px solid #d52b1e;
+    border-radius: 50%;
+    animation: spin-cuba 1s linear infinite;
+  }
+
+  @keyframes spin-cuba {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* 📱 Header móvil */
+  .mobile-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: linear-gradient(135deg, #d52b1e 0%, #0f40a0 100%);
+    color: white;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .mobile-header h1 {
+    font-size: 20px;
+    margin: 0;
+    font-weight: 700;
+  }
+
+  /* 🍔 Menú hamburguesa */
+  .menu-toggle {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  /* 📊 Dashboard móvil */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .dashboard-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #d52b1e;
+  }
+
+  /* 📋 Lista de envíos móvil */
+  .envios-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .envio-item {
+    background: white;
+    margin: 8px;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #0f40a0;
+  }
+
+  .envio-item:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+
+  /* 🔢 Estados de envío */
+  .estado-pendiente {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .estado-confirmado {
+    background: #dcfce7;
+    color: #166534;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .estado-entregado {
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  /* 🎯 Acciones rápidas */
+  .quick-actions {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+
+  .fab-button {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #d52b1e 0%, #0f40a0 100%);
+    color: white;
+    border: none;
+    font-size: 24px;
+    box-shadow: 0 4px 12px rgba(213, 43, 30, 0.4);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .fab-button:active {
+    transform: scale(0.95);
+  }
+
+  /* 📱 Toast notifications */
+  .toast-cuba {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #d52b1e;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    z-index: 2000;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    animation: toast-slide-in 0.3s ease;
+  }
+
+  @keyframes toast-slide-in {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  /* 🔧 Utilidades */
+  .text-center { text-align: center; }
+  .mb-2 { margin-bottom: 8px; }
+  .mb-3 { margin-bottom: 12px; }
+  .mb-4 { margin-bottom: 16px; }
+  .mt-2 { margin-top: 8px; }
+  .mt-3 { margin-top: 12px; }
+  .mt-4 { margin-top: 16px; }
+  .p-2 { padding: 8px; }
+  .p-3 { padding: 12px; }
+  .p-4 { padding: 16px; }
+
+  /* 📱 Swipe gestures */
+  .swipeable {
+    touch-action: pan-x;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .swipe-actions {
+    position: absolute;
+    top: 0;
+    right: -100px;
+    height: 100%;
+    width: 100px;
+    background: #ef4444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+  }
+
+  /* 🎨 Animaciones suaves */
+  .fade-in {
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .slide-up {
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  /* 🔍 Optimización de rendimiento */
+  .will-change {
+    will-change: transform, opacity;
+  }
+
+  .gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+}
+
+/* 📱 Orientación horizontal en móviles */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+  .mobile-header {
+    padding: 12px 16px;
+  }
+  
+  .mobile-header h1 {
+    font-size: 18px;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 12px;
+  }
+}
+
+/* 🌙 Modo oscuro para PWA */
+@media (prefers-color-scheme: dark) {
+  .card, .dashboard-card, .envio-item {
+    background: #1f2937;
+    color: #f9fafb;
+    border-color: #374151;
+  }
+  
+  .form-control {
+    background: #374151;
+    color: #f9fafb;
+    border-color: #4b5563;
+  }
+  
+  .toast-cuba {
+    background: #1f2937;
+    border: 1px solid #d52b1e;
+  }
+}

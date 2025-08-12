@@ -44,10 +44,10 @@ def create_demo_data():
     else:
         print(f"ℹ️ Empresa ya existente: {empresa.nombre}")
     
-    # Crear usuarios de prueba con credenciales SIMPLES
+    # Crear usuarios de prueba con credenciales CORRECTAS para Packfy Cuba
     usuarios = {
         'admin': {
-            'email': 'admin@packfy.com',
+            'email': 'admin@packfy.cu',
             'password': 'admin123',
             'is_staff': True,
             'is_superuser': True,
@@ -55,27 +55,21 @@ def create_demo_data():
             'last_name': 'Packfy',
             'es_administrador_empresa': True
         },
-        'demo': {
-            'email': 'demo@packfy.com',
-            'password': 'demo123',
-            'first_name': 'Demo',
-            'last_name': 'Usuario',
-            'es_administrador_empresa': False
-        },
-        'test': {
-            'email': 'test@test.com',
-            'password': '123456',
-            'first_name': 'Test',
-            'last_name': 'User',
+        'empresa': {
+            'email': 'empresa@test.cu',
+            'password': 'empresa123',
+            'first_name': 'Empresa',
+            'last_name': 'Test',
             'es_administrador_empresa': True,
-            'is_staff': True
+            'is_staff': False
         },
-        'operador': {
-            'email': 'operador@packfy.com',
-            'password': 'operador123',
-            'first_name': 'Operador',
-            'last_name': 'Sistema',
-            'es_administrador_empresa': False
+        'cliente': {
+            'email': 'cliente@test.cu',
+            'password': 'cliente123',
+            'first_name': 'Cliente',
+            'last_name': 'Test',
+            'es_administrador_empresa': False,
+            'is_staff': False
         }
     }
     

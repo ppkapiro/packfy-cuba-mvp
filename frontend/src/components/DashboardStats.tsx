@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { enviosAPI } from '../services/api';
 import { Envio } from '../types';
 import axios from 'axios';
-import './DashboardStats.css';
 
 interface DashboardStatsData {
   total: number;
@@ -26,6 +25,7 @@ const DashboardStats: React.FC = () => {
   const loadStats = async () => {
     setLoading(true);
     console.log("DashboardStats: Iniciando carga de estadísticas");
+    
     try {
       // Simulamos obtener estadísticas desde los envíos
       // En un entorno real, esto se haría con un endpoint específico
@@ -67,7 +67,8 @@ const DashboardStats: React.FC = () => {
       let recientes = 0;
       
       envios.forEach((envio: Envio) => {
-        try {          // Conteo por estado
+        try {
+          // Conteo por estado
           const estadoKey = envio.estado_display || envio.estado_actual || 'Desconocido';
           porEstado[estadoKey] = (porEstado[estadoKey] || 0) + 1;
           
@@ -105,6 +106,7 @@ const DashboardStats: React.FC = () => {
         entregadosHoy,
         recientes
       });
+      
       console.log("DashboardStats: Estadísticas calculadas:", {
         total: envios.length,
         porEstado,
@@ -113,30 +115,35 @@ const DashboardStats: React.FC = () => {
         recientes
       });
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("DashboardStats: Error en loadStats:", error);
       // Imprimir detalles completos del error para depuración
       try {
         console.error("DashboardStats: Error completo:", JSON.stringify(error, null, 2));
-      } catch (_e) {
+      } catch {
         console.error("DashboardStats: No se pudo convertir el error a JSON");
       }
       
       // Mostrar mensaje más específico según el tipo de error
       if (axios.isAxiosError(error)) {
-        if (error.response) {
+        const axiosError = error as any; // Type casting para acceder a propiedades de axios
+        if (axiosError.response) {
           // Error de respuesta del servidor
-          console.error("DashboardStats: Error de respuesta:", error.response.status, error.response.statusText);
-          setError(`Error al cargar estadísticas: ${error.response.status} - ${error.response.statusText}`);
-        } else if (error.request) {
+          console.error("DashboardStats: Error de respuesta:", axiosError.response.status, axiosError.response.statusText);
+          setError(`Error al cargar estadísticas: ${axiosError.response.status} - ${axiosError.response.statusText}`);
+        } else if (axiosError.request) {
           // No se recibió respuesta
           console.error("DashboardStats: No se recibió respuesta del servidor");
           setError('No se recibió respuesta del servidor. Compruebe su conexión.');
         } else {
           // Error en la configuración de la solicitud
-          console.error("DashboardStats: Error en configuración de solicitud:", error.message);
-          setError(`Error al configurar la solicitud: ${error.message}`);
+          const errorMessage = axiosError.message || 'Error desconocido';
+          console.error("DashboardStats: Error en configuración de solicitud:", errorMessage);
+          setError(`Error al configurar la solicitud: ${errorMessage}`);
         }
+      } else if (error instanceof Error) {
+        console.error("DashboardStats: Error general:", error.message);
+        setError(`Error: ${error.message}`);
       } else {
         console.error("DashboardStats: Error desconocido");
         setError('Error desconocido al cargar las estadísticas');
@@ -145,7 +152,8 @@ const DashboardStats: React.FC = () => {
       setLoading(false);
     }
   };
-    if (loading) return <div className="dashboard-loading">Cargando estadísticas...</div>;
+
+  if (loading) return <div className="dashboard-loading">Cargando estadísticas...</div>;
   if (error) return <div className="dashboard-error">{error}</div>;
   if (!stats) return <div className="dashboard-error">No se pudieron cargar las estadísticas</div>;
   
@@ -157,21 +165,33 @@ const DashboardStats: React.FC = () => {
       
       <div className="stats-grid">
         <div className="stat-card">
+          <div className="stat-icon">
+            <span className="icon icon-package icon-xl"></span>
+          </div>
           <div className="stat-value">{stats.total}</div>
           <div className="stat-label">Total de Envíos</div>
         </div>
         
         <div className="stat-card">
+          <div className="stat-icon">
+            <span className="icon icon-stats icon-xl"></span>
+          </div>
           <div className="stat-value">{stats.recientes}</div>
           <div className="stat-label">Envíos Nuevos (7 días)</div>
         </div>
         
         <div className="stat-card">
+          <div className="stat-icon">
+            <span className="icon icon-search icon-xl"></span>
+          </div>
           <div className="stat-value">{stats.pendientes}</div>
           <div className="stat-label">Envíos Pendientes</div>
         </div>
         
         <div className="stat-card">
+          <div className="stat-icon">
+            <span className="icon icon-user icon-xl"></span>
+          </div>
           <div className="stat-value">{stats.entregadosHoy}</div>
           <div className="stat-label">Entregados Hoy</div>
         </div>
@@ -185,9 +205,10 @@ const DashboardStats: React.FC = () => {
               <div className="status-bar-label">
                 {estado} <span className="status-count">({cantidad})</span>
               </div>
-              <div className="status-bar-wrapper">                <div 
+              <div className="status-bar-wrapper">
+                <div 
                   className={`status-bar status-${estado.toLowerCase().replace(/\s+/g, '-')}`}
-                  data-percentage={`${(cantidad / stats.total) * 100}`}
+                  data-percentage={(cantidad / stats.total) * 100}
                 ></div>
               </div>
             </div>

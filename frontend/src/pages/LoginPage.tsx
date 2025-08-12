@@ -8,6 +8,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   
   const { login } = useAuth();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -17,7 +18,7 @@ const LoginPage = () => {
     try {
       await login(email, password);
       console.log('LoginPage: Inicio de sesión exitoso, redirigiendo a /dashboard');
-        // Pequeña pausa antes de redireccionar
+      // Pequeña pausa antes de redireccionar
       setTimeout(() => {
         // Usar window.location.href en lugar de navigate para garantizar una carga fresca
         const win = window as Window;
@@ -51,56 +52,135 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
-    return (
+
+  // Función para autocompletar credenciales de prueba
+  const fillTestCredentials = (testEmail: string, testPassword: string) => {
+    setEmail(testEmail);
+    setPassword(testPassword);
+    setError('');
+  };
+
+  return (
     <div className="login-page">
-      <div className="login-container">
-        <h1>Paquetería Cuba</h1>
-        <h2>Iniciar Sesión</h2>
+      <div className="form-container">
+        <div className="form-header">
+          <div className="login-logo">
+            <span className="icon icon-flag-cuba icon-2xl"></span>
+          </div>
+          <h1 className="form-title">Packfy Cuba</h1>
+          <p className="form-subtitle">Sistema de Paquetería Moderno</p>
+        </div>
         
         {error && (
-          <div className="alert alert-error">
-            <div className="error-icon">⚠️</div>
-            <div className="error-message">{error}</div>
+          <div className="form-error">
+            <span className="icon icon-close"></span>
+            <span>{error}</span>
           </div>
         )}
         
-        <form onSubmit={handleSubmit}>
+        <form className="login-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="email">Correo Electrónico</label>
-            <input
-              type="email"
-              id="email"
-              className="form-control"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            <label htmlFor="email" className="form-label">
+              Correo Electrónico
+            </label>
+            <div className="form-input-with-icon">
+              <input
+                type="email"
+                id="email"
+                className="form-input"
+                placeholder="ejemplo@packfy.cu"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                disabled={loading}
+              />
+              <span className="form-input-icon icon icon-user"></span>
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password" className="form-label">
+              Contraseña
+            </label>
+            <div className="form-input-with-icon">
+              <input
+                type="password"
+                id="password"
+                className="form-input"
+                placeholder="Tu contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                disabled={loading}
+              />
+              <span className="form-input-icon icon icon-close"></span>
+            </div>
+          </div>
+
+          <div className="form-button-group">
+            <button
+              type="submit"
+              className="form-button form-button-primary"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="loading-spinner"></span>
+                  <span>Iniciando...</span>
+                </>
+              ) : (
+                <>
+                  <span className="icon icon-user"></span>
+                  <span>Iniciar Sesión</span>
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+
+        <div className="login-divider"></div>
+
+        {/* Credenciales de prueba para desarrollo */}
+        <div className="test-credentials">
+          <div className="test-credentials-title">
+            🧪 Credenciales de Prueba
           </div>
           
-          <div className="form-group">
-            <label htmlFor="password">Contraseña</label>
-            <input
-              type="password"
-              id="password"
-              className="form-control"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-            <button
-            type="submit"
-            className="btn btn-block"
-            disabled={loading}
+          <div 
+            className="test-credential"
+            onClick={() => fillTestCredentials('admin@packfy.cu', 'admin123')}
           >
-            {loading ? (
-              <>
-                <span className="loading-spinner"></span>
-                Iniciando sesión...
-              </>
-            ) : 'Iniciar Sesión'}
-          </button>
-        </form>
+            <span>👑 Administrador</span>
+            <span>admin@packfy.cu</span>
+          </div>
+          
+          <div 
+            className="test-credential"
+            onClick={() => fillTestCredentials('empresa@test.cu', 'empresa123')}
+          >
+            <span>🏢 Empresa</span>
+            <span>empresa@test.cu</span>
+          </div>
+          
+          <div 
+            className="test-credential"
+            onClick={() => fillTestCredentials('cliente@test.cu', 'cliente123')}
+          >
+            <span>🇨🇺 Cliente</span>
+            <span>cliente@test.cu</span>
+          </div>
+        </div>
+
+        <div className="login-footer">
+          <div className="login-links">
+            <a href="/rastrear" className="login-link">
+              🔍 Rastrear Paquete sin Registro
+            </a>
+            <a href="#" className="login-link">
+              ❓ ¿Olvidaste tu contraseña?
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -49,6 +49,19 @@ dist/
 build/
 *.egg-info/
 
+# Backup files
+*.backup
+*.bak
+*-backup.*
+backup_*
+*_backup_*
+
+# Temporary files
+*.temp
+*.tmp
+temp/
+tmp/
+
 # Docker
 *.log
 

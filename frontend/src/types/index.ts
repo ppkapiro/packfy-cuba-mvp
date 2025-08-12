@@ -29,8 +29,8 @@ export interface Envio {
   
   notas: string | null;
   historial?: HistorialEstado[];
-  creado_por?: any;
-  actualizado_por?: any;
+  creado_por?: Usuario | null;
+  actualizado_por?: Usuario | null;
 }
 
 export interface HistorialEstado {

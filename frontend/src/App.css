@@ -614,12 +614,13 @@ table {
     font-size: 16px !important; /* Evita zoom en iOS */
     min-height: 44px; /* Touch target mínimo */
     padding: 12px 16px !important;
+    -webkit-border-radius: 8px !important; /* iOS border radius */
     border-radius: 8px !important;
     border: 2px solid #d1d5db !important;
     background-color: white !important;
     transition: border-color 0.2s ease !important;
     -webkit-appearance: none; /* Remover estilos iOS */
-    -webkit-border-radius: 8px; /* iOS border radius */
+    appearance: none; /* Estándar para compatibilidad */
   }
   
   .form-control:focus {

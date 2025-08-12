@@ -1,13 +1,204 @@
-/* 📊 Dashboard Stats Styles */
+/* 📊 Dashboard Stats Premium - Tema Cubano */
 
-.status-bar {
-  width: calc(var(--percentage, 0) * 1%);
-  transition: width 0.3s ease;
-  height: 20px;
-  background: linear-gradient(90deg, #4f46e5, #7c3aed);
-  border-radius: 4px;
+.dashboard-stats {
+  margin-bottom: var(--spacing-xl);
 }
 
-.status-bar[data-percentage] {
-  width: calc(attr(data-percentage number, 0) * 1%);
+.stats-header {
+  margin-bottom: var(--spacing-lg);
+}
+
+.stats-header h2 {
+  color: var(--primary-cuba);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.stat-card {
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-cuba);
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-cuba);
+}
+
+.stat-icon {
+  margin-bottom: var(--spacing-md);
+  color: var(--primary-cuba);
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-cuba);
+  margin-bottom: var(--spacing-sm);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stats-by-status {
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.stats-by-status h3 {
+  color: var(--primary-cuba);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 var(--spacing-lg) 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.status-bars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.status-bar-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.status-bar-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.status-count {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.status-bar-wrapper {
+  background: var(--background-light);
+  border-radius: var(--border-radius-sm);
+  height: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.status-bar {
+  height: 100%;
+  background: var(--gradient-cuba);
+  border-radius: var(--border-radius-sm);
+  transition: width 0.6s ease;
+  width: calc(var(--percentage, 0) * 1%);
+  position: relative;
+}
+
+.status-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 25%, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.1) 50%, transparent 50%, transparent 75%, rgba(255,255,255,0.1) 75%);
+  background-size: 4px 4px;
+  animation: shimmer 1s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0 0; }
+  100% { background-position: 4px 4px; }
+}
+
+/* Estados específicos de barras */
+.status-bar[data-estado*="pendiente"] {
+  background: linear-gradient(90deg, var(--warning-color), var(--accent-cuba));
+}
+
+.status-bar[data-estado*="transito"] {
+  background: linear-gradient(90deg, var(--info-color), var(--secondary-cuba));
+}
+
+.status-bar[data-estado*="entregado"] {
+  background: linear-gradient(90deg, var(--success-color), var(--success-cuba));
+}
+
+.status-bar[data-estado*="cancelado"] {
+  background: linear-gradient(90deg, var(--danger-color), var(--danger-cuba));
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+  }
+  
+  .stat-card {
+    padding: var(--spacing-md);
+  }
+  
+  .stat-value {
+    font-size: 2rem;
+  }
+  
+  .stats-by-status {
+    padding: var(--spacing-md);
+  }
+  
+  .status-bar-label {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .stat-value {
+    font-size: 1.8rem;
+  }
 }

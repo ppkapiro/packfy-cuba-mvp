@@ -5,52 +5,98 @@ import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
-  const isDev = mode === 'development'
-  // Deshabilitar HMR por defecto para evitar problemas móviles
-  const enableHMR = false // Cambiar a true solo para desarrollo local
+// 🇨🇺 PACKFY CUBA - CONFIGURACIÓN VITE UNIFICADA v3.0
+export default defineConfig({
+  plugins: [react()],
+  base: '/',
   
-  console.log('🔧 Vite config:', { mode, isDev, enableHMR })
-  
-  return {
-    plugins: [react()],
-    base: '/',
-    resolve: {
-      alias: {
-        '@': path.resolve(__dirname, './src'),
-      },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
     },
-    server: {
-      port: 5173,
+  },
+  
+  server: {
+    port: 5173,
+    host: '0.0.0.0',
+    
+    // HTTPS con certificados locales
+    https: {
+      key: './certs/cert.key',
+      cert: './certs/cert.crt',
+    },
+    
+    // Configuración optimizada para desarrollo móvil
+    watch: {
+      usePolling: false,
+      interval: 3000,
+      ignored: ['**/node_modules/**', '**/dist/**'],
+    },
+    
+    hmr: {
+      clientPort: 5173,
       host: '0.0.0.0',
-      watch: {
-        usePolling: true,
-        interval: 2000, // Reducir frecuencia para evitar actualizaciones constantes
-      },
-      hmr: enableHMR ? {
-        clientPort: 5173,
-        host: 'localhost', // Solo para localhost
-        overlay: false, // Sin overlay que pueda causar problemas
-      } : false, // HMR deshabilitado para evitar actualizaciones constantes
-      proxy: {
-        '/api': {
-          target: process.env.BACKEND_URL || 'http://backend:8000',
-          changeOrigin: true,
-          secure: false,
-          // No reescribir la ruta - mantener /api/ porque el backend lo necesita
-          // rewrite: (path) => path.replace(/^\/api/, ''),
-          configure: (proxy, options) => {
-            // Log para debugging de proxy
-            proxy.on('proxyReq', (proxyReq, req, res) => {
-              console.log('📡 Proxy request:', req.method, req.url, '→', proxyReq.path);
-            });
-            proxy.on('error', (err, req, res) => {
-              console.error('❌ Proxy error:', err.message);
-            });
-          },
+      timeout: 30000,
+      overlay: false,
+    },
+    
+    // Proxy para desarrollo local
+    proxy: {
+      '/api': {
+        target: 'http://packfy-backend:8000',
+        changeOrigin: true,
+        secure: false,
+        timeout: 30000,
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, _req, _res) => {
+            console.log('🚨 Proxy error:', err);
+          });
+          proxy.on('proxyReq', (proxyReq, req, _res) => {
+            console.log('📡 Proxy request:', req.method, req.url);
+          });
+        },
+      }
+    }
+  },
+  
+  build: {
+    outDir: 'dist',
+    sourcemap: true,
+    
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          api: ['axios'],
         },
       },
     },
-  }
+    
+    // Optimizaciones de build
+    minify: 'terser',
+    target: 'es2020',
+  },
+  
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+    __VERSION__: JSON.stringify('3.0.0'),
+  },
+  
+  // Optimizaciones específicas
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom'],
+    exclude: ['@vite/client'],
+  },
+  
+  // CSS
+  css: {
+    devSourcemap: true,
+    preprocessorOptions: {
+      css: {
+        charset: false
+      }
+    }
+  },
 })
