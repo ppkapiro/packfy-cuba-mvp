@@ -37,8 +37,8 @@ services:
       - DEBUG=1
       - SECRET_KEY=django-insecure-dev-key-only
       - DATABASE_URL=postgresql://postgres:postgres@database:5432/packfy
-      - ALLOWED_HOSTS=localhost,127.0.0.1,backend
-      - CORS_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
+      - ALLOWED_HOSTS=localhost,127.0.0.1,backend,192.168.12.178
+      - CORS_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000,https://localhost:5173,https://192.168.12.178:5173,http://192.168.12.178:5173
     volumes:
       - ./backend:/app
       - static_files:/app/static
@@ -62,7 +62,7 @@ services:
       backend:
         condition: service_healthy
     environment:
-      - VITE_API_BASE_URL=http://localhost:8000
+      - VITE_API_BASE_URL=http://192.168.12.178:8000
       - VITE_APP_TITLE=Packfy MVP
     volumes:
       - ./frontend:/app
@@ -71,10 +71,10 @@ services:
       - "5173:5173"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5173"]
+      test: ["CMD", "curl", "-f", "http://localhost:5173", "||", "curl", "-k", "-f", "https://localhost:5173"]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
 
 volumes:
   postgres_data:

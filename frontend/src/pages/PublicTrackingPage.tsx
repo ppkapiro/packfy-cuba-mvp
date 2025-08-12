@@ -1,46 +1,62 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { enviosAPI } from '../services/api';
+import { publicAPI } from '../services/api';
+import './TrackingPage.css';
+import '../styles/mobile-optimized.css';
 
-interface EnvioPublico {
-  numero_guia: string;
-  estado: string;
-  estado_display: string;
-  remitente_nombre: string;
-  destinatario_nombre: string;
-  fecha_actualizacion: string;
-  historial: Array<{
+interface TrackingPublicResult {
+  resultados: number;
+  nombre_buscado: string;
+  tipo_busqueda: string;
+  envios: Array<{
+    numero_guia: string;
     estado: string;
-    fecha: string;
-    comentario?: string;
-    ubicacion?: string;
+    estado_display: string;
+    remitente_nombre: string;
+    destinatario_nombre: string;
+    fecha_creacion: string;
+    fecha_actualizacion: string;
   }>;
 }
 
-const PublicTrackingPage = () => {
-  const [numeroGuia, setNumeroGuia] = useState('');
-  const [envio, setEnvio] = useState<EnvioPublico | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  
+const PublicTrackingPage: React.FC = () => {
+  const [nombre, setNombre] = useState<string>('');
+  const [tipoBusqueda, setTipoBusqueda] = useState<string>('ambos');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [resultados, setResultados] = useState<TrackingPublicResult | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!numeroGuia.trim()) return;
-    
+    if (!nombre.trim()) {
+      setError('Por favor ingresa un nombre para buscar');
+      return;
+    }
+
     setLoading(true);
     setError('');
-    setEnvio(null);
-    
+    setResultados(null);
+
     try {
-      const response = await enviosAPI.rastrearPublico(numeroGuia);
-      setEnvio(response.data);
+      const response = await publicAPI.trackByName(nombre.trim(), tipoBusqueda);
+      const data = response.data as TrackingPublicResult;
+      setResultados(data);
+
+      if (data.resultados === 0) {
+        setError('No se encontraron envíos para ese nombre');
+      }
     } catch (err: any) {
-      setError(err.response?.data?.error || 'No se encontró ningún envío con ese número de guía');
+      console.error('Error en búsqueda:', err);
+      if (err.response?.status === 404) {
+        setError('No se encontraron envíos para ese nombre');
+      } else {
+        setError('Error al buscar envíos. Por favor intenta nuevamente.');
+      }
     } finally {
       setLoading(false);
     }
   };
-  
+
   return (
     <div className="public-tracking-page">
       <header className="tracking-header">
@@ -48,107 +64,116 @@ const PublicTrackingPage = () => {
           <div className="logo">
             <h1>Paquetería Cuba</h1>
           </div>
-          <div className="auth-links">
-            <Link to="/login">Iniciar Sesión</Link>
+          <div className="nav">
+            <Link to="/dashboard" className="nav-link">
+              Acceso al Sistema
+            </Link>
           </div>
         </div>
       </header>
-      
-      <main className="tracking-content">
+
+      <main className="tracking-main">
         <div className="container">
           <div className="tracking-hero">
-            <h2>Seguimiento de Envíos</h2>
-            <p>Consulta el estado de tus envíos en tiempo real</p>
-            
-            <div className="tracking-search">
-              <form onSubmit={handleSubmit}>
-                <div className="form-row">
-                  <input
-                    type="text"
-                    value={numeroGuia}
-                    onChange={(e) => setNumeroGuia(e.target.value)}
-                    placeholder="Ingresa tu número de guía"
-                    className="form-control"
-                    disabled={loading}
-                  />
-                  <button 
-                    type="submit" 
-                    className="btn" 
-                    disabled={loading}
-                  >
-                    {loading ? 'Buscando...' : 'Rastrear'}
-                  </button>
-                </div>
-              </form>
-            </div>
+            <h2>Rastrea tus Envíos</h2>
+            <p>Busca por nombre del remitente o destinatario</p>
           </div>
-          
-          {error && (
-            <div className="tracking-result error">
-              <div className="alert alert-error">{error}</div>
-            </div>
-          )}
-          
-          {envio && (
-            <div className="tracking-result">
-              <div className="tracking-summary">
-                <h3>Envío #{envio.numero_guia}</h3>
-                <div className="tracking-status">
-                  <span className={`estado estado-${envio.estado}`}>
-                    {envio.estado_display}
-                  </span>
-                </div>
-                
-                <div className="shipment-info">
-                  <div className="info-item">
-                    <span className="label">Remitente:</span>
-                    <span className="value">{envio.remitente_nombre}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Destinatario:</span>
-                    <span className="value">{envio.destinatario_nombre}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Última actualización:</span>
-                    <span className="value">{new Date(envio.fecha_actualizacion).toLocaleDateString('es-ES', { 
-                      day: '2-digit', 
-                      month: '2-digit', 
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}</span>
-                  </div>
-                </div>
+
+          <div className="tracking-form-section">
+            <form onSubmit={handleSubmit} className="public-tracking-form">
+              <div className="form-group">
+                <input
+                  type="text"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                  placeholder="Nombre del remitente o destinatario"
+                  className="form-control"
+                  disabled={loading}
+                />
+                <select
+                  value={tipoBusqueda}
+                  onChange={(e) => setTipoBusqueda(e.target.value)}
+                  className="form-control"
+                  disabled={loading}
+                  aria-label="Tipo de búsqueda"
+                  title="Seleccionar tipo de búsqueda"
+                >
+                  <option value="ambos">Remitente o Destinatario</option>
+                  <option value="remitente">Solo Remitente</option>
+                  <option value="destinatario">Solo Destinatario</option>
+                </select>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading || !nombre.trim()}
+                >
+                  {loading ? 'Buscando...' : 'Buscar Envíos'}
+                </button>
               </div>
-              
-              <div className="tracking-history">
-                <h4>Historial de seguimiento</h4>
-                <div className="timeline">
-                  {envio.historial?.map((item, index) => (
-                    <div key={index} className="timeline-item">
-                      <div className="timeline-date">
-                        {new Date(item.fecha).toLocaleDateString('es-ES', { 
-                          day: '2-digit', 
-                          month: '2-digit', 
-                          year: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
+            </form>
+
+            {error && (
+              <div className="alert alert-error">
+                <p>{error}</p>
+              </div>
+            )}
+          </div>
+
+          {resultados && (
+            <div className="tracking-results">
+              <div className="results-header">
+                <h3>Resultados para "{resultados.nombre_buscado}"</h3>
+                <span className="results-count">{resultados.resultados} envíos encontrados</span>
+              </div>
+
+              <div className="results-list">
+                {resultados.envios.map((envio, index) => (
+                  <div key={index} className="result-item">
+                    <div className="result-header">
+                      <h4>Envío #{envio.numero_guia}</h4>
+                      <span className={`estado estado-${envio.estado.toLowerCase()}`}>
+                        {envio.estado_display}
+                      </span>
+                    </div>
+
+                    <div className="result-body">
+                      <div className="result-row">
+                        <span className="label">De:</span>
+                        <span className="value">{envio.remitente_nombre}</span>
                       </div>
-                      <div className="timeline-content">
-                        <div className="timeline-status">{item.estado}</div>
-                        {item.ubicacion && <div className="timeline-location">{item.ubicacion}</div>}
-                        {item.comentario && <div className="timeline-comment">{item.comentario}</div>}
+                      <div className="result-row">
+                        <span className="label">Para:</span>
+                        <span className="value">{envio.destinatario_nombre}</span>
+                      </div>
+                      <div className="result-row">
+                        <span className="label">Fecha:</span>
+                        <span className="value">
+                          {new Date(envio.fecha_creacion).toLocaleDateString('es-ES', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          })}
+                        </span>
+                      </div>
+                      <div className="result-row">
+                        <span className="label">Estado:</span>
+                        <span className="value">
+                          Actualizado el {new Date(envio.fecha_actualizacion).toLocaleDateString('es-ES', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                        </span>
                       </div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
             </div>
           )}
         </div>
       </main>
-      
+
       <footer className="tracking-footer">
         <div className="container">
           <p>&copy; {new Date().getFullYear()} Paquetería Cuba - Todos los derechos reservados</p>

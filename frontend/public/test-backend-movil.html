@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔗 Test Backend - Packfy Cuba</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e40af 0%, #dc2626 100%);
+            min-height: 100vh;
+            color: white;
+            padding: 1rem;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .flag {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .test-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .test-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 0.5rem 0;
+            transition: all 0.3s;
+        }
+        
+        .test-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .test-btn.success {
+            background: rgba(16, 185, 129, 0.3);
+            border-color: #10b981;
+        }
+        
+        .test-btn.error {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: #ef4444;
+        }
+        
+        .test-btn.loading {
+            background: rgba(251, 191, 36, 0.3);
+            border-color: #fbbf24;
+        }
+        
+        .console {
+            background: #1f2937;
+            color: #10b981;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            max-height: 250px;
+            overflow-y: auto;
+            margin: 1rem 0;
+            white-space: pre-wrap;
+        }
+        
+        .url-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            word-break: break-all;
+        }
+        
+        .section-header {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="flag">🇨🇺</div>
+            <h1>Test Backend API</h1>
+            <p>Verificar conexión al backend Django</p>
+        </div>
+        
+        <div class="test-card">
+            <h3 class="section-header">📡 URLs del Backend</h3>
+            <div class="url-item">http://192.168.12.178:8000</div>
+            <div class="url-item">http://192.168.12.178:8000/api/</div>
+            <div class="url-item">http://192.168.12.178:8000/admin/</div>
+            <div class="url-item">http://127.0.0.1:8000 (local)</div>
+        </div>
+        
+        <div class="test-card">
+            <h3 class="section-header">🧪 Pruebas de Conexión</h3>
+            
+            <button class="test-btn" onclick="testBackendRoot()">
+                🏠 Probar Backend Root
+            </button>
+            
+            <button class="test-btn" onclick="testBackendAPI()">
+                🔗 Probar API Endpoint
+            </button>
+            
+            <button class="test-btn" onclick="testBackendAdmin()">
+                ⚙️ Probar Admin Panel
+            </button>
+            
+            <button class="test-btn" onclick="testCORS()">
+                🌐 Probar CORS desde Móvil
+            </button>
+            
+            <button class="test-btn" onclick="testFull()">
+                🚀 Prueba Completa
+            </button>
+        </div>
+        
+        <div class="console" id="console">
+🇨🇺 Packfy Cuba - Test Backend iniciado...
+        </div>
+    </div>
+    
+    <script>
+        const consoleElement = document.getElementById('console');
+        
+        function log(message) {
+            const time = new Date().toLocaleTimeString();
+            consoleElement.textContent += `[${time}] ${message}\n`;
+            consoleElement.scrollTop = consoleElement.scrollHeight;
+        }
+        
+        function setButtonState(button, state, text) {
+            button.className = `test-btn ${state}`;
+            button.textContent = text;
+        }
+        
+        async function testBackendRoot() {
+            const btn = event.target;
+            setButtonState(btn, 'loading', '🔄 Probando...');
+            log('🏠 Probando conexión al backend root...');
+            
+            try {
+                const response = await fetch('http://192.168.12.178:8000/', {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+                
+                if (response.ok) {
+                    setButtonState(btn, 'success', '✅ Backend Root OK');
+                    log(`✅ Backend responde: ${response.status} ${response.statusText}`);
+                } else {
+                    throw new Error(`${response.status} ${response.statusText}`);
+                }
+            } catch (error) {
+                setButtonState(btn, 'error', '❌ Error Root');
+                log(`❌ Error backend root: ${error.message}`);
+            }
+        }
+        
+        async function testBackendAPI() {
+            const btn = event.target;
+            setButtonState(btn, 'loading', '🔄 Probando API...');
+            log('🔗 Probando endpoint API...');
+            
+            try {
+                const response = await fetch('http://192.168.12.178:8000/api/', {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+                
+                if (response.ok) {
+                    const data = await response.text();
+                    setButtonState(btn, 'success', '✅ API OK');
+                    log(`✅ API responde: ${response.status}`);
+                    log(`📄 Contenido: ${data.substring(0, 100)}...`);
+                } else {
+                    throw new Error(`${response.status} ${response.statusText}`);
+                }
+            } catch (error) {
+                setButtonState(btn, 'error', '❌ Error API');
+                log(`❌ Error API: ${error.message}`);
+            }
+        }
+        
+        async function testBackendAdmin() {
+            const btn = event.target;
+            setButtonState(btn, 'loading', '🔄 Probando Admin...');
+            log('⚙️ Probando panel admin...');
+            
+            try {
+                const response = await fetch('http://192.168.12.178:8000/admin/', {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+                
+                if (response.ok) {
+                    setButtonState(btn, 'success', '✅ Admin OK');
+                    log(`✅ Admin responde: ${response.status}`);
+                } else {
+                    throw new Error(`${response.status} ${response.statusText}`);
+                }
+            } catch (error) {
+                setButtonState(btn, 'error', '❌ Error Admin');
+                log(`❌ Error admin: ${error.message}`);
+            }
+        }
+        
+        async function testCORS() {
+            const btn = event.target;
+            setButtonState(btn, 'loading', '🔄 Probando CORS...');
+            log('🌐 Probando configuración CORS...');
+            
+            try {
+                const response = await fetch('http://192.168.12.178:8000/api/', {
+                    method: 'OPTIONS',
+                    mode: 'cors',
+                    headers: {
+                        'Origin': window.location.origin,
+                        'Access-Control-Request-Method': 'GET'
+                    }
+                });
+                
+                setButtonState(btn, 'success', '✅ CORS OK');
+                log(`✅ CORS configurado correctamente`);
+                log(`📋 Headers CORS: ${JSON.stringify([...response.headers])}`);
+            } catch (error) {
+                setButtonState(btn, 'error', '❌ Error CORS');
+                log(`❌ Error CORS: ${error.message}`);
+            }
+        }
+        
+        async function testFull() {
+            const btn = event.target;
+            setButtonState(btn, 'loading', '🔄 Prueba Completa...');
+            log('🚀 Iniciando prueba completa del backend...');
+            
+            const tests = [
+                { name: 'Root', url: 'http://192.168.12.178:8000/' },
+                { name: 'API', url: 'http://192.168.12.178:8000/api/' },
+                { name: 'Admin', url: 'http://192.168.12.178:8000/admin/' }
+            ];
+            
+            let allPassed = true;
+            
+            for (const test of tests) {
+                try {
+                    log(`🔍 Probando ${test.name}...`);
+                    const response = await fetch(test.url, { method: 'GET', mode: 'cors' });
+                    
+                    if (response.ok) {
+                        log(`✅ ${test.name}: OK (${response.status})`);
+                    } else {
+                        log(`⚠️ ${test.name}: ${response.status} ${response.statusText}`);
+                        allPassed = false;
+                    }
+                } catch (error) {
+                    log(`❌ ${test.name}: ${error.message}`);
+                    allPassed = false;
+                }
+                
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            
+            if (allPassed) {
+                setButtonState(btn, 'success', '✅ Todo OK');
+                log('🎉 Todas las pruebas pasaron exitosamente!');
+            } else {
+                setButtonState(btn, 'error', '⚠️ Algunos errores');
+                log('⚠️ Algunas pruebas fallaron, revisar logs');
+            }
+        }
+        
+        // Información inicial
+        window.addEventListener('load', () => {
+            log('📱 Página de test backend cargada');
+            log(`🌐 Origen: ${window.location.origin}`);
+            log(`🔗 URL actual: ${window.location.href}`);
+            log('📋 Listo para pruebas...');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✅ Test Móvil Actualizado - Packfy v2.1</title>
+    
+    <!-- Cache Busting Headers -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <style>
+        /* ESTILOS MODERNOS EMBEBIDOS - v2.1 */
+        :root {
+            --primary-cuba: #0f4c75;
+            --secondary-cuba: #1e88e5;
+            --accent-cuba: #d4af37;
+            --success-cuba: #2e7d32;
+            --gradient-cuba: linear-gradient(135deg, var(--primary-cuba) 0%, var(--secondary-cuba) 50%, var(--accent-cuba) 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--gradient-cuba);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+        
+        .test-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .status-grid {
+            display: grid;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .status-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .status-good {
+            background: rgba(46, 125, 50, 0.3);
+            border-color: var(--success-cuba);
+        }
+        
+        .test-button {
+            background: var(--accent-cuba);
+            color: black;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            min-height: 48px; /* Touch target */
+        }
+        
+        .test-button:hover, .test-button:focus {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+        }
+        
+        .test-button:active {
+            transform: scale(0.95);
+        }
+        
+        .timestamp {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 480px) {
+            .test-container {
+                margin: 10px;
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            .test-button {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+        
+        /* Animación de entrada */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .test-container {
+            animation: fadeIn 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🚀 Test Móvil v2.1</h1>
+        <p>Verificación de actualización exitosa</p>
+        
+        <div class="status-grid">
+            <div class="status-item status-good">
+                <strong>✅ Estilos Modernos</strong><br>
+                <small>Variables CSS cargadas</small>
+            </div>
+            
+            <div class="status-item status-good">
+                <strong>✅ Responsive Design</strong><br>
+                <small>Optimizado para móvil</small>
+            </div>
+            
+            <div class="status-item status-good">
+                <strong>✅ Cache Busting</strong><br>
+                <small>Versión 2.1 activa</small>
+            </div>
+            
+            <div class="status-item" id="connection-status">
+                <strong>🔄 Conectividad</strong><br>
+                <small>Verificando...</small>
+            </div>
+        </div>
+        
+        <button class="test-button" onclick="goToMain()">
+            🏠 Ir a Aplicación Principal
+        </button>
+        
+        <button class="test-button" onclick="testAPI()">
+            🧪 Test API Backend
+        </button>
+        
+        <button class="test-button" onclick="forceReload()">
+            🔄 Forzar Recarga
+        </button>
+        
+        <div class="timestamp">
+            Actualizado: <span id="timestamp"></span><br>
+            IP: <span id="user-ip"></span><br>
+            Pantalla: <span id="screen-info"></span>
+        </div>
+    </div>
+    
+    <script>
+        // Mostrar timestamp
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+        
+        // Mostrar info de pantalla
+        document.getElementById('screen-info').textContent = 
+            `${window.innerWidth}x${window.innerHeight}`;
+        
+        // Detectar IP del usuario
+        fetch('/api/get-client-ip/')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('user-ip').textContent = data.ip || 'Desconocida';
+                document.getElementById('connection-status').className = 'status-item status-good';
+                document.getElementById('connection-status').innerHTML = 
+                    '<strong>✅ Conectividad</strong><br><small>Backend accesible</small>';
+            })
+            .catch(error => {
+                document.getElementById('user-ip').textContent = 'No detectada';
+                document.getElementById('connection-status').innerHTML = 
+                    '<strong>⚠️ Conectividad</strong><br><small>Verificar backend</small>';
+            });
+        
+        // Funciones de navegación
+        function goToMain() {
+            window.location.href = '/';
+        }
+        
+        function testAPI() {
+            window.open('/api/swagger/', '_blank');
+        }
+        
+        function forceReload() {
+            // Limpiar cache del navegador
+            if ('caches' in window) {
+                caches.keys().then(names => {
+                    names.forEach(name => {
+                        caches.delete(name);
+                    });
+                });
+            }
+            
+            // Recargar sin cache
+            window.location.reload(true);
+        }
+        
+        // Log de depuración
+        console.log('📱 Test Móvil v2.1 cargado exitosamente');
+        console.log('🌐 URL:', window.location.href);
+        console.log('📱 User Agent:', navigator.userAgent);
+        console.log('⏰ Timestamp:', new Date().toISOString());
+        
+        // Verificar si es móvil
+        const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        console.log('📱 Es móvil:', isMobile);
+        
+        if (isMobile) {
+            document.querySelector('h1').textContent = '📱 Test Móvil v2.1 ✅';
+        }
+    </script>
+</body>
+</html>

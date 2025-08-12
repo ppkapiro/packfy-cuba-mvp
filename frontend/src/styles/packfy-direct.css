@@ -1,0 +1,170 @@
+/* 🎨 ESTILOS PREMIUM PACKFY CUBA v2.0 - VERSIÓN DIRECTA */
+
+/* Animaciones básicas pero efectivas */
+@keyframes fadeInSlow {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatCuba {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(2deg); }
+}
+
+@keyframes shimmerCuba {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes glowCuba {
+  0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+  50% { box-shadow: 0 0 40px rgba(220, 38, 38, 0.6); }
+}
+
+/* Clases que funcionan inmediatamente */
+.packfy-hero {
+  animation: fadeInSlow 1s ease-out;
+  background: linear-gradient(135deg, #dbeafe 0%, #fdf4ff 50%, #fce7f3 100%);
+}
+
+.packfy-cuba-flag {
+  animation: floatCuba 4s ease-in-out infinite;
+  background: linear-gradient(135deg, #1e40af 0%, #dc2626 50%, #1e40af 100%);
+  transition: all 0.3s ease;
+}
+
+.packfy-cuba-flag:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.packfy-title {
+  background: linear-gradient(45deg, #1e40af, #7c3aed, #dc2626, #f59e0b);
+  background-size: 300% 300%;
+  animation: shimmerCuba 3s ease-in-out infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.packfy-card {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.packfy-card:hover {
+  transform: translateY(-20px) scale(1.03);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+}
+
+.packfy-glow {
+  animation: glowCuba 3s ease-in-out infinite;
+}
+
+.packfy-premium-badge {
+  background: linear-gradient(45deg, #f59e0b, #ef4444, #f59e0b);
+  background-size: 200% 200%;
+  animation: shimmerCuba 2s ease-in-out infinite;
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Partículas cubanas */
+.packfy-particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.packfy-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: linear-gradient(45deg, #1e40af, #dc2626);
+  border-radius: 50%;
+  animation: floatCuba 6s ease-in-out infinite;
+  opacity: 0.7;
+}
+
+.packfy-particle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+.packfy-particle:nth-child(2) { top: 40%; right: 20%; animation-delay: 1s; }
+.packfy-particle:nth-child(3) { top: 60%; left: 30%; animation-delay: 2s; }
+
+/* Responsive optimizado */
+@media (max-width: 768px) {
+  .packfy-card:hover {
+    transform: translateY(-10px) scale(1.02);
+  }
+  
+  .packfy-cuba-flag {
+    animation-duration: 6s;
+  }
+}
+
+/* Botones premium */
+.packfy-btn-premium {
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  color: white;
+  font-weight: bold;
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.packfy-btn-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.packfy-btn-premium:hover::before {
+  left: 100%;
+}
+
+.packfy-btn-premium:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(239, 68, 68, 0.4);
+}
+
+.packfy-btn-simple {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  font-weight: bold;
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.packfy-btn-simple:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(59, 130, 246, 0.4);
+}
+
+/* Tags patrióticos */
+.packfy-badge-cuba {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: glowCuba 4s ease-in-out infinite;
+}

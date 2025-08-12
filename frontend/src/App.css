@@ -324,7 +324,7 @@ a:hover {
 /* Tablas responsive */
 .table-responsive {
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 table {
@@ -443,5 +443,296 @@ table {
     background-color: #374151;
     border-color: #4b5563;
     color: var(--text-color);
+  }
+}
+
+/* 📱 =========================
+   ESTILOS PWA
+   ========================= */
+
+/* Contenedor principal de la app */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-content {
+  flex: 1;
+}
+
+/* Banner de estado de red */
+.network-status-banner {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Componente de instalación PWA */
+.pwa-install-prompt {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.pwa-status.installed {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid #10b981;
+  border-radius: var(--border-radius);
+  padding: 8px 12px;
+}
+
+.pwa-manual-install details {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pwa-manual-install details[open] {
+  box-shadow: var(--shadow);
+}
+
+.pwa-manual-install summary::-webkit-details-marker {
+  display: none;
+}
+
+.pwa-manual-install summary {
+  position: relative;
+  padding-right: 20px;
+}
+
+.pwa-manual-install summary::after {
+  content: '▼';
+  position: absolute;
+  right: 8px;
+  font-size: 12px;
+  transition: transform 0.2s ease;
+}
+
+.pwa-manual-install details[open] summary::after {
+  transform: rotate(180deg);
+}
+
+@keyframes fadeInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Adaptaciones para PWA en standalone mode */
+@media (display-mode: standalone) {
+  /* Ocultar elementos específicos del navegador cuando la app está instalada */
+  .browser-only {
+    display: none !important;
+  }
+  
+  /* Ajustar padding superior para status bar en móviles */
+  .app-container {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  /* Mejorar el área táctil en modo standalone */
+  button, .btn {
+    min-height: 44px; /* Tamaño mínimo recomendado para touch */
+  }
+}
+
+/* Detección de modo PWA para iOS */
+@media (display-mode: standalone), 
+       (display-mode: minimal-ui) {
+  /* Estilos específicos para cuando la app está instalada */
+  .pwa-install-prompt {
+    display: none;
+  }
+}
+
+/* Indicador de conexión offline */
+.offline-indicator {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: #dc2626;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 1000;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Mejoras de accesibilidad para PWA */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Optimizaciones para pantallas pequeñas */
+@media (max-width: 480px) {
+  .pwa-install-prompt {
+    position: fixed !important;
+    bottom: 10px !important;
+    right: 10px !important;
+    left: 10px !important;
+    width: auto !important;
+  }
+  
+  .pwa-install-prompt button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* MEJORAS MÓVIL - LOGIN FORM */
+  .form-control {
+    font-size: 16px !important; /* Evita zoom en iOS */
+    min-height: 44px; /* Touch target mínimo */
+    padding: 12px 16px !important;
+    -webkit-border-radius: 8px !important; /* iOS border radius */
+    border-radius: 8px !important;
+    border: 2px solid #d1d5db !important;
+    background-color: white !important;
+    transition: border-color 0.2s ease !important;
+    -webkit-appearance: none; /* Remover estilos iOS */
+    appearance: none; /* Estándar para compatibilidad */
+  }
+  
+  .form-control:focus {
+    border-color: #3b82f6 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  }
+  
+  /* Evitar zoom en inputs */
+  input[type="email"],
+  input[type="password"],
+  input[type="text"],
+  input[type="tel"],
+  input[type="number"] {
+    font-size: 16px !important;
+  }
+  
+  /* Botones móvil optimizados */
+  .btn {
+    min-height: 44px !important;
+    font-size: 16px !important;
+    padding: 12px 24px !important;
+    border-radius: 8px !important;
+    cursor: pointer;
+    transition: all 0.2s ease !important;
+  }
+  
+  .btn:active {
+    transform: scale(0.98);
+  }
+  
+  /* Login específico móvil */
+  .login-container {
+    padding: 20px !important;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  }
+  
+  .login-form {
+    max-width: 100% !important;
+    padding: 24px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+    background: white !important;
+  }
+  
+  /* PWA - Evitar interferencias con forms */
+  .pwa-install-prompt.fixed {
+    z-index: 999 !important; /* Menor que modales pero mayor que contenido */
+  }
+  
+  /* Standalone mode - ajustes adicionales */
+  @media (display-mode: standalone) {
+    .form-control {
+      -webkit-user-select: text !important;
+      user-select: text !important;
+    }
+    
+    /* Evitar problemas táctiles en standalone */
+    input {
+      -webkit-tap-highlight-color: transparent;
+    }
+  }
+}
+
+/* Logo con indicador PWA */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo h1 {
+  margin: 0;
+}
+
+/* PWA Status Indicator */
+.pwa-status-indicator {
+  flex-shrink: 0;
+}
+
+/* Estados de carga mejorados para PWA */
+.loading-app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 20px;
+}
+
+.loading-app::before {
+  content: '📱';
+  font-size: 48px;
+  animation: bounce 1s infinite;
+}
+
+.loading-app::after {
+  content: 'Cargando Packfy...';
+  font-size: 18px;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
   }
 }

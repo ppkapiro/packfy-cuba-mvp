@@ -1,200 +1,296 @@
-import axios from 'axios';
+// 🇨🇺 PACKFY CUBA - API UNIFICADA Y ROBUSTA v3.0
+// Sistema único de configuración de API para todas las conexiones
 
-// Crear instancia de axios con la URL base
-export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://backend:8000',
-  timeout: 15000, // Aumentado a 15 segundos para mayor tolerancia
-  headers: {
-    'Content-Type': 'application/json'
-  }
-});
-
-// Log para debugging
-console.log('API: Inicializando con baseURL:', api.defaults.baseURL);
-
-// Determinar si estamos usando el tenant "ejemplo"
-const useEjemploTenant = false;
-
-// Instancia para peticiones públicas (sin token)
-export const publicApi = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://backend:8000',
-  timeout: 15000, // Aumentado a 15 segundos
-  headers: {
-    'Content-Type': 'application/json'
-  }
-});
-
-// Configurar los headers de autenticación si existe un token
-const token = localStorage.getItem('token');
-if (token) {
-  api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+interface ApiResponse<T = any> {
+  data?: T;
+  error?: string;
+  status: number;
 }
 
-// Interceptor para manejar la renovación de tokens y otros errores
-api.interceptors.response.use(
-  (response: any) => {
-    // Log para debugging
-    if (response.config.url.includes('/auth/')) {
-      console.log('API: Respuesta autenticación exitosa:', {
-        url: response.config.url,
-        status: response.status,
-        hasToken: !!response.data.access
-      });
-    }
-    return response;
-  },
-  async (error: any) => {
-    const originalRequest = error.config;
-    
-    // Si no hay objeto de respuesta, estamos ante un error de red, probablemente
-    if (!error.response) {
-      console.error('API: Error de red detectado (posiblemente API no disponible):', error.message);
-      // No redireccionar automáticamente, solo reportar el error para que la UI pueda manejarlo
-      return Promise.reject({
-        ...error,
-        isNetworkError: true,
-        friendlyMessage: 'No se pudo conectar con el servidor. Por favor, verifique su conexión a internet.'
-      });
-    }
-    
-    // Si el error es 401 (no autorizado) y no hemos intentado renovar el token
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      console.log('API: Error 401 detectado, intentando renovar token');
-      originalRequest._retry = true;
-      
-      try {
-        // Intentar renovar el token
-        const refreshToken = localStorage.getItem('refreshToken');
-        
-        if (!refreshToken) {
-          // No hay refresh token, pero no hagamos redirección forzada
-          console.log('API: No hay refresh token disponible');
-          localStorage.removeItem('token');
-          localStorage.removeItem('refreshToken');
-          sessionStorage.removeItem('_auth_success');
-          // Dejar que el componente se encargue de la redirección
-          return Promise.reject({
-            ...error,
-            isAuthError: true,
-            authErrorType: 'no-refresh-token'
-          });
-        }
-        
-        // Llamar al endpoint de refresh, usando la ruta específica del tenant si es necesario
-        const refreshEndpoint = useEjemploTenant 
-          ? '/api/auth/ejemplo/refresh/' 
-          : '/api/auth/refresh/';
-            
-        const response = await axios.post(
-          `${api.defaults.baseURL}${refreshEndpoint}`,
-          { refresh: refreshToken },
-          // Configuración para evitar bucles infinitos en caso de error
-          { _forceRefresh: true }
-        );
-        
-        const { access } = response.data;
-        
-        console.log('API: Token renovado exitosamente');
-        
-        // Guardar el nuevo token
-        localStorage.setItem('token', access);
-        
-        // Actualizar el header de autorización
-        api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
-        originalRequest.headers['Authorization'] = `Bearer ${access}`;
-        
-        // Reintentar la petición original
-        return api(originalRequest);
-      } catch (refreshError) {        
-        // Error al renovar el token, pero no forzar redirección
-        console.error('API: Error al renovar el token:', refreshError);
-        localStorage.removeItem('token');
-        localStorage.removeItem('refreshToken');
-        sessionStorage.removeItem('_auth_success');
-        
-        // Dejar que el componente se encargue de la redirección
-        return Promise.reject({
-          ...error,
-          isAuthError: true,
-          authErrorType: 'refresh-failed',
-          refreshError
-        });
-      }
-    }
-    
-    return Promise.reject(error);
+class PackfyApiClient {
+  private static instance: PackfyApiClient;
+  private baseURL: string = "";
+  private isConfigured: boolean = false;
+
+  private constructor() {
+    this.configure();
   }
-);
 
-// Función auxiliar para obtener la ruta correcta según el tenant
-const getPath = (standardPath: string, ejemploPath: string) => {
-  return useEjemploTenant ? ejemploPath : standardPath;
-};
+  static getInstance(): PackfyApiClient {
+    if (!PackfyApiClient.instance) {
+      PackfyApiClient.instance = new PackfyApiClient();
+    }
+    return PackfyApiClient.instance;
+  }
 
-// API de Envíos
-export const enviosAPI = {
-  // Obtener todos los envíos con filtros opcionales y paginación
-  getAll: (page = 1, pageSize = 10, filters = {}) => 
-    api.get(getPath('/api/envios/', '/api/ejemplo/envios/'), { 
-      params: { 
-        page, 
-        page_size: pageSize,
-        ...filters 
+  private configure(): void {
+    const hostname = window.location.hostname;
+    const protocol = window.location.protocol;
+    const port = window.location.port;
+
+    console.log("🇨🇺 Packfy API configurándose...", {
+      hostname,
+      protocol,
+      port,
+    });
+
+    // Estrategia de configuración inteligente
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      // Desarrollo local
+      this.baseURL = port === "5173" ? "/api" : "http://localhost:8000/api";
+    } else if (
+      hostname.match(/^192\.168\.|^10\.|^172\.(1[6-9]|2[0-9]|3[0-1])\./)
+    ) {
+      // Red local (móvil/LAN) - usar proxy para evitar Mixed Content
+      this.baseURL = "/api";
+    } else {
+      // Producción o dominio externo
+      this.baseURL = `${protocol}//${hostname}/api`;
+    }
+
+    this.isConfigured = true;
+    console.log("✅ Packfy API configurada:", this.baseURL);
+  }
+
+  getBaseURL(): string {
+    if (!this.isConfigured) {
+      this.configure();
+    }
+    return this.baseURL;
+  }
+
+  async makeRequest<T>(
+    endpoint: string,
+    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE" = "GET",
+    data?: any,
+    headers?: Record<string, string>
+  ): Promise<ApiResponse<T>> {
+    try {
+      const token = localStorage.getItem("token");
+
+      const config: RequestInit = {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
+          ...headers,
+        },
+      };
+
+      if (data && method !== "GET") {
+        config.body = JSON.stringify(data);
       }
-    }),
-  
-  // Obtener un envío por ID
-  getById: (id: string) => api.get(getPath(`/api/envios/${id}/`, `/api/ejemplo/envios/${id}/`)),
-  
-  // Crear un nuevo envío
-  create: (data: any) => api.post(getPath('/api/envios/', '/api/ejemplo/envios/'), data),
-  
-  // Actualizar un envío
-  update: (id: string, data: any) => api.put(getPath(`/api/envios/${id}/`, `/api/ejemplo/envios/${id}/`), data),
-  
-  // Cambiar el estado de un envío
-  changeStatus: (id: string, estado: string, comentario?: string, ubicacion?: string) => 
-    api.post(getPath(`/api/envios/${id}/cambiar_estado/`, `/api/ejemplo/envios/${id}/cambiar_estado/`), 
-      { estado, comentario, ubicacion }),
-    
-  // Obtener el historial de estados de un envío
-  getHistory: (id: string) => api.get(getPath('/api/historial-estados/', '/api/ejemplo/historial-estados/'), 
-    { params: { envio: id } }),
-  
-  // Buscar un envío por número de guía
-  buscarPorGuia: (numeroGuia: string) => api.get(getPath('/api/envios/buscar_por_guia/', '/api/ejemplo/envios/buscar_por_guia/'), 
-    { params: { numero_guia: numeroGuia } }),
-  
-  // Rastrear un envío públicamente por número de guía (sin autenticación)
-  rastrearPublico: (numeroGuia: string) => publicApi.get('/api/envios/rastrear/', 
-    { params: { numero_guia: numeroGuia } }),
+
+      const url = `${this.getBaseURL()}${endpoint}`;
+      console.log(`📡 API Request: ${method} ${url}`);
+
+      const response = await fetch(url, config);
+
+      let responseData;
+      try {
+        responseData = await response.json();
+      } catch {
+        responseData = null;
+      }
+
+      const result: ApiResponse<T> = {
+        data: responseData,
+        status: response.status,
+      };
+
+      if (!response.ok) {
+        result.error =
+          responseData?.detail ||
+          responseData?.message ||
+          `HTTP ${response.status}`;
+        console.error("❌ API Error:", result.error);
+      } else {
+        console.log("✅ API Success:", method, endpoint);
+      }
+
+      return result;
+    } catch (error) {
+      console.error("🚨 API Request Failed:", error);
+      return {
+        status: 0,
+        error: error instanceof Error ? error.message : "Network Error",
+      };
+    }
+  }
+
+  // Métodos de autenticación
+  async login(email: string, password: string) {
+    return this.makeRequest("/auth/login/", "POST", { email, password });
+  }
+
+  async logout() {
+    return this.makeRequest("/auth/logout/", "POST");
+  }
+
+  async getCurrentUser() {
+    return this.makeRequest("/auth/user/");
+  }
+
+  async register(userData: any) {
+    return this.makeRequest("/auth/register/", "POST", userData);
+  }
+
+  // Métodos de empresas
+  async getEmpresas(page = 1, pageSize = 10) {
+    return this.makeRequest(`/empresas/?page=${page}&page_size=${pageSize}`);
+  }
+
+  async getEmpresa(id: number) {
+    return this.makeRequest(`/empresas/${id}/`);
+  }
+
+  async createEmpresa(empresa: any) {
+    return this.makeRequest("/empresas/", "POST", empresa);
+  }
+
+  async updateEmpresa(id: number, empresa: any) {
+    return this.makeRequest(`/empresas/${id}/`, "PUT", empresa);
+  }
+
+  async deleteEmpresa(id: number) {
+    return this.makeRequest(`/empresas/${id}/`, "DELETE");
+  }
+
+  // Métodos de envíos
+  async getEnvios(page = 1, pageSize = 10, filters?: any) {
+    let url = `/envios/?page=${page}&page_size=${pageSize}`;
+    if (filters) {
+      const queryParams = new URLSearchParams(filters).toString();
+      url += `&${queryParams}`;
+    }
+    return this.makeRequest(url);
+  }
+
+  async getEnvio(id: number) {
+    return this.makeRequest(`/envios/${id}/`);
+  }
+
+  async getEnvioByGuia(numeroGuia: string) {
+    return this.makeRequest(
+      `/envios/buscar_por_guia/?numero_guia=${numeroGuia}`
+    );
+  }
+
+  async getEnviosByNombre(nombre: string, tipo: string = "ambos") {
+    return this.makeRequest(
+      `/envios/buscar_por_nombre/?nombre=${nombre}&tipo=${tipo}`
+    );
+  }
+
+  async createEnvio(envio: any) {
+    return this.makeRequest("/envios/", "POST", envio);
+  }
+
+  async updateEnvio(id: number, envio: any) {
+    return this.makeRequest(`/envios/${id}/`, "PUT", envio);
+  }
+
+  async updateEnvioEstado(id: number, estado: string) {
+    return this.makeRequest(`/envios/${id}/`, "PATCH", { estado });
+  }
+
+  async deleteEnvio(id: number) {
+    return this.makeRequest(`/envios/${id}/`, "DELETE");
+  }
+
+  async getEstadisticas() {
+    return this.makeRequest("/envios/estadisticas/");
+  }
+
+  // Métodos públicos
+  async trackPublic(numeroGuia: string) {
+    return this.makeRequest(`/public/track/${numeroGuia}/`);
+  }
+
+  async trackByNamePublic(nombre: string, tipo: string = "ambos") {
+    return this.makeRequest(
+      `/envios/rastrear_por_nombre/?nombre=${nombre}&tipo=${tipo}`
+    );
+  }
+
+  // Test de conectividad
+  async testConnection(): Promise<boolean> {
+    try {
+      const response = await this.makeRequest("/");
+      return response.status === 200;
+    } catch {
+      return false;
+    }
+  }
+
+  // Información de configuración
+  getConfig() {
+    return {
+      baseURL: this.getBaseURL(),
+      configured: this.isConfigured,
+      timestamp: new Date().toISOString(),
+    };
+  }
+}
+
+// Instancia singleton
+const apiClient = PackfyApiClient.getInstance();
+
+// Exportaciones para compatibilidad
+export const api = {
+  get: (url: string) => apiClient.makeRequest(url, "GET"),
+  post: (url: string, data?: any) => apiClient.makeRequest(url, "POST", data),
+  put: (url: string, data?: any) => apiClient.makeRequest(url, "PUT", data),
+  patch: (url: string, data?: any) => apiClient.makeRequest(url, "PATCH", data),
+  delete: (url: string) => apiClient.makeRequest(url, "DELETE"),
 };
 
-// API de Autenticación
 export const authAPI = {
-  login: (email: string, password: string) => 
-    api.post(getPath('/api/auth/login/', '/api/auth/ejemplo/login/'), { email, password }),
-    
-  refresh: (refreshToken: string) => 
-    api.post(getPath('/api/auth/refresh/', '/api/auth/ejemplo/refresh/'), { refresh: refreshToken }),
-    
-  getCurrentUser: () => api.get(getPath('/api/usuarios/me/', '/api/ejemplo/usuarios/me/')),
+  login: (email: string, password: string) => apiClient.login(email, password),
+  logout: () => apiClient.logout(),
+  getCurrentUser: () => apiClient.getCurrentUser(),
+  refresh: (refreshToken: string) =>
+    apiClient.makeRequest("/auth/refresh/", "POST", { refresh: refreshToken }),
+  register: (userData: any) => apiClient.register(userData),
 };
 
-// API de Usuarios
-export const usuariosAPI = {
-  getAll: () => api.get(getPath('/api/usuarios/', '/api/ejemplo/usuarios/')),
-  
-  getById: (id: string) => api.get(getPath(`/api/usuarios/${id}/`, `/api/ejemplo/usuarios/${id}/`)),
-  
-  create: (data: any) => api.post(getPath('/api/usuarios/', '/api/ejemplo/usuarios/'), data),
-  
-  update: (id: string, data: any) => api.put(getPath(`/api/usuarios/${id}/`, `/api/ejemplo/usuarios/${id}/`), data),
-  
-  changePassword: (id: string, oldPassword: string, newPassword: string) => 
-    api.post(getPath(`/api/usuarios/${id}/change-password/`, `/api/ejemplo/usuarios/${id}/change-password/`), {
-      old_password: oldPassword,
-      new_password: newPassword,
-      new_password_confirm: newPassword
-    }),
+export const empresasAPI = {
+  getAll: (page = 1, pageSize = 10) => apiClient.getEmpresas(page, pageSize),
+  getById: (id: number) => apiClient.getEmpresa(id),
+  create: (empresa: any) => apiClient.createEmpresa(empresa),
+  update: (id: number, empresa: any) => apiClient.updateEmpresa(id, empresa),
+  delete: (id: number) => apiClient.deleteEmpresa(id),
 };
+
+export const enviosAPI = {
+  getAll: (page = 1, pageSize = 10, filters?: any) =>
+    apiClient.getEnvios(page, pageSize, filters),
+  getById: (id: number) => apiClient.getEnvio(id),
+  getByGuia: (numeroGuia: string) => apiClient.getEnvioByGuia(numeroGuia),
+  getByNombre: (nombre: string, tipo = "ambos") =>
+    apiClient.getEnviosByNombre(nombre, tipo),
+  create: (envio: any) => apiClient.createEnvio(envio),
+  update: (id: number, envio: any) => apiClient.updateEnvio(id, envio),
+  updateEstado: (id: number, estado: string) =>
+    apiClient.updateEnvioEstado(id, estado),
+  delete: (id: number) => apiClient.deleteEnvio(id),
+  getEstadisticas: () => apiClient.getEstadisticas(),
+};
+
+export const publicAPI = {
+  trackPackage: (numeroGuia: string) => apiClient.trackPublic(numeroGuia),
+  trackByName: (nombre: string, tipo = "ambos") =>
+    apiClient.trackByNamePublic(nombre, tipo),
+};
+
+// Funciones de utilidad
+export const testConnection = () => apiClient.testConnection();
+export const getApiInfo = () => apiClient.getConfig();
+
+// Exportaciones individuales para compatibilidad
+export const trackByNamePublic = (nombre: string, tipo = "ambos") =>
+  apiClient.trackByNamePublic(nombre, tipo);
+
+console.log("🇨🇺 Packfy API Unificada v3.0 cargada:", apiClient.getConfig());
+
+export default apiClient;

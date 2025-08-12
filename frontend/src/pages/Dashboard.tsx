@@ -227,7 +227,8 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <ErrorBoundary fallback={<ErrorFallback />}>      <div className="dashboard-page">
+    <ErrorBoundary fallback={<ErrorFallback />}>
+      <div className="dashboard-page">
         {successMessage && (
           <div className="alert alert-success">
             {successMessage}
@@ -267,7 +268,8 @@ const Dashboard: React.FC = () => {
         <div className="stats-container">
           <React.Suspense fallback={<div className="dashboard-loading">Cargando estadísticas...</div>}>            <ErrorBoundary fallback={
               <div className="dashboard-error">
-                No se pudieron cargar las estadísticas.                <button 
+                No se pudieron cargar las estadísticas.
+                <button 
                   onClick={() => {
                     const win = window as Window;
                     win.location.reload();
@@ -296,6 +298,22 @@ const Dashboard: React.FC = () => {
               🔄
             </button>
             <Link to="/envios/nuevo" className="btn">Nuevo Envío</Link>
+          </div>
+        </div>
+        
+        {/* Accesos rápidos a modos de envío */}
+        <div className="quick-actions">
+          <h3>🚀 Accesos Rápidos</h3>
+          <div className="quick-actions-grid">
+            <Link to="/envios" className="quick-action-btn quick-action-selector">
+              🎯 Seleccionar Modo
+            </Link>
+            <Link to="/envios/simple" className="quick-action-btn quick-action-simple">
+              📦 Modo Simple (Gratis)
+            </Link>
+            <Link to="/envios/premium" className="quick-action-btn quick-action-premium">
+              ✨ Modo Premium
+            </Link>
           </div>
         </div>
           <div className="filtros">

@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { AuthProvider } from './contexts/AuthContext';
 import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
@@ -8,59 +8,71 @@ import ShipmentDetail from './pages/ShipmentDetail';
 import TrackingPage from './pages/TrackingPage';
 import PublicTrackingPage from './pages/PublicTrackingPage';
 import DiagnosticPage from './pages/DiagnosticPage';
-import './App.css';
+import EnvioModePage from './pages/EnvioModePage';
+import SimpleAdvancedPage from './pages/SimpleAdvancedPage';
+import ModernAdvancedPage from './pages/ModernAdvancedPage';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
+import NetworkStatusBanner from './components/NetworkStatusBanner';
 
-// Componente protegido que redirecciona a login si no hay autenticación
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const { isAuthenticated, isLoading, token } = useAuth();
-  
-  if (isLoading) {
-    console.log('ProtectedRoute: Cargando autenticación...');
-    return <div className="loading-app">Cargando...</div>;
+// 🇨🇺 PACKFY CUBA - SISTEMA UNIFICADO v3.0
+import './styles/unified-system.css';
+
+// Componente de rutas protegidas
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    return <Navigate to="/login" replace />;
   }
-  
-  // Información adicional para depuración
-  console.log('ProtectedRoute: Estado de autenticación:', isAuthenticated);
-  console.log('ProtectedRoute: Token presente:', !!token);
-  if (token) {
-    console.log('ProtectedRoute: Longitud del token:', token.length);
-    console.log('ProtectedRoute: Primeros 10 caracteres del token:', token.substring(0, 10) + '...');
-  }
-  
-  if (!isAuthenticated) {
-    console.log('ProtectedRoute: Usuario no autenticado, redirigiendo a login');
-    return <Navigate to="/login" />;
-  }
-  
-  console.log('ProtectedRoute: Usuario autenticado, renderizando contenido protegido');
-  return children;
-};
+
+  return <>{children}</>;
+}
 
 function App() {
+  console.log('🇨🇺 Packfy Cuba v3.0 - Sistema Unificado iniciando...');
+
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>          <Route path="/login" element={<LoginPage />} />
-          <Route path="/diagnostico" element={<DiagnosticPage />} />
-          <Route path="/rastrear" element={<PublicTrackingPage />} />
-            <Route 
-            path="/" 
-            element={
-              <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<Navigate to="/dashboard" />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="envios/nuevo" element={<NewShipment />} />
-            <Route path="envios/:id" element={<ShipmentDetail />} />
-            <Route path="seguimiento" element={<TrackingPage />} />
-          </Route>
-          
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </BrowserRouter>
+      <div className="app-container">
+        {/* Banner de estado de conexión */}
+        <NetworkStatusBanner />
+
+        <BrowserRouter>
+          <div className="app-content">
+            <Routes>
+              {/* Rutas públicas */}
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/diagnostico" element={<DiagnosticPage />} />
+              <Route path="/rastrear" element={<PublicTrackingPage />} />
+
+              {/* Rutas protegidas */}
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Layout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<Navigate to="/dashboard" />} />
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="envios/nuevo" element={<NewShipment />} />
+                <Route path="envios/:id" element={<ShipmentDetail />} />
+                <Route path="envios" element={<EnvioModePage />} />
+                <Route path="envios/simple" element={<SimpleAdvancedPage />} />
+                <Route path="envios/premium" element={<ModernAdvancedPage />} />
+                <Route path="envios/moderno" element={<ModernAdvancedPage />} />
+                <Route path="rastreo" element={<TrackingPage />} />
+                {/* Redirección para compatibilidad con URL vieja */}
+                <Route path="seguimiento" element={<Navigate to="/rastreo" replace />} />
+              </Route>
+            </Routes>
+          </div>
+        </BrowserRouter>
+
+        {/* PWA Install Prompt */}
+        <PWAInstallPrompt />
+      </div>
     </AuthProvider>
   );
 }
