@@ -19,3 +19,7 @@ except Exception as e:
 "
 
 echo "Migraciones completadas."
+
+# Iniciar servidor Django
+echo "Iniciando servidor Django..."
+python manage.py runserver 0.0.0.0:8000
