@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 
@@ -9,6 +9,9 @@ RUN npm install
 RUN apk add --no-cache curl iputils bind-tools
 
 COPY . .
+
+# Usar configuración simplificada para Docker
+RUN cp vite.config.docker.ts vite.config.ts
 
 EXPOSE 5173
 

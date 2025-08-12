@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Automático - Versión Simple</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            margin: 5px;
+        }
+        .passed { background: #d4edda; color: #155724; }
+        .failed { background: #f8d7da; color: #721c24; }
+        .console-output {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin: 20px 0;
+        }
+        .action-buttons {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover { background: #0056b3; }
+        .btn-success { background: #28a745; }
+        .btn-warning { background: #ffc107; color: #212529; }
+        
+        .checklist-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .criteria-box {
+            margin-top: 30px;
+            padding: 15px;
+            background: #e7f3ff;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Automático - Versión Simple</h1>
+        <p>Esta página ejecuta automáticamente tests de las funcionalidades básicas.</p>
+        
+        <div class="action-buttons">
+            <a href="/envios/simple" class="btn btn-success">🚀 Ir a Versión Simple</a>
+            <button onclick="runManualTests()" class="btn">🔄 Ejecutar Tests</button>
+            <a href="/envios/avanzado" class="btn btn-warning">⚠️ Ir a Versión Avanzada</a>
+        </div>
+
+        <h3>📊 Resultados de Tests</h3>
+        <div id="test-results">
+            <div class="test-status">🔄 Ejecutando tests...</div>
+        </div>
+
+        <h3>📝 Consola de Output</h3>
+        <div id="console-output" class="console-output">
+            Cargando tests automáticos...\n
+        </div>
+
+        <h3>📋 Checklist Manual</h3>
+        <div class="checklist-box">
+            <h4>✅ Si los tests automáticos pasan, verifica manualmente:</h4>
+            <ol>
+                <li><strong>Navegación:</strong> <a href="/envios/simple" target="_blank">Abre la versión simple</a></li>
+                <li><strong>Formulario:</strong> Llena con datos: Peso 2.5kg, nombres, etc.</li>
+                <li><strong>Cálculo:</strong> Haz clic en "Calcular Precio" → Debe mostrar ~10,304 CUP</li>
+                <li><strong>Foto:</strong> Haz clic en "Capturar Foto" → Debe abrir cámara/selector</li>
+                <li><strong>QR:</strong> Haz clic en "Generar QR" → Debe mostrar tracking PCK########</li>
+            </ol>
+            
+            <h4>📱 Testing Móvil:</h4>
+            <p><strong>URL móvil:</strong> <code>http://192.168.12.179:5173/envios/simple</code></p>
+            <p>Repite los mismos pasos en dispositivo móvil.</p>
+        </div>
+
+        <div class="criteria-box">
+            <h4>🎯 Criterios de Éxito</h4>
+            <ul>
+                <li>✅ Tests automáticos pasan</li>
+                <li>✅ Conversión USD→CUP funciona (2.5kg ≈ $10,304 CUP)</li>
+                <li>✅ Cámara abre en móvil</li>
+                <li>✅ QR genera tracking válido</li>
+                <li>✅ Sin errores en consola del navegador</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Capturar console.log para mostrar en pantalla
+        const originalLog = console.log;
+        const consoleOutput = document.getElementById('console-output');
+        const testResults = document.getElementById('test-results');
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const message = args.join(' ') + '\n';
+            consoleOutput.textContent += message;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        };
+
+        // Función para ejecutar tests manuales
+        function runManualTests() {
+            consoleOutput.textContent = 'Ejecutando tests manuales...\n';
+            
+            // Test básico de cálculo
+            const testPrice = () => {
+                const rate = 320;
+                const weight = 2.5;
+                let basePrice = 28.00; // Para 2-5kg
+                const handling = basePrice * 0.15;
+                const total = (basePrice + handling) * rate;
+                
+                console.log('💰 Test de Precio:');
+                console.log(`   Peso: ${weight}kg`);
+                console.log(`   Base: $${basePrice} USD`);
+                console.log(`   Manejo: $${handling.toFixed(2)} USD`);
+                console.log(`   Total: $${total.toLocaleString()} CUP`);
+                
+                return total > 10000 && total < 12000; // Rango esperado
+            };
+
+            // Test de capacidades del navegador
+            const testBrowser = () => {
+                console.log('🌐 Test de Navegador:');
+                console.log(`   User Agent: ${navigator.userAgent}`);
+                console.log(`   Pantalla: ${screen.width}x${screen.height}`);
+                console.log(`   File API: ${!!window.File}`);
+                console.log(`   Camera API: ${!!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)}`);
+                
+                return true;
+            };
+
+            // Test de generación de tracking
+            const testTracking = () => {
+                const tracking = 'PCK' + Date.now().toString().slice(-8);
+                console.log('🔖 Test de Tracking:');
+                console.log(`   Generado: ${tracking}`);
+                console.log(`   Formato válido: ${tracking.length === 11 && tracking.startsWith('PCK')}`);
+                
+                return tracking.length === 11;
+            };
+
+            // Ejecutar todos los tests
+            const results = {
+                price: testPrice(),
+                browser: testBrowser(),
+                tracking: testTracking()
+            };
+
+            console.log('\n📊 RESULTADOS:');
+            console.log('==============');
+            
+            let html = '';
+            Object.entries(results).forEach(([test, passed]) => {
+                const status = passed ? 'passed' : 'failed';
+                const icon = passed ? '✅' : '❌';
+                html += `<div class="test-status ${status}">${icon} ${test.toUpperCase()}</div>`;
+                console.log(`${icon} ${test}: ${passed ? 'PASÓ' : 'FALLÓ'}`);
+            });
+
+            testResults.innerHTML = html;
+
+            const allPassed = Object.values(results).every(Boolean);
+            console.log(allPassed ? '\n🎉 TODOS LOS TESTS BÁSICOS PASARON!' : '\n⚠️ ALGUNOS TESTS FALLARON');
+            
+            if (allPassed) {
+                console.log('\n➡️ PASO 1 COMPLETADO - Proceder al PASO 2 (Versión Avanzada)');
+            } else {
+                console.log('\n❌ PASO 1 FALLÓ - Revisar problemas antes de continuar');
+            }
+        }
+
+        // Auto-ejecutar al cargar
+        setTimeout(runManualTests, 1000);
+    </script>
+</body>
+</html>

@@ -34,9 +34,8 @@ def create_demo_data():
             'direccion': 'Calle 23 #512, La Habana, Cuba',
             'telefono': '+53 555-1234',
             'email': 'info@packfy.com',
-            'es_activa': True,
-            'fecha_creacion': datetime.now(),
-            'descripcion': 'Empresa de demostración para Packfy'
+            'activo': True,
+            'ruc': '12345678901'
         }
     )
     
@@ -45,37 +44,32 @@ def create_demo_data():
     else:
         print(f"ℹ️ Empresa ya existente: {empresa.nombre}")
     
-    # Crear usuarios de prueba con diferentes roles
+    # Crear usuarios de prueba con credenciales CORRECTAS para Packfy Cuba
     usuarios = {
         'admin': {
-            'email': 'admin@packfy.com',
-            'password': 'adminadmin',
+            'email': 'admin@packfy.cu',
+            'password': 'admin123',
             'is_staff': True,
             'is_superuser': True,
             'first_name': 'Admin',
             'last_name': 'Packfy',
             'es_administrador_empresa': True
         },
-        'operador': {
-            'email': 'operador@packfy.com',
-            'password': 'password123',
-            'first_name': 'Operador',
-            'last_name': 'Sistema',
-            'es_administrador_empresa': False
+        'empresa': {
+            'email': 'empresa@test.cu',
+            'password': 'empresa123',
+            'first_name': 'Empresa',
+            'last_name': 'Test',
+            'es_administrador_empresa': True,
+            'is_staff': False
         },
-        'encargado': {
-            'email': 'encargado@packfy.com',
-            'password': 'password123',
-            'first_name': 'Encargado',
-            'last_name': 'Distribución',
-            'es_administrador_empresa': True
-        },
-        'repartidor': {
-            'email': 'repartidor@packfy.com',
-            'password': 'password123',
-            'first_name': 'Juan',
-            'last_name': 'Repartidor',
-            'es_administrador_empresa': False
+        'cliente': {
+            'email': 'cliente@test.cu',
+            'password': 'cliente123',
+            'first_name': 'Cliente',
+            'last_name': 'Test',
+            'es_administrador_empresa': False,
+            'is_staff': False
         }
     }
     
