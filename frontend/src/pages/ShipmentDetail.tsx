@@ -7,7 +7,7 @@ import { enviosAPI } from '../services/api';
 // Funciones auxiliares para manejo seguro de datos
 const formatearMoneda = (valor: string | number | null | undefined): string => {
   if (!valor) return '$0.00';
-  
+
   try {
     const numero = typeof valor === 'string' ? parseFloat(valor) : valor;
     if (isNaN(numero)) return '$0.00';
@@ -19,21 +19,21 @@ const formatearMoneda = (valor: string | number | null | undefined): string => {
 };
 
 const formatearPeso = (peso: string | number | null | undefined): string => {
-  if (!peso) return '0 kg';
-  
+  if (!peso) return '0 lbs';
+
   try {
     const numero = typeof peso === 'string' ? parseFloat(peso) : peso;
-    if (isNaN(numero)) return '0 kg';
-    return `${numero} kg`;
+    if (isNaN(numero)) return '0 lbs';
+    return `${numero} lbs`;
   } catch (error) {
     console.error('Error al formatear peso:', peso, error);
-    return '0 kg';
+    return '0 lbs';
   }
 };
 
 const formatearFechaSafe = (fecha: string | null | undefined, formato: string = 'dd/MM/yyyy HH:mm'): string => {
   if (!fecha) return 'No disponible';
-  
+
   try {
     const fechaObj = new Date(fecha);
     if (isNaN(fechaObj.getTime())) {
@@ -67,24 +67,24 @@ interface Envio {
   ancho: number;
   largo: number;
   valor_declarado: number;
-  
+
   remitente_nombre: string;
   remitente_direccion: string;
   remitente_telefono: string;
   remitente_email: string | null;
-  
+
   destinatario_nombre: string;
   destinatario_direccion: string;
   destinatario_telefono: string;
   destinatario_email: string | null;
-  
+
   estado: string;
   estado_display: string;
   fecha_creacion: string;
   fecha_actualizacion: string;
   fecha_estimada_entrega: string | null;
   fecha_entrega_real: string | null;
-  
+
   notas: string | null;
   historial: HistorialEstado[];
 }
@@ -93,21 +93,21 @@ const ShipmentDetail = () => {
   const params = useParams();
   const id = params.id;
   const navigate = useNavigate();
-  
+
   const [envio, setEnvio] = useState<Envio | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
+
   const [nuevoEstado, setNuevoEstado] = useState('');
   const [notasCambioEstado, setNotasCambioEstado] = useState('');
   const [cambiandoEstado, setCambiandoEstado] = useState(false);
-  
+
   useEffect(() => {
     if (id) {
       cargarEnvio();
     }
   }, [id]);
-  
+
   const cargarEnvio = async () => {
     setLoading(true);
     try {
@@ -120,10 +120,10 @@ const ShipmentDetail = () => {
       setLoading(false);
     }
   };
-  
+
   const handleCambioEstado = async () => {
     if (!nuevoEstado) return;
-    
+
     setCambiandoEstado(true);
     try {
       await enviosAPI.changeStatus(id!, nuevoEstado, notasCambioEstado);
@@ -137,33 +137,33 @@ const ShipmentDetail = () => {
       setCambiandoEstado(false);
     }
   };
-  
+
   if (loading) {
     return <div className="loading">Cargando datos del envío...</div>;
   }
-  
+
   if (error) {
     return <div className="alert alert-error">{error}</div>;
   }
-  
+
   if (!envio) {
     return <div className="not-found">Envío no encontrado</div>;
   }
-  
+
   return (
     <div className="shipment-detail-page">
       <div className="detail-header">
         <h1>Envío #{envio.numero_guia}</h1>
         <div className="detail-actions">
-          <button 
-            onClick={() => navigate(-1)} 
+          <button
+            onClick={() => navigate(-1)}
             className="btn btn-secondary"
           >
             Volver
           </button>
         </div>
       </div>
-      
+
       <div className="shipment-status">
         <span className={`estado estado-${envio.estado}`}>
           {envio.estado_display}
@@ -174,15 +174,15 @@ const ShipmentDetail = () => {
           </span>
         )}
       </div>
-      
+
       <div className="cambio-estado">
         <h3>Cambiar Estado</h3>
         <div className="form-row">
           <div className="form-group">
             <label htmlFor="estado-select">Nuevo Estado:</label>
-            <select 
+            <select
               id="estado-select"
-              value={nuevoEstado} 
+              value={nuevoEstado}
               onChange={(e) => setNuevoEstado(e.target.value)}
               className="form-control"
               disabled={cambiandoEstado}
@@ -200,8 +200,8 @@ const ShipmentDetail = () => {
             </select>
           </div>
           <div className="form-group">
-            <input 
-              type="text" 
+            <input
+              type="text"
               value={notasCambioEstado}
               onChange={(e) => setNotasCambioEstado(e.target.value)}
               placeholder="Notas sobre el cambio de estado (opcional)"
@@ -209,8 +209,8 @@ const ShipmentDetail = () => {
               disabled={cambiandoEstado}
             />
           </div>
-          <button 
-            className="btn" 
+          <button
+            className="btn"
             onClick={handleCambioEstado}
             disabled={!nuevoEstado || cambiandoEstado}
           >
@@ -218,7 +218,7 @@ const ShipmentDetail = () => {
           </button>
         </div>
       </div>
-      
+
       <div className="detail-sections">
         <div className="detail-section">
           <h2>Información del Paquete</h2>
@@ -252,14 +252,14 @@ const ShipmentDetail = () => {
             <div className="detail-item">
               <span className="label">Entrega Estimada:</span>
               <span className="value">
-                {envio.fecha_estimada_entrega 
+                {envio.fecha_estimada_entrega
                   ? formatearFechaSafe(envio.fecha_estimada_entrega, 'dd/MM/yyyy')
                   : 'No definida'}
               </span>
             </div>
           </div>
         </div>
-        
+
         <div className="detail-section">
           <h2>Remitente</h2>
           <div className="detail-grid">
@@ -281,7 +281,7 @@ const ShipmentDetail = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="detail-section">
           <h2>Destinatario</h2>
           <div className="detail-grid">
@@ -303,7 +303,7 @@ const ShipmentDetail = () => {
             </div>
           </div>
         </div>
-        
+
         {envio.notas && (
           <div className="detail-section">
             <h2>Notas</h2>
@@ -311,10 +311,10 @@ const ShipmentDetail = () => {
           </div>
         )}
       </div>
-      
+
       <div className="historial-section">
         <h2>Historial de Estados</h2>
-        
+
         {envio.historial.length === 0 ? (
           <p className="no-data">No hay registros en el historial</p>
         ) : (

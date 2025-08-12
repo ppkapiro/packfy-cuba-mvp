@@ -1,0 +1,41 @@
+{
+  "include": ["backend"],
+  "exclude": [
+    "backend/venv",
+    "backend/__pycache__",
+    "backend/**/__pycache__",
+    "backend/.pytest_cache",
+    "frontend/node_modules",
+    "frontend/dist",
+    "frontend/build"
+  ],
+  "extraPaths": [
+    "backend",
+    "backend/apps",
+    "backend/envios",
+    "backend/config",
+    "backend/usuarios",
+    "backend/empresas"
+  ],
+  "pythonVersion": "3.12",
+  "pythonPlatform": "Windows",
+  "typeCheckingMode": "basic",
+  "useLibraryCodeForTypes": true,
+  "autoImportCompletions": true,
+  "autoSearchPaths": true,
+  "verboseOutput": false,
+  "reportMissingImports": "warning",
+  "reportMissingTypeStubs": "none",
+  "reportGeneralTypeIssues": "none",
+  "reportOptionalMemberAccess": "none",
+  "reportOptionalSubscript": "none",
+  "reportPrivateImportUsage": "none",
+  "reportUnboundVariable": "warning",
+  "reportAttributeAccessIssue": "none",
+  "reportUnknownMemberType": "none",
+  "reportUnknownArgumentType": "none",
+  "reportUnknownVariableType": "none",
+  "reportUntypedFunctionDecorator": "none",
+  "reportUntypedClassDecorator": "none",
+  "stubPath": "backend"
+}

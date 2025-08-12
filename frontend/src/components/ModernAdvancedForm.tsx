@@ -5,25 +5,25 @@ import '../styles/envio-mode.css';
 // Servicios simplificados (misma lógica)
 const SimpleCurrencyService = {
   rate: 320,
-  calculatePrice(weightKg: number, hasInsurance = false): number {
+  calculatePrice(weightLbs: number, hasInsurance = false): number {
     let basePrice = 8.50;
-    if (weightKg > 1) basePrice = 15.00;
-    if (weightKg > 2) basePrice = 28.00;
-    if (weightKg > 5) basePrice = 45.00;
-    if (weightKg > 10) basePrice = 85.00;
-    if (weightKg > 20) basePrice = 85.00 + ((weightKg - 20) * 4.50);
-    
+    if (weightLbs > 2.2) basePrice = 15.00;  // >1kg
+    if (weightLbs > 4.4) basePrice = 28.00;  // >2kg
+    if (weightLbs > 11.0) basePrice = 45.00; // >5kg
+    if (weightLbs > 22.0) basePrice = 85.00; // >10kg
+    if (weightLbs > 44.0) basePrice = 85.00 + ((weightLbs - 44.0) * 2.04); // >20kg
+
     const insurance = hasInsurance ? basePrice * 0.05 : 0;
     const handling = basePrice * 0.15;
     return (basePrice + insurance + handling) * this.rate;
   },
-  getWeightCategory(weightKg: number): string {
-    if (weightKg <= 1) return 'Paquete Pequeño (0-1 kg)';
-    if (weightKg <= 2) return 'Paquete Mediano (1-2 kg)';
-    if (weightKg <= 5) return 'Paquete Grande (2-5 kg)';
-    if (weightKg <= 10) return 'Paquete Extra Grande (5-10 kg)';
-    if (weightKg <= 20) return 'Paquete Jumbo (10-20 kg)';
-    return 'Paquete Comercial (20+ kg)';
+  getWeightCategory(weightLbs: number): string {
+    if (weightLbs <= 2.2) return 'Paquete Pequeño (0-2.2 lbs)';
+    if (weightLbs <= 4.4) return 'Paquete Mediano (2.2-4.4 lbs)';
+    if (weightLbs <= 11.0) return 'Paquete Grande (4.4-11 lbs)';
+    if (weightLbs <= 22.0) return 'Paquete Extra Grande (11-22 lbs)';
+    if (weightLbs <= 44.0) return 'Paquete Jumbo (22-44 lbs)';
+    return 'Paquete Comercial (44+ lbs)';
   }
 };
 
@@ -34,12 +34,12 @@ const SimpleCameraService = {
       input.type = 'file';
       input.accept = 'image/*';
       input.capture = 'environment';
-      
+
       input.onchange = (e) => {
         const file = (e.target as HTMLInputElement).files?.[0];
         resolve(file || null);
       };
-      
+
       input.oncancel = () => resolve(null);
       input.click();
     });
@@ -107,13 +107,13 @@ const ModernAdvancedForm: React.FC = () => {
         const Icon = s.icon;
         const isActive = step === s.key;
         const isCompleted = index < currentStepIndex;
-        
+
         return (
           <div key={s.key} className="flex flex-col items-center flex-1 relative">
             <div className={`
               w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-2 transition-all duration-300 transform
-              ${isActive ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white scale-110 shadow-xl ring-4 ring-blue-200' : 
-                isCompleted ? 'bg-gradient-to-br from-green-500 to-green-600 text-white shadow-lg' : 
+              ${isActive ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white scale-110 shadow-xl ring-4 ring-blue-200' :
+                isCompleted ? 'bg-gradient-to-br from-green-500 to-green-600 text-white shadow-lg' :
                 'bg-gray-200 text-gray-400 hover:bg-gray-300'}
             `}>
               {isCompleted ? (
@@ -123,13 +123,13 @@ const ModernAdvancedForm: React.FC = () => {
               )}
             </div>
             <span className={`text-xs sm:text-sm md:text-base font-medium text-center px-1 transition-colors ${
-              isActive ? 'text-blue-600 font-bold' : 
+              isActive ? 'text-blue-600 font-bold' :
               isCompleted ? 'text-green-600 font-semibold' : 'text-gray-400'
             }`}>
               {s.label}
             </span>
             {index < steps.length - 1 && (
-              <div 
+              <div
                 className={`absolute top-6 sm:top-8 md:top-10 left-1/2 h-0.5 sm:h-1 -z-10 transition-colors transform translate-x-6 sm:translate-x-8 md:translate-x-10 ${
                   isCompleted ? 'bg-gradient-to-r from-green-400 to-green-500' : 'bg-gray-300'
                 } w-full`}
@@ -211,7 +211,7 @@ const ModernAdvancedForm: React.FC = () => {
                       required
                     />
                   </div>
-                  
+
                   <div className="group">
                     <label className="block text-base sm:text-lg font-medium text-gray-700 mb-2 sm:mb-3 group-focus-within:text-blue-600 transition-colors">
                       🏠 Destinatario
@@ -225,7 +225,7 @@ const ModernAdvancedForm: React.FC = () => {
                       required
                     />
                   </div>
-                  
+
                   <div className="group">
                     <label className="block text-base sm:text-lg font-medium text-gray-700 mb-2 sm:mb-3 group-focus-within:text-blue-600 transition-colors">
                       📍 Dirección en Cuba
@@ -238,7 +238,7 @@ const ModernAdvancedForm: React.FC = () => {
                       required
                     />
                   </div>
-                  
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="group">
                       <label className="block text-base sm:text-lg font-medium text-gray-700 mb-2 sm:mb-3 group-focus-within:text-blue-600 transition-colors">
@@ -255,7 +255,7 @@ const ModernAdvancedForm: React.FC = () => {
                         required
                       />
                     </div>
-                    
+
                     <div className="group">
                       <label className="block text-base sm:text-lg font-medium text-gray-700 mb-2 sm:mb-3 group-focus-within:text-blue-600 transition-colors">
                         📦 Tipo
@@ -273,7 +273,7 @@ const ModernAdvancedForm: React.FC = () => {
                       </select>
                     </div>
                   </div>
-                  
+
                   <div className="group">
                     <label className="block text-base sm:text-lg font-medium text-gray-700 mb-2 sm:mb-3 group-focus-within:text-blue-600 transition-colors">
                       📝 Descripción (opcional)
@@ -287,7 +287,7 @@ const ModernAdvancedForm: React.FC = () => {
                     />
                   </div>
                 </div>
-                
+
                 <button
                   type="submit"
                   className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 sm:py-4 px-6 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center gap-3 focus:ring-4 focus:ring-blue-200"
@@ -306,7 +306,7 @@ const ModernAdvancedForm: React.FC = () => {
                 <DollarSign className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
               </div>
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mb-4 sm:mb-6">Precio Calculado</h2>
-              
+
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8 shadow-lg">
                 <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-green-600 mb-2 sm:mb-3">
                   ${price?.toLocaleString()} CUP
@@ -317,7 +317,7 @@ const ModernAdvancedForm: React.FC = () => {
                 <div className="text-sm sm:text-base text-green-600 font-medium">
                   Tasa: 1 USD = 320 CUP
                 </div>
-                
+
                 {/* Información adicional */}
                 <div className="mt-4 sm:mt-6 pt-4 border-t border-green-200">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm sm:text-base">
@@ -332,7 +332,7 @@ const ModernAdvancedForm: React.FC = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <button
                   onClick={() => setStep('info')}
@@ -360,7 +360,7 @@ const ModernAdvancedForm: React.FC = () => {
               </div>
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mb-4 sm:mb-6">Fotos del Paquete</h2>
               <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8">Captura una foto clara del paquete</p>
-              
+
               {photo && (
                 <div className="bg-green-50 border-2 border-green-200 rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg">
                   <div className="text-green-600 font-bold text-lg sm:text-xl mb-2">
@@ -376,7 +376,7 @@ const ModernAdvancedForm: React.FC = () => {
                   </div>
                 </div>
               )}
-              
+
               <button
                 onClick={handleCapturePhoto}
                 className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white py-4 sm:py-6 px-4 sm:px-6 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center gap-3 mb-6 sm:mb-8 focus:ring-4 focus:ring-purple-200"
@@ -384,7 +384,7 @@ const ModernAdvancedForm: React.FC = () => {
                 <Camera className="w-6 h-6 sm:w-8 sm:h-8" />
                 {photo ? 'Cambiar Foto' : 'Capturar Foto'}
               </button>
-              
+
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <button
                   onClick={() => setStep('price')}
@@ -412,7 +412,7 @@ const ModernAdvancedForm: React.FC = () => {
               </div>
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mb-4 sm:mb-6">Finalizar Registro</h2>
               <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8">Revisa los datos y finaliza tu envío</p>
-              
+
               <div className="bg-gray-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-left mb-6 sm:mb-8 shadow-lg">
                 <h3 className="font-bold text-lg sm:text-xl mb-4 text-center text-gray-800">📋 Resumen del Paquete</h3>
                 <div className="space-y-3 sm:space-y-4 text-sm sm:text-base lg:text-lg">
@@ -444,7 +444,7 @@ const ModernAdvancedForm: React.FC = () => {
                   )}
                 </div>
               </div>
-              
+
               {tracking && (
                 <div className="bg-blue-50 border-2 border-blue-200 rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg">
                   <div className="font-bold text-blue-800 text-lg sm:text-xl mb-3">🏷️ Número de Tracking:</div>
@@ -452,7 +452,7 @@ const ModernAdvancedForm: React.FC = () => {
                   <div className="mt-3 text-xs sm:text-sm text-blue-600">Guarda este número para seguir tu envío</div>
                 </div>
               )}
-              
+
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <button
                   onClick={() => setStep('photo')}

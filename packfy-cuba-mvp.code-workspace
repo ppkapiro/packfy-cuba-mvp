@@ -1,0 +1,52 @@
+{
+  "folders": [
+    {
+      "name": "🚀 Packfy Cuba MVP",
+      "path": "."
+    },
+    {
+      "name": "🔧 Backend (Django)",
+      "path": "./backend"
+    },
+    {
+      "name": "🎨 Frontend (React)",
+      "path": "./frontend"
+    }
+  ],
+  "settings": {
+    "python.defaultInterpreterPath": "./backend/venv/Scripts/python.exe",
+    "python.terminal.activateEnvironment": true,
+    "python.envFile": "${workspaceFolder}/backend/.env",
+    "python.analysis.extraPaths": [
+      "${workspaceFolder}/backend",
+      "${workspaceFolder}/backend/apps",
+      "${workspaceFolder}/backend/envios",
+      "${workspaceFolder}/backend/config",
+      "${workspaceFolder}/backend/usuarios",
+      "${workspaceFolder}/backend/empresas"
+    ],
+    "python.analysis.diagnosticSeverityOverrides": {
+      "reportMissingImports": "none",
+      "reportMissingTypeStubs": "none",
+      "reportGeneralTypeIssues": "none",
+      "reportOptionalMemberAccess": "none",
+      "reportOptionalSubscript": "none",
+      "reportPrivateImportUsage": "none",
+      "reportAttributeAccessIssue": "none"
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-python.python",
+      "ms-python.pylint",
+      "ms-python.black-formatter",
+      "ms-python.flake8",
+      "ms-toolsai.jupyter",
+      "pkief.material-icon-theme",
+      "ms-vscode.powershell",
+      "esbenp.prettier-vscode",
+      "bradlc.vscode-tailwindcss",
+      "ms-vscode.vscode-typescript-next"
+    ]
+  }
+}

@@ -31,8 +31,8 @@ const Layout = () => {
           <nav className="nav-main">
             <ul className="nav-menu">
               <li className="nav-item">
-                <Link 
-                  to="/dashboard" 
+                <Link
+                  to="/dashboard"
                   className={`nav-link ${isActiveRoute('/dashboard') ? 'active' : ''}`}
                 >
                   <span className="icon icon-dashboard"></span>
@@ -40,8 +40,8 @@ const Layout = () => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link 
-                  to="/envios/nuevo" 
+                <Link
+                  to="/envios/nuevo"
                   className={`nav-link ${isActiveRoute('/envios/nuevo') ? 'active' : ''}`}
                 >
                   <span className="icon icon-package"></span>
@@ -49,8 +49,8 @@ const Layout = () => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link 
-                  to="/envios" 
+                <Link
+                  to="/envios"
                   className={`nav-link ${isActiveRoute('/envios') && !isActiveRoute('/envios/nuevo') ? 'active' : ''}`}
                 >
                   <span className="icon icon-package"></span>
@@ -58,12 +58,12 @@ const Layout = () => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link 
-                  to="/seguimiento" 
-                  className={`nav-link ${isActiveRoute('/seguimiento') ? 'active' : ''}`}
+                <Link
+                  to="/rastreo"
+                  className={`nav-link ${isActiveRoute('/rastreo') ? 'active' : ''}`}
                 >
                   <span className="icon icon-search"></span>
-                  <span>Rastrear</span>
+                  <span>Seguimiento</span>
                 </Link>
               </li>
             </ul>
@@ -90,7 +90,7 @@ const Layout = () => {
           </div>
         </div>
       </header>
-      
+
       <main className="app-content">
         <div className="container">
           <Outlet />

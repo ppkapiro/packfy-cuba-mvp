@@ -4,19 +4,19 @@ import { Package, Camera, QrCode, DollarSign, Star } from 'lucide-react';
 // Servicio de conversión simplificado
 const SimpleCurrencyService = {
   rate: 320, // USD a CUP
-  
-  calculatePrice(weightKg: number, hasInsurance = false): number {
+
+  calculatePrice(weightLbs: number, hasInsurance = false): number {
     let basePrice = 8.50; // Precio base
-    
-    if (weightKg > 1) basePrice = 15.00;
-    if (weightKg > 2) basePrice = 28.00;
-    if (weightKg > 5) basePrice = 45.00;
-    if (weightKg > 10) basePrice = 85.00;
-    if (weightKg > 20) basePrice = 85.00 + ((weightKg - 20) * 4.50);
-    
+
+    if (weightLbs > 2.2) basePrice = 15.00;  // >1kg
+    if (weightLbs > 4.4) basePrice = 28.00;  // >2kg
+    if (weightLbs > 11.0) basePrice = 45.00; // >5kg
+    if (weightLbs > 22.0) basePrice = 85.00; // >10kg
+    if (weightLbs > 44.0) basePrice = 85.00 + ((weightLbs - 44.0) * 2.04); // >20kg
+
     const insurance = hasInsurance ? basePrice * 0.05 : 0;
     const handling = basePrice * 0.15;
-    
+
     return (basePrice + insurance + handling) * this.rate; // En CUP
   }
 };
@@ -29,12 +29,12 @@ const SimpleCameraService = {
       input.type = 'file';
       input.accept = 'image/*';
       input.capture = 'environment';
-      
+
       input.onchange = (e) => {
         const file = (e.target as HTMLInputElement).files?.[0];
         resolve(file || null);
       };
-      
+
       input.oncancel = () => resolve(null);
       input.click();
     });
@@ -47,7 +47,7 @@ const SimpleQRService = {
     const timestamp = Date.now().toString().slice(-8);
     return `PCK${timestamp}`;
   },
-  
+
   createQRData(packageInfo: any): string {
     return JSON.stringify({
       tracking: this.generateTrackingNumber(),
@@ -86,7 +86,7 @@ const SimpleAdvancedForm: React.FC = () => {
     try {
       const capturedPhoto = await SimpleCameraService.capturePhoto();
       console.log('📷 Resultado de captura:', capturedPhoto);
-      
+
       if (capturedPhoto) {
         console.log('📷 Foto capturada exitosamente:', capturedPhoto.name, capturedPhoto.size);
         setPhoto(capturedPhoto);
@@ -158,14 +158,14 @@ Precio: $${price?.toLocaleString()} CUP`);
               <p className="text-blue-100 text-lg">
                 Registro de Paquete Simplificado
               </p>
-              
+
               {/* Link a Premium mejorado */}
               <div className="mt-6 p-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl">
                 <p className="text-white/90 text-sm mb-3">
-                  ¿Necesitas funciones avanzadas? 
+                  ¿Necesitas funciones avanzadas?
                 </p>
-                <a 
-                  href="/envios" 
+                <a
+                  href="/envios"
                   className="inline-flex items-center bg-white text-blue-600 px-6 py-2 rounded-full font-bold text-sm hover:bg-blue-50 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                 >
                   <Star className="w-4 h-4 mr-2" />
@@ -174,9 +174,9 @@ Precio: $${price?.toLocaleString()} CUP`);
               </div>
             </div>
           </div>
-          
+
           <div className="p-8">
-        
+
         {renderSteps()}
 
         {step === 'info' && (
@@ -192,7 +192,7 @@ Precio: $${price?.toLocaleString()} CUP`);
                 required
               />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium mb-1">Destinatario</label>
               <input
@@ -204,7 +204,7 @@ Precio: $${price?.toLocaleString()} CUP`);
                 required
               />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium mb-1">Dirección</label>
               <input
@@ -216,9 +216,9 @@ Precio: $${price?.toLocaleString()} CUP`);
                 required
               />
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium mb-1">Peso (kg)</label>
+              <label className="block text-sm font-medium mb-1">Peso (libras)</label>
               <input
                 type="number"
                 step="0.1"
@@ -230,7 +230,7 @@ Precio: $${price?.toLocaleString()} CUP`);
                 required
               />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium mb-1">Descripción</label>
               <input
@@ -241,7 +241,7 @@ Precio: $${price?.toLocaleString()} CUP`);
                 placeholder="Contenido del paquete"
               />
             </div>
-            
+
             <button
               type="submit"
               className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700"
@@ -261,10 +261,10 @@ Precio: $${price?.toLocaleString()} CUP`);
                 ${price?.toLocaleString()} CUP
               </div>
               <div className="text-sm text-green-700">
-                Peso: {formData.weight} kg • Tasa: 1 USD = 320 CUP
+                Peso: {formData.weight} lbs • Tasa: 1 USD = 320 CUP
               </div>
             </div>
-            
+
             <button
               onClick={() => setStep('photo')}
               className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700"
@@ -277,12 +277,12 @@ Precio: $${price?.toLocaleString()} CUP`);
         {step === 'photo' && (
           <div className="text-center space-y-4">
             <h3 className="text-xl font-bold mb-4">Capturar Foto del Paquete</h3>
-            
+
             {/* Debug info */}
             <div className="text-xs text-gray-500 mb-2">
               Debug: photo = {photo ? `${photo.name} (${photo.size} bytes)` : 'null'}
             </div>
-            
+
             {photo && (
               <div className="mb-4">
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4">
@@ -290,7 +290,7 @@ Precio: $${price?.toLocaleString()} CUP`);
                 </div>
               </div>
             )}
-            
+
             <button
               onClick={handleCapturePhoto}
               className="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 flex items-center justify-center gap-2"
@@ -298,7 +298,7 @@ Precio: $${price?.toLocaleString()} CUP`);
               <Camera className="w-5 h-5" />
               {photo ? 'Cambiar Foto' : 'Capturar Foto'}
             </button>
-            
+
             {photo && (
               <button
                 onClick={() => {
@@ -310,7 +310,7 @@ Precio: $${price?.toLocaleString()} CUP`);
                 Continuar a QR
               </button>
             )}
-            
+
             {/* Botón de debug para forzar continuar */}
             <button
               onClick={() => {
@@ -327,23 +327,23 @@ Precio: $${price?.toLocaleString()} CUP`);
         {step === 'qr' && (
           <div className="text-center space-y-4">
             <h3 className="text-xl font-bold mb-4">Generar Etiqueta QR</h3>
-            
+
             <div className="bg-gray-50 border rounded-lg p-4 text-left text-sm">
               <div><strong>Remitente:</strong> {formData.senderName}</div>
               <div><strong>Destinatario:</strong> {formData.recipientName}</div>
               <div><strong>Dirección:</strong> {formData.recipientAddress}</div>
-              <div><strong>Peso:</strong> {formData.weight} kg</div>
+              <div><strong>Peso:</strong> {formData.weight} lbs</div>
               <div><strong>Precio:</strong> ${price?.toLocaleString()} CUP</div>
               {photo && <div><strong>Foto:</strong> ✅ Adjunta</div>}
             </div>
-            
+
             {tracking && (
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <div className="font-bold text-blue-800">Número de Tracking:</div>
                 <div className="text-2xl font-mono text-blue-600">{tracking}</div>
               </div>
             )}
-            
+
             <button
               onClick={handleGenerateQR}
               className="w-full bg-purple-600 text-white py-3 rounded-lg font-medium hover:bg-purple-700 flex items-center justify-center gap-2"

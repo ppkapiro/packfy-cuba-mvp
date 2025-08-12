@@ -8,7 +8,7 @@ interface PriceCalculatorProps {
 
 const PriceCalculator: React.FC<PriceCalculatorProps> = ({ onPriceCalculated }) => {
   const [weight, setWeight] = useState<string>('');
-  const [weightUnit, setWeightUnit] = useState<'kg' | 'lb'>('kg');
+  const [weightUnit, setWeightUnit] = useState<'kg' | 'lb'>('lb');
   const [dimensions, setDimensions] = useState({
     length: '',
     width: '',
@@ -21,7 +21,7 @@ const PriceCalculator: React.FC<PriceCalculatorProps> = ({ onPriceCalculated }) 
   const [isUpdatingRates, setIsUpdatingRates] = useState(false);
 
   const convertWeight = (value: number, unit: 'kg' | 'lb'): number => {
-    return unit === 'lb' ? value * 0.453592 : value; // Convertir libras a kg
+    return unit === 'kg' ? value * 2.20462 : value; // Convertir kg a libras o mantener libras
   };
 
   const convertDimension = (value: number, unit: 'cm' | 'in'): number => {
@@ -33,7 +33,7 @@ const PriceCalculator: React.FC<PriceCalculatorProps> = ({ onPriceCalculated }) 
       return;
     }
 
-    const weightInKg = convertWeight(parseFloat(weight), weightUnit);
+    const weightInLbs = convertWeight(parseFloat(weight), weightUnit);
     const dimensionsInCm = {
       length: convertDimension(parseFloat(dimensions.length), dimensionUnit),
       width: convertDimension(parseFloat(dimensions.width), dimensionUnit),
@@ -41,7 +41,7 @@ const PriceCalculator: React.FC<PriceCalculatorProps> = ({ onPriceCalculated }) 
     };
 
     const result = CurrencyService.calculateShippingPrice(
-      weightInKg,
+      weightInLbs,
       dimensionsInCm,
       hasInsurance
     );
@@ -125,8 +125,8 @@ const PriceCalculator: React.FC<PriceCalculatorProps> = ({ onPriceCalculated }) 
             title="Unidad de peso"
             aria-label="Seleccionar unidad de peso"
           >
+            <option value="lb">libras</option>
             <option value="kg">kg</option>
-            <option value="lb">lb</option>
           </select>
         </div>
       </div>
@@ -194,35 +194,35 @@ const PriceCalculator: React.FC<PriceCalculatorProps> = ({ onPriceCalculated }) 
       {calculation && (
         <div className="border-t pt-4">
           <h4 className="font-semibold text-gray-800 mb-3">Desglose de Precio:</h4>
-          
+
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-600">Precio base:</span>
               <span>{CurrencyService.formatCurrency(calculation.basePrice, 'USD')}</span>
             </div>
-            
+
             <div className="flex justify-between">
               <span className="text-gray-600">Manejo (15%):</span>
               <span>{CurrencyService.formatCurrency(calculation.fees.handling / rates.USD_CUP, 'USD')}</span>
             </div>
-            
+
             {hasInsurance && (
               <div className="flex justify-between">
                 <span className="text-gray-600">Seguro (5%):</span>
                 <span>{CurrencyService.formatCurrency(calculation.fees.insurance / rates.USD_CUP, 'USD')}</span>
               </div>
             )}
-            
+
             <div className="border-t pt-2 border-gray-200">
               <div className="flex justify-between font-medium">
                 <span>Subtotal USD:</span>
                 <span>{CurrencyService.formatCurrency(
-                  calculation.basePrice + (calculation.fees.total / rates.USD_CUP), 
+                  calculation.basePrice + (calculation.fees.total / rates.USD_CUP),
                   'USD'
                 )}</span>
               </div>
             </div>
-            
+
             <div className="bg-blue-50 p-3 rounded-lg mt-3">
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-blue-900">Total en CUP:</span>

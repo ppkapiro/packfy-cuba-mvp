@@ -200,7 +200,7 @@ const NewShipment = () => {
 
           <div className="form-row">
             <div className="form-group">
-              <label>Peso (kg)</label>
+              <label>Peso (libras)</label>
               <input
                 type="number"
                 step="0.01"
