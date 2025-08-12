@@ -27,12 +27,18 @@ from empresas.views import EmpresaViewSet
 
 # Importamos los ViewSets de nuestras apps
 from envios.views import EnvioViewSet, HistorialEstadoViewSet
-from envios.views_public import rastrear_por_guia_publico, rastrear_por_nombre_publico
+from envios.views_public import (
+    rastrear_por_guia_publico,
+    rastrear_por_nombre_publico
+)
 
 # Importar health check
 from health_check import health_check
 from rest_framework import permissions, routers
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView
+)
 from usuarios.views import UsuarioViewSet
 
 # Configuración de Swagger/OpenAPI
@@ -71,7 +77,11 @@ urlpatterns = [
         TokenObtainPairView.as_view(),
         name="token_obtain_pair",
     ),
-    path("api/auth/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path(
+        "api/auth/refresh/",
+        TokenRefreshView.as_view(),
+        name="token_refresh"
+    ),
     # Health check endpoint
     path("api/health/", health_check, name="health_check"),
     # Endpoint para información del sistema
@@ -105,7 +115,11 @@ urlpatterns = [
     ),
 ]
 
-# Configuración para servir archivos estáticos y media en entorno de desarrollo
+# Configuración para servir archivos estáticos y media en desarrollo
 if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(
+        settings.STATIC_URL, document_root=settings.STATIC_ROOT
+    )
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+    )
