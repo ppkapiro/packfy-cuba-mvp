@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Package, Star, Lock, Check } from 'lucide-react';
-import '../styles/envio-mode.css';
-import '../styles/performance.css';
-import '../styles/packfy-direct.css';
+// 🇨🇺 Estilos cargados globalmente desde main.tsx
 
 interface EnvioModePageProps {
   defaultMode?: 'simple' | 'premium';

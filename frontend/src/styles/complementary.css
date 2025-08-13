@@ -1,0 +1,257 @@
+/* 🇨🇺 PACKFY CUBA - ESTILOS COMPLEMENTARIOS v3.3 */
+/* ============================================== */
+/* Archivo complementario para estilos específicos que
+   extienden el sistema maestro unificado */
+
+/* ==========================================
+   FORMULARIOS PREMIUM ESPECÍFICOS
+   ========================================== */
+.simple-page-container,
+.premium-page-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+  padding: var(--spacing-6);
+}
+
+.premium-page-container {
+  background: linear-gradient(135deg, #fff5e6 0%, #ffe4cc 100%);
+}
+
+.premium-form-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--spacing-6);
+  background: linear-gradient(135deg, var(--white) 0%, var(--gray-50) 100%);
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--gray-200);
+}
+
+.simple-form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--spacing-5);
+  background: var(--white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Step indicators específicos */
+.step-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-4);
+  border-radius: var(--border-radius-md);
+  font-weight: 500;
+  transition: all var(--transition);
+  cursor: pointer;
+}
+
+.step-indicator.active {
+  background: var(--gradient-primary);
+  color: var(--white);
+  box-shadow: var(--shadow-md);
+}
+
+.step-indicator.completed {
+  background: var(--success);
+  color: var(--white);
+}
+
+.step-indicator:not(.active):not(.completed) {
+  color: var(--gray-500);
+}
+
+/* ==========================================
+   DASHBOARD ESPECÍFICO
+   ========================================== */
+.dashboard-container {
+  padding: var(--spacing-6);
+  background: var(--gray-50);
+  min-height: 100vh;
+}
+
+.dashboard-header {
+  background: var(--gradient-primary);
+  color: var(--white);
+  padding: var(--spacing-6);
+  border-radius: var(--border-radius-lg);
+  margin-bottom: var(--spacing-6);
+  box-shadow: var(--shadow-lg);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-6);
+  margin-bottom: var(--spacing-8);
+}
+
+.stat-card {
+  background: var(--white);
+  padding: var(--spacing-6);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--primary);
+  transition: all var(--transition);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.stat-value {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--gray-600);
+  margin-top: var(--spacing-1);
+}
+
+/* ==========================================
+   ENVÍO MODE ESPECÍFICO
+   ========================================== */
+.envio-mode-container {
+  background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+  min-height: 100vh;
+  padding: var(--spacing-6);
+}
+
+.envio-form-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  background: var(--white);
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+}
+
+.envio-header {
+  background: var(--gradient-primary);
+  color: var(--white);
+  padding: var(--spacing-6);
+  text-align: center;
+}
+
+/* ==========================================
+   LOADING SPINNER ESPECÍFICO
+   ========================================== */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal);
+}
+
+.loading-content {
+  background: var(--white);
+  padding: var(--spacing-8);
+  border-radius: var(--border-radius-lg);
+  text-align: center;
+  box-shadow: var(--shadow-xl);
+}
+
+.spinner-large {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--gray-300);
+  border-radius: 50%;
+  border-top-color: var(--primary);
+  animation: spin 1s ease-in-out infinite;
+  margin: 0 auto var(--spacing-4);
+}
+
+/* ==========================================
+   NAVEGACIÓN ESPECÍFICA
+   ========================================== */
+.main-nav {
+  background: var(--white);
+  box-shadow: var(--shadow);
+  border-bottom: 1px solid var(--gray-200);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.nav-brand {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-6);
+}
+
+.nav-item {
+  color: var(--gray-600);
+  text-decoration: none;
+  font-weight: 500;
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--border-radius);
+  transition: all var(--transition-fast);
+}
+
+.nav-item:hover,
+.nav-item.active {
+  color: var(--primary);
+  background: var(--gray-100);
+}
+
+/* ==========================================
+   RESPONSIVE MOBILE ESPECÍFICO
+   ========================================== */
+@media (max-width: 768px) {
+  .premium-form-container,
+  .simple-form-container {
+    margin: var(--spacing-4);
+    padding: var(--spacing-4);
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-header {
+    margin: var(--spacing-4);
+    padding: var(--spacing-4);
+  }
+
+  .nav-menu {
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--white);
+    box-shadow: var(--shadow-lg);
+    padding: var(--spacing-4);
+    gap: var(--spacing-2);
+  }
+}

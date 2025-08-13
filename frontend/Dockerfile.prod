@@ -1,4 +1,4 @@
-# Dockerfile para producción - Frontend
+# Dockerfile para producción - Frontend Sistema Unificado
 FROM node:22-alpine AS build
 
 WORKDIR /app
@@ -10,9 +10,13 @@ RUN npm ci --only=production
 # Copiar código fuente
 COPY . .
 
-# Variables de entorno para build
+# Variables de entorno para build sistema unificado
 ENV NODE_ENV=production
 ENV VITE_API_URL=https://api.packfy.cu
+ENV VITE_APP_VERSION=3.2
+ENV VITE_INTERFACE_MODE=unified
+ENV VITE_FORM_STYLE=cuban-unified
+ENV VITE_SUBSCRIPTION_MODE=disabled
 
 # Build de producción
 RUN npm run build

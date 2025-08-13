@@ -1,0 +1,480 @@
+/* 🇨🇺 PACKFY CUBA - VARIABLES CSS MAESTRAS v3.3 */
+/* ============================================== */
+/* Este archivo contiene TODAS las variables CSS del sistema */
+/* Consolidado desde 22 archivos fragmentados */
+
+:root {
+  /* ==========================================
+     🇨🇺 COLORES PRIMARIOS CUBANOS MODERNOS
+     ========================================== */
+  /* Azul Océano Caribeño - Profundo y elegante */
+  --primary: #0066cc;
+  --primary-hover: #0052a3;
+  --primary-light: #3385d6;
+  --primary-dark: #004499;
+  --primary-50: #e6f3ff;
+  --primary-100: #b3daff;
+  --primary-200: #80c1ff;
+  --primary-300: #4da8ff;
+  --primary-400: #1a8fff;
+  --primary-500: #0066cc;
+  --primary-600: #0052a3;
+  --primary-700: #003e7a;
+  --primary-800: #002a52;
+  --primary-900: #001629;
+
+  /* ==========================================
+     🇨🇺 COLORES SECUNDARIOS - CORAL CUBANO
+     ========================================== */
+  /* Rojo Coral Vibrante - Pasión y energía */
+  --secondary: #e53e3e;
+  --secondary-hover: #c53030;
+  --secondary-light: #fc8181;
+  --secondary-dark: #9b2c2c;
+  --secondary-50: #fed7d7;
+  --secondary-100: #feb2b2;
+  --secondary-200: #fc8181;
+  --secondary-300: #f56565;
+  --secondary-400: #e53e3e;
+  --secondary-500: #e53e3e;
+  --secondary-600: #c53030;
+  --secondary-700: #9b2c2c;
+  --secondary-800: #742a2a;
+  --secondary-900: #4a1818;
+
+  /* ==========================================
+     🇨🇺 COLORES DE ACENTO - ORO CUBANO
+     ========================================== */
+  /* Dorado Tropical - Lujo y elegancia */
+  --accent: #ffd700;
+  --accent-hover: #ffcc00;
+  --accent-light: #ffed4e;
+  --accent-dark: #b8860b;
+  --accent-50: #fffef0;
+  --accent-100: #fffbcc;
+  --accent-200: #fff899;
+  --accent-300: #fff566;
+  --accent-400: #fff233;
+  --accent-500: #ffd700;
+  --accent-600: #ffcc00;
+  --accent-700: #cc9900;
+  --accent-800: #996600;
+  --accent-900: #664400;
+
+  /* ==========================================
+     🇨🇺 COLORES DE ESTADO TROPICALES
+     ========================================== */
+  /* Verde Esmeralda - Naturaleza tropical */
+  --success: #38a169;
+  --success-hover: #2f855a;
+  --success-light: #68d391;
+  --success-dark: #25855a;
+  --success-50: #f0fff4;
+  --success-100: #c6f6d5;
+  --success-200: #9ae6b4;
+  --success-300: #68d391;
+  --success-400: #48bb78;
+  --success-500: #38a169;
+  --success-600: #2f855a;
+  --success-700: #276749;
+  --success-800: #22543d;
+  --success-900: #1a202c;
+
+  /* Ámbar Tropical - Advertencias cálidas */
+  --warning: #ed8936;
+  --warning-hover: #dd6b20;
+  --warning-light: #f6ad55;
+  --warning-dark: #c05621;
+  --warning-50: #fffbf0;
+  --warning-100: #fef5e7;
+  --warning-200: #feebc8;
+  --warning-300: #fbd38d;
+  --warning-400: #f6ad55;
+  --warning-500: #ed8936;
+  --warning-600: #dd6b20;
+  --warning-700: #c05621;
+  --warning-800: #9c4221;
+  --warning-900: #7b341e;
+
+  /* Coral de Alarma - Errores vibrantes */
+  --error: #e53e3e;
+  --error-hover: #c53030;
+  --error-light: #fc8181;
+  --error-dark: #9b2c2c;
+  --error-50: #fed7d7;
+  --error-100: #feb2b2;
+  --error-200: #fc8181;
+  --error-300: #f56565;
+  --error-400: #e53e3e;
+  --error-500: #e53e3e;
+  --error-600: #c53030;
+  --error-700: #9b2c2c;
+  --error-800: #742a2a;
+  --error-900: #4a1818;
+
+  /* Turquesa del Caribe - Información fresca */
+  --info: #3182ce;
+  --info-hover: #2c5aa0;
+  --info-light: #63b3ed;
+  --info-dark: #2a69ac;
+  --info-50: #ebf8ff;
+  --info-100: #bee3f8;
+  --info-200: #90cdf4;
+  --info-300: #63b3ed;
+  --info-400: #4299e1;
+  --info-500: #3182ce;
+  --info-600: #2c5aa0;
+  --info-700: #2a69ac;
+  --info-800: #1a365d;
+  --info-900: #153e75;
+
+  /* ==========================================
+     🇨🇺 ESCALAS DE GRISES
+     ========================================== */
+  --white: #ffffff;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+  --gray-900: #0f172a;
+  --black: #000000;
+
+  /* ==========================================
+     🇨🇺 GRADIENTES CUBANOS MODERNOS
+     ========================================== */
+  /* Gradiente Principal - Océano Profundo */
+  --gradient-primary: linear-gradient(
+    135deg,
+    var(--primary) 0%,
+    var(--primary-light) 50%,
+    var(--info) 100%
+  );
+
+  /* Gradiente Secundario - Atardecer Tropical */
+  --gradient-secondary: linear-gradient(
+    135deg,
+    var(--secondary) 0%,
+    var(--warning) 50%,
+    var(--accent) 100%
+  );
+
+  /* Gradiente de Acento - Oro Radiante */
+  --gradient-accent: linear-gradient(
+    135deg,
+    var(--accent) 0%,
+    var(--accent-light) 50%,
+    var(--warning) 100%
+  );
+
+  /* Gradiente Hero - Bandera Cubana Moderna */
+  --gradient-hero: linear-gradient(
+    135deg,
+    var(--primary) 0%,
+    var(--info) 25%,
+    var(--accent) 50%,
+    var(--secondary) 75%,
+    var(--primary-dark) 100%
+  );
+
+  /* Gradiente Success - Naturaleza Tropical */
+  --gradient-success: linear-gradient(
+    135deg,
+    var(--success) 0%,
+    var(--success-light) 100%
+  );
+
+  /* Gradiente Warning - Ámbar Caribeño */
+  --gradient-warning: linear-gradient(
+    135deg,
+    var(--warning) 0%,
+    var(--accent) 100%
+  );
+
+  /* Gradiente Error - Coral Intenso */
+  --gradient-error: linear-gradient(
+    135deg,
+    var(--error) 0%,
+    var(--secondary) 100%
+  );
+
+  /* ==========================================
+     🇨🇺 GRADIENTES ESPECIALES
+     ========================================== */
+  /* Atardecer en La Habana */
+  --gradient-sunset: linear-gradient(
+    135deg,
+    #ff6b6b 0%,
+    #ff8e53 25%,
+    #ff6b9d 50%,
+    #c44569 75%,
+    #f8b500 100%
+  );
+
+  /* Océano Caribeño */
+  --gradient-ocean: linear-gradient(
+    135deg,
+    #0066cc 0%,
+    #00a8cc 25%,
+    #00d4ff 50%,
+    #40e0d0 75%,
+    #00ced1 100%
+  );
+
+  /* Palmeras al Viento */
+  --gradient-tropical: linear-gradient(
+    135deg,
+    #38a169 0%,
+    #68d391 25%,
+    #9ae6b4 50%,
+    #c6f6d5 75%,
+    #f0fff4 100%
+  );
+
+  /* Cielo Cubano */
+  --gradient-sky: linear-gradient(
+    135deg,
+    #87ceeb 0%,
+    #87cefa 25%,
+    #b0e0e6 50%,
+    #e0f6ff 75%,
+    #f0f8ff 100%
+  );
+
+  /* ==========================================
+     🇨🇺 GRADIENTES GLASSMORPHISM
+     ========================================== */
+  --gradient-glass: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+
+  --gradient-glass-dark: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.2) 0%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+
+  --gradient-glass-blue: linear-gradient(
+    135deg,
+    rgba(0, 102, 204, 0.25) 0%,
+    rgba(0, 102, 204, 0.1) 100%
+  );
+
+  /* ==========================================
+     🇨🇺 TIPOGRAFÍA
+     ========================================== */
+  --font-family: "Roboto", "Segoe UI", sans-serif;
+  --font-family-mono: "Fira Code", "Consolas", monospace;
+
+  /* Tamaños de fuente */
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-base: 1rem; /* 16px */
+  --font-size-lg: 1.125rem; /* 18px */
+  --font-size-xl: 1.25rem; /* 20px */
+  --font-size-2xl: 1.5rem; /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem; /* 36px */
+  --font-size-5xl: 3rem; /* 48px */
+  --font-size-6xl: 3.75rem; /* 60px */
+
+  /* Pesos de fuente */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* Alturas de línea */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* ==========================================
+     🇨🇺 ESPACIADO CONSISTENTE
+     ========================================== */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem; /* 4px */
+  --spacing-2: 0.5rem; /* 8px */
+  --spacing-3: 0.75rem; /* 12px */
+  --spacing-4: 1rem; /* 16px */
+  --spacing-5: 1.25rem; /* 20px */
+  --spacing-6: 1.5rem; /* 24px */
+  --spacing-8: 2rem; /* 32px */
+  --spacing-10: 2.5rem; /* 40px */
+  --spacing-12: 3rem; /* 48px */
+  --spacing-16: 4rem; /* 64px */
+  --spacing-20: 5rem; /* 80px */
+  --spacing-24: 6rem; /* 96px */
+
+  /* ==========================================
+     🇨🇺 BORDES Y RADIOS
+     ========================================== */
+  --border-radius-none: 0;
+  --border-radius-sm: 0.25rem; /* 4px */
+  --border-radius-md: 0.375rem; /* 6px */
+  --border-radius-lg: 0.5rem; /* 8px */
+  --border-radius-xl: 0.75rem; /* 12px */
+  --border-radius-2xl: 1rem; /* 16px */
+  --border-radius-full: 9999px;
+
+  --border-width-0: 0;
+  --border-width-1: 1px;
+  --border-width-2: 2px;
+  --border-width-4: 4px;
+
+  /* ==========================================
+     🇨🇺 SOMBRAS MODERNAS Y GLASSMORPHISM
+     ========================================== */
+  /* Sombras Básicas */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+
+  /* ==========================================
+     🇨🇺 SOMBRAS COLORIDAS CUBANAS
+     ========================================== */
+  /* Sombras con toque cubano */
+  --shadow-primary: 0 10px 25px -5px rgba(0, 102, 204, 0.25),
+    0 4px 6px -2px rgba(0, 102, 204, 0.1);
+  --shadow-secondary: 0 10px 25px -5px rgba(229, 62, 62, 0.25),
+    0 4px 6px -2px rgba(229, 62, 62, 0.1);
+  --shadow-accent: 0 10px 25px -5px rgba(255, 215, 0, 0.35),
+    0 4px 6px -2px rgba(255, 215, 0, 0.15);
+  --shadow-success: 0 10px 25px -5px rgba(56, 161, 105, 0.25),
+    0 4px 6px -2px rgba(56, 161, 105, 0.1);
+
+  /* ==========================================
+     🇨🇺 EFECTOS GLASSMORPHISM
+     ========================================== */
+  /* Sombras para efectos cristal */
+  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  --shadow-glass-hover: 0 15px 35px 0 rgba(31, 38, 135, 0.4);
+
+  /* Backdrop blur para glassmorphism */
+  --blur-xs: blur(2px);
+  --blur-sm: blur(4px);
+  --blur-md: blur(8px);
+  --blur-lg: blur(16px);
+  --blur-xl: blur(24px);
+  --blur-2xl: blur(40px);
+
+  /* ==========================================
+     🇨🇺 SOMBRAS NEUMORPHISM
+     ========================================== */
+  /* Efectos neumórficos suaves */
+  --shadow-neumorphism-light: 6px 6px 12px rgba(0, 0, 0, 0.1),
+    -6px -6px 12px rgba(255, 255, 255, 0.8);
+  --shadow-neumorphism-dark: 6px 6px 12px rgba(0, 0, 0, 0.3),
+    -6px -6px 12px rgba(255, 255, 255, 0.1);
+
+  /* Sombras para elementos hundidos */
+  --shadow-inset-light: inset 6px 6px 12px rgba(0, 0, 0, 0.1),
+    inset -6px -6px 12px rgba(255, 255, 255, 0.8);
+  --shadow-inset-dark: inset 6px 6px 12px rgba(0, 0, 0, 0.3),
+    inset -6px -6px 12px rgba(255, 255, 255, 0.1);
+
+  /* ==========================================
+     🇨🇺 Z-INDEX LAYERS
+     ========================================== */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-toast: 1080;
+
+  /* ==========================================
+     🇨🇺 TRANSICIONES Y ANIMACIONES MODERNAS
+     ========================================== */
+  /* Velocidades de transición */
+  --transition-faster: 100ms ease-in-out;
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 250ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
+  --transition-slower: 500ms ease-in-out;
+
+  /* Curvas de animación avanzadas */
+  --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-back-in: cubic-bezier(0.6, -0.28, 0.735, 0.045);
+  --ease-back-out: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-back-in-out: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* Easing para microinteracciones */
+  --ease-in-quart: cubic-bezier(0.5, 0, 0.75, 0);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+  /* Easing para elementos flotantes */
+  --ease-float: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* ==========================================
+     🇨🇺 DURACIONES PARA ANIMACIONES
+     ========================================== */
+  --duration-instant: 0ms;
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --duration-slower: 750ms;
+  --duration-slowest: 1000ms;
+
+  /* ==========================================
+     🇨🇺 TRANSFORMS PREDEFINIDOS
+     ========================================== */
+  --transform-scale-sm: scale(0.95);
+  --transform-scale-lg: scale(1.05);
+  --transform-scale-xl: scale(1.1);
+  --transform-rotate-sm: rotate(3deg);
+  --transform-rotate-lg: rotate(-3deg);
+  --transform-translate-y-sm: translateY(-2px);
+  --transform-translate-y-lg: translateY(-4px);
+  --transform-translate-y-xl: translateY(-8px);
+
+  /* ==========================================
+     🇨🇺 BREAKPOINTS (para uso con container queries)
+     ========================================== */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+/* ==========================================
+   🇨🇺 MODO OSCURO (si se implementa)
+   ========================================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: #3b82f6;
+    --primary-hover: #60a5fa;
+
+    --gray-50: #0f172a;
+    --gray-100: #1e293b;
+    --gray-200: #334155;
+    --gray-300: #475569;
+    --gray-400: #64748b;
+    --gray-500: #94a3b8;
+    --gray-600: #cbd5e1;
+    --gray-700: #e2e8f0;
+    --gray-800: #f1f5f9;
+    --gray-900: #f8fafc;
+
+    --white: #0f172a;
+    --black: #ffffff;
+  }
+}

@@ -177,9 +177,6 @@ body {
   transition: var(--transition-fast);
   text-decoration: none;
   white-space: nowrap;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
   outline: none;
 }

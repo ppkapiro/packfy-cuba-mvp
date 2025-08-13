@@ -1,0 +1,416 @@
+/* 🇨🇺 PACKFY CUBA - SISTEMA DE ICONOS MODERNOS v4.0 */
+/* ===================================================== */
+/* Iconos CSS con estilo cubano y efectos modernos */
+
+/* ==========================================
+   🇨🇺 BASE PARA ICONOS
+   ========================================== */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+  font-weight: normal;
+  transition: all var(--transition-normal);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Tamaños de iconos */
+.icon-xs {
+  font-size: 0.75rem;
+}
+.icon-sm {
+  font-size: 0.875rem;
+}
+.icon-md {
+  font-size: 1rem;
+}
+.icon-lg {
+  font-size: 1.25rem;
+}
+.icon-xl {
+  font-size: 1.5rem;
+}
+.icon-2xl {
+  font-size: 2rem;
+}
+.icon-3xl {
+  font-size: 3rem;
+}
+
+/* ==========================================
+   🇨🇺 ICONOS BÁSICOS CON EMOJI
+   ========================================== */
+.icon-dashboard::before {
+  content: "📊";
+}
+.icon-package::before {
+  content: "📦";
+}
+.icon-user::before {
+  content: "👤";
+}
+.icon-settings::before {
+  content: "⚙️";
+}
+.icon-search::before {
+  content: "🔍";
+}
+.icon-plus::before {
+  content: "➕";
+}
+.icon-edit::before {
+  content: "✏️";
+}
+.icon-delete::before {
+  content: "🗑️";
+}
+.icon-save::before {
+  content: "💾";
+}
+.icon-download::before {
+  content: "⬇️";
+}
+.icon-upload::before {
+  content: "⬆️";
+}
+.icon-print::before {
+  content: "🖨️";
+}
+.icon-email::before {
+  content: "📧";
+}
+.icon-phone::before {
+  content: "📞";
+}
+.icon-location::before {
+  content: "📍";
+}
+.icon-calendar::before {
+  content: "📅";
+}
+.icon-clock::before {
+  content: "⏰";
+}
+.icon-stats::before {
+  content: "📈";
+}
+.icon-chart::before {
+  content: "📊";
+}
+.icon-warning::before {
+  content: "⚠️";
+}
+.icon-error::before {
+  content: "❌";
+}
+.icon-success::before {
+  content: "✅";
+}
+.icon-info::before {
+  content: "ℹ️";
+}
+
+/* ==========================================
+   🇨🇺 ICONOS CUBANOS ESPECIALES
+   ========================================== */
+.icon-flag-cuba::before {
+  content: "🇨🇺";
+}
+.icon-palm::before {
+  content: "🌴";
+}
+.icon-sun::before {
+  content: "☀️";
+}
+.icon-ocean::before {
+  content: "🌊";
+}
+.icon-star::before {
+  content: "⭐";
+}
+.icon-heart::before {
+  content: "❤️";
+}
+.icon-fire::before {
+  content: "🔥";
+}
+.icon-lightning::before {
+  content: "⚡";
+}
+.icon-gem::before {
+  content: "💎";
+}
+.icon-crown::before {
+  content: "👑";
+}
+
+/* ==========================================
+   🇨🇺 ICONOS DE NAVEGACIÓN
+   ========================================== */
+.icon-home::before {
+  content: "🏠";
+}
+.icon-menu::before {
+  content: "☰";
+}
+.icon-close::before {
+  content: "✕";
+}
+.icon-arrow-left::before {
+  content: "←";
+}
+.icon-arrow-right::before {
+  content: "→";
+}
+.icon-arrow-up::before {
+  content: "↑";
+}
+.icon-arrow-down::before {
+  content: "↓";
+}
+.icon-chevron-left::before {
+  content: "‹";
+}
+.icon-chevron-right::before {
+  content: "›";
+}
+.icon-chevron-up::before {
+  content: "‹";
+  transform: rotate(90deg);
+}
+.icon-chevron-down::before {
+  content: "›";
+  transform: rotate(90deg);
+}
+
+/* ==========================================
+   🇨🇺 ICONOS DE ESTADO DE ENVÍO
+   ========================================== */
+.icon-package-new::before {
+  content: "📦";
+}
+.icon-package-transit::before {
+  content: "🚚";
+}
+.icon-package-delivered::before {
+  content: "✅";
+}
+.icon-package-pending::before {
+  content: "⏳";
+}
+.icon-package-cancelled::before {
+  content: "❌";
+}
+.icon-truck::before {
+  content: "🚛";
+}
+.icon-plane::before {
+  content: "✈️";
+}
+.icon-ship::before {
+  content: "🚢";
+}
+
+/* ==========================================
+   🇨🇺 EFECTOS HOVER MODERNOS
+   ========================================== */
+.icon:hover {
+  transform: var(--transform-scale-lg);
+  filter: brightness(1.2);
+}
+
+.icon-pulse {
+  animation: iconPulse 2s infinite;
+}
+
+@keyframes iconPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+.icon-spin {
+  animation: iconSpin 2s linear infinite;
+}
+
+@keyframes iconSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.icon-bounce {
+  animation: iconBounce 1s infinite;
+}
+
+@keyframes iconBounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-6px);
+  }
+  60% {
+    transform: translateY(-3px);
+  }
+}
+
+/* ==========================================
+   🇨🇺 ICONOS CON BACKGROUNDS GLASSMORPHISM
+   ========================================== */
+.icon-bg {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--border-radius-lg);
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: var(--blur-sm);
+  backdrop-filter: var(--blur-sm);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow-sm);
+}
+
+.icon-bg-primary {
+  background: var(--gradient-primary);
+  color: var(--white);
+  box-shadow: var(--shadow-primary);
+}
+
+.icon-bg-success {
+  background: var(--gradient-success);
+  color: var(--white);
+  box-shadow: var(--shadow-success);
+}
+
+.icon-bg-warning {
+  background: var(--gradient-warning);
+  color: var(--gray-900);
+  box-shadow: var(--shadow-accent);
+}
+
+.icon-bg-error {
+  background: var(--gradient-error);
+  color: var(--white);
+  box-shadow: var(--shadow-secondary);
+}
+
+.icon-bg-accent {
+  background: var(--gradient-accent);
+  color: var(--gray-900);
+  box-shadow: var(--shadow-accent);
+}
+
+/* ==========================================
+   🇨🇺 ICONOS FLOTANTES
+   ========================================== */
+.icon-float {
+  position: relative;
+  animation: iconFloat 3s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* ==========================================
+   🇨🇺 GRUPOS DE ICONOS
+   ========================================== */
+.icon-group {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: center;
+}
+
+.icon-group .icon {
+  transition: all var(--transition-fast);
+}
+
+.icon-group:hover .icon {
+  transform: var(--transform-scale-sm);
+}
+
+.icon-group:hover .icon:hover {
+  transform: var(--transform-scale-lg);
+}
+
+/* ==========================================
+   🇨🇺 ICONOS CON NOTIFICACIONES
+   ========================================== */
+.icon-notification {
+  position: relative;
+}
+
+.icon-notification::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background: var(--error);
+  border-radius: var(--border-radius-full);
+  box-shadow: 0 0 0 2px var(--white);
+  animation: iconPulse 2s infinite;
+}
+
+.icon-notification-count::after {
+  content: attr(data-count);
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 18px;
+  height: 18px;
+  background: var(--gradient-error);
+  color: var(--white);
+  border-radius: var(--border-radius-full);
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--white);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ==========================================
+   🇨🇺 RESPONSIVO
+   ========================================== */
+@media (max-width: 768px) {
+  .icon-lg {
+    font-size: 1.125rem;
+  }
+  .icon-xl {
+    font-size: 1.25rem;
+  }
+  .icon-2xl {
+    font-size: 1.5rem;
+  }
+  .icon-3xl {
+    font-size: 2rem;
+  }
+
+  .icon-bg {
+    width: 2rem;
+    height: 2rem;
+  }
+}

@@ -1,7 +1,7 @@
-# 🚀 Packfy MVP - Docker Compose Moderno
-# Configuración optimizada para desarrollo y producción
+# 🇨🇺 PACKFY CUBA - Docker Compose v4.0
+# Sistema moderno de gestión de envíos con interfaz glassmorphism
 
-name: packfy-mvp
+name: packfy-cuba-mvp
 
 services:
   # 📊 Base de datos PostgreSQL
@@ -12,12 +12,14 @@ services:
       POSTGRES_DB: packfy
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./backend/scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5433:5432"
     restart: unless-stopped
+    networks:
+      - packfy_network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d packfy"]
       interval: 10s
@@ -26,65 +28,117 @@ services:
 
   # 🔧 Backend Django API
   backend:
-    build: 
+    build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: packfy-backend
+    container_name: packfy-backend-v4
     depends_on:
       database:
         condition: service_healthy
     environment:
-      - DEBUG=1
-      - SECRET_KEY=django-insecure-dev-key-only
-      - DATABASE_URL=postgresql://postgres:postgres@database:5432/packfy
-      - ALLOWED_HOSTS=localhost,127.0.0.1,backend,192.168.12.178
-      - CORS_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000,https://localhost:5173,https://192.168.12.178:5173,http://192.168.12.178:5173
+      - DJANGO_DEBUG=true
+      - DJANGO_SECRET_KEY=django-insecure-dev-key-v4-glassmorphism
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,backend,0.0.0.0
+      - POSTGRES_DB=packfy
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=database
+      - POSTGRES_PORT=5432
+      - CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+      - DJANGO_SETTINGS_MODULE=config.settings
+      - PYTHONPATH=/app
+      - INTERFACE_VERSION=3.3
+      - FORM_STYLE=cuban-unified
+      - SUBSCRIPTION_MODE=disabled
+      - FEATURE_UNIFIED_MANAGEMENT=enabled
+      - USE_HTTPS=true
+      - SECURE_SSL_REDIRECT=false
+      - SECURE_PROXY_SSL_HEADER=HTTP_X_FORWARDED_PROTO,https
     volumes:
       - ./backend:/app
       - static_files:/app/static
       - media_files:/app/media
+      - ./backend/logs:/app/logs
+      - ./frontend/certs:/app/certs
     ports:
       - "8000:8000"
+      - "8443:8443"
     restart: unless-stopped
+    networks:
+      - packfy_network
     healthcheck:
       test: ["CMD", "python", "manage.py", "check", "--deploy"]
       interval: 30s
       timeout: 10s
       retries: 3
 
-  # 🌐 Frontend React
+  # 🌐 Frontend React Gestión Unificada v3.3
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: packfy-frontend
+    container_name: packfy-frontend-v3.3
     depends_on:
       backend:
         condition: service_healthy
     environment:
-      - VITE_API_BASE_URL=http://192.168.12.178:8000
-      - VITE_APP_TITLE=Packfy MVP
+      - NODE_ENV=development
+      - VITE_API_BASE_URL=https://192.168.12.178:8000
+      - VITE_APP_TITLE=Packfy Cuba - Gestión Unificada v3.3
+      - VITE_APP_VERSION=3.3
+      - VITE_INTERFACE_MODE=unified-management
+      - VITE_FORM_STYLE=cuban-unified
+      - VITE_APP_NAME=Packfy Cuba - Gestión Unificada
+      - VITE_SUBSCRIPTION_MODE=disabled
+      - VITE_FEATURE_UNIFIED_PAGES=enabled
+      - VITE_ENABLE_HTTPS=true
+      - HOST=0.0.0.0
+      - PORT=5173
+      - HTTPS=true
     volumes:
       - ./frontend:/app
       - /app/node_modules
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/certs:/app/certs
     ports:
       - "5173:5173"
     restart: unless-stopped
+    networks:
+      - packfy_network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5173", "||", "curl", "-k", "-f", "https://localhost:5173"]
+      test: ["CMD-SHELL", "curl -k -f https://localhost:5173 || exit 1"]
       interval: 30s
       timeout: 10s
-      retries: 5
+      retries: 3
+      start_period: 20s
+
+  # 🔄 Servicio de Desarrollo (Opcional para Hot Reload)
+  dev-tools:
+    image: node:22-alpine
+    container_name: packfy-dev-tools
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      - /workspace/node_modules
+    environment:
+      - NODE_ENV=development
+    profiles:
+      - dev
+    command: tail -f /dev/null
 
 volumes:
   postgres_data:
-    name: packfy_postgres_data
+    name: packfy_postgres_data_v3
   static_files:
-    name: packfy_static_files
+    name: packfy_static_files_v3
   media_files:
-    name: packfy_media_files
+    name: packfy_media_files_v3
 
 networks:
-  default:
-    name: packfy_network
+  packfy_network:
+    name: packfy_network_v3
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

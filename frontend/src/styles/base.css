@@ -1,0 +1,182 @@
+/* 🇨🇺 PACKFY CUBA - ESTILOS BASE v3.0 */
+
+/* Tailwind CSS base */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
+
+/* Variables CSS globales */
+:root {
+  /* 🇨🇺 Colores Cubanos Premium */
+  --cuba-blue: #1e40af;
+  --cuba-red: #dc2626;
+  --cuba-white: #ffffff;
+  --cuba-gold: #fbbf24;
+
+  /* Colores del sistema */
+  --primary-color: #1976d2;
+  --primary-light: #4791db;
+  --primary-dark: #115293;
+  --secondary-color: #f5f5f5;
+  --text-color: #333;
+  --error-color: #d32f2f;
+  --success-color: #388e3c;
+  --warning-color: #f57c00;
+  --border-radius: 4px;
+  --border-color: #ddd;
+  --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Base styles */
+@layer base {
+  body {
+    @apply font-sans text-gray-900 bg-gray-50;
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-medium text-gray-900;
+  }
+
+  h1 {
+    @apply text-3xl;
+  }
+  h2 {
+    @apply text-2xl;
+  }
+  h3 {
+    @apply text-xl;
+  }
+  h4 {
+    @apply text-lg;
+  }
+
+  a {
+    @apply text-blue-600 hover:text-blue-800 transition-colors;
+  }
+
+  button {
+    @apply transition-all duration-200;
+  }
+}
+
+/* Componentes personalizados */
+@layer components {
+  .btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+  }
+
+  .input-field {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+  }
+
+  .nav-link {
+    @apply text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition-colors;
+  }
+
+  .nav-link-active {
+    @apply text-blue-600 bg-blue-50 px-3 py-2 rounded-md;
+  }
+}
+
+/* Utilidades personalizadas */
+@layer utilities {
+  .text-cuba-blue {
+    color: var(--cuba-blue);
+  }
+
+  .bg-cuba-blue {
+    background-color: var(--cuba-blue);
+  }
+
+  .text-cuba-red {
+    color: var(--cuba-red);
+  }
+
+  .bg-cuba-red {
+    background-color: var(--cuba-red);
+  }
+
+  .text-cuba-gold {
+    color: var(--cuba-gold);
+  }
+
+  .bg-cuba-gold {
+    background-color: var(--cuba-gold);
+  }
+
+  .gradient-cuba {
+    background: linear-gradient(135deg, var(--cuba-blue) 0%, #1d4ed8 100%);
+  }
+
+  .shadow-cuba {
+    box-shadow: 0 4px 14px 0 rgba(30, 64, 175, 0.1);
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    @apply px-4;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-color: #f3f4f6;
+    --secondary-color: #1f2937;
+  }
+}

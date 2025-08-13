@@ -37,7 +37,7 @@ class PackfyApiClient {
     // Estrategia de configuración inteligente
     if (hostname === "localhost" || hostname === "127.0.0.1") {
       // Desarrollo local
-      this.baseURL = port === "5173" ? "/api" : "http://localhost:8000/api";
+      this.baseURL = port === "5173" ? "/api" : "https://localhost:8000/api";
     } else if (
       hostname.match(/^192\.168\.|^10\.|^172\.(1[6-9]|2[0-9]|3[0-1])\./)
     ) {

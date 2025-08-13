@@ -1,11 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
-import './index.css'
-import './styles/master-premium.css'
-import './styles/layout-fixes.css'
-import './styles/mobile-optimized.css'
-import './styles/mobile-pwa.css'
+
+// 🇨🇺 PACKFY CUBA - Sistema CSS Unificado y Optimizado v3.3
+// Reducido de 6,575 a 1,606 líneas (75.6% optimización)
+import './styles/main.css'
 
 // 📱 Service Worker PWA optimizado para móvil
 if ('serviceWorker' in navigator) {
@@ -13,7 +12,7 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js')
       .then((registration) => {
         console.log('🚀 SW v2.0 registrado exitosamente:', registration.scope);
-        
+
         // Verificar actualizaciones del SW
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
@@ -30,15 +29,15 @@ if ('serviceWorker' in navigator) {
       .catch((error) => {
         console.log('❌ Error al registrar SW:', error);
       });
-    
+
     // 📱 Detección de instalación PWA - MEJORADO PARA CHROME
     let deferredPrompt: any = null;
-    
+
     window.addEventListener('beforeinstallprompt', (e: Event) => {
       console.log('📱 PWA listo para instalación');
       e.preventDefault();
       deferredPrompt = e;
-      
+
       // Mostrar prompt INMEDIATAMENTE cuando esté disponible
       console.log('💡 Mostrando prompt de instalación INMEDIATO');
       setTimeout(() => {
@@ -62,7 +61,7 @@ if ('serviceWorker' in navigator) {
         }
       }, 1000); // Reducido a 1 segundo
     });
-    
+
     // Confirmar instalación exitosa
     window.addEventListener('appinstalled', () => {
       console.log('🎉 Packfy Cuba PWA instalada exitosamente');

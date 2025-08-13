@@ -41,8 +41,8 @@ const Layout = () => {
               </li>
               <li className="nav-item">
                 <Link
-                  to="/envios/nuevo"
-                  className={`nav-link ${isActiveRoute('/envios/nuevo') ? 'active' : ''}`}
+                  to="/envios/modo"
+                  className={`nav-link ${isActiveRoute('/envios/modo') ? 'active' : ''}`}
                 >
                   <span className="icon icon-package"></span>
                   <span>Nuevo</span>
@@ -55,16 +55,6 @@ const Layout = () => {
                 >
                   <span className="icon icon-package"></span>
                   <span>Gestión</span>
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link
-                  to="/rastreo"
-                  className={`nav-link ${isActiveRoute('/rastreo') ? 'active' : ''}`}
-                  onClick={() => console.log('🔍 Layout: Navegando a /rastreo')}
-                >
-                  <span className="icon icon-search"></span>
-                  <span>Rastrear</span>
                 </Link>
               </li>
             </ul>

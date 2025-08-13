@@ -4,25 +4,107 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+
     <!-- 📱 PWA Meta Tags -->
-    <meta name="theme-color" content="#3b82f6" />
-    <meta name="description" content="Sistema de gestión de envíos para Cuba - Packfy MVP" />
-    <meta name="keywords" content="paquetería, envíos, Cuba, tracking, logística" />
-    
+    <meta name="theme-color" content="#0066cc" />
+    <meta
+      name="description"
+      content="Sistema de gestión de envíos para Cuba - Packfy MVP"
+    />
+    <meta
+      name="keywords"
+      content="paquetería, envíos, Cuba, tracking, logística"
+    />
+
     <!-- 📱 PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
-    
+
     <!-- 📱 iOS Specific PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Packfy" />
     <link rel="apple-touch-icon" href="/icon-192.svg" />
-    
+
     <!-- 📱 Android Chrome -->
     <meta name="mobile-web-app-capable" content="yes" />
-    
-    <title>Paquetería Cuba MVP</title>
+
+    <!-- 🇨🇺 ESTILOS CRÍTICOS INMEDIATOS -->
+    <style>
+      /* Aplicar estilos básicos INMEDIATAMENTE para evitar FOUC */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", "Roboto", sans-serif;
+        background: linear-gradient(
+          135deg,
+          #f8fafc 0%,
+          rgba(0, 102, 204, 0.03) 100%
+        );
+        min-height: 100vh;
+      }
+
+      .header {
+        background: linear-gradient(
+          135deg,
+          #0066cc 0%,
+          #3385d6 25%,
+          #ffd700 50%,
+          #e53e3e 75%,
+          #004499 100%
+        );
+        color: white;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 20px rgba(0, 102, 204, 0.3);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .nav-link {
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        transition: all 0.25s ease-in-out;
+        padding: 0.75rem 1.25rem;
+        border-radius: 0.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .nav-link:hover {
+        color: white;
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        text-decoration: none;
+      }
+
+      .btn {
+        background: linear-gradient(
+          135deg,
+          #0066cc 0%,
+          #3385d6 50%,
+          #3182ce 100%
+        );
+        color: white;
+        border: 1px solid rgba(0, 102, 204, 0.3);
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.25s ease-in-out;
+        box-shadow: 0 10px 15px -3px rgba(0, 102, 204, 0.25);
+      }
+
+      .btn:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 0 20px rgba(0, 102, 204, 0.4);
+        color: white;
+        text-decoration: none;
+      }
+    </style>
+
+    <title>🇨🇺 Packfy Cuba - Sistema de Paquetería MVP</title>
   </head>
   <body>
     <div id="root"></div>

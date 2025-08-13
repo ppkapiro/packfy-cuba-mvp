@@ -1,0 +1,316 @@
+/* 🇨🇺 PACKFY CUBA - ESTILOS CRÍTICOS INMEDIATOS v4.0 */
+/* ===================================================== */
+/* Estilos que deben aplicarse INMEDIATAMENTE */
+
+/* FORZAR APLICACIÓN DE ESTILOS MODERNOS */
+html,
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-family: "Segoe UI", "Roboto", sans-serif !important;
+  background: linear-gradient(
+    135deg,
+    #f8fafc 0%,
+    rgba(0, 102, 204, 0.03) 100%
+  ) !important;
+  min-height: 100vh !important;
+}
+
+/* HEADER MODERNO FORZADO */
+.header {
+  background: linear-gradient(
+    135deg,
+    #0066cc 0%,
+    #3385d6 25%,
+    #ffd700 50%,
+    #e53e3e 75%,
+    #004499 100%
+  ) !important;
+  color: white !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 20px rgba(0, 102, 204, 0.3) !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 100 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.header-content {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 1rem 1.5rem !important;
+  min-height: 72px !important;
+  max-width: 1400px !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+}
+
+/* LOGO MODERNO FORZADO */
+.logo {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  color: white !important;
+  text-decoration: none !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 0.5rem !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.25s ease-in-out !important;
+}
+
+.logo:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: scale(1.05) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  color: white !important;
+  text-decoration: none !important;
+}
+
+/* NAVEGACIÓN MODERNA FORZADA */
+.nav-main {
+  display: flex !important;
+}
+
+.nav-menu {
+  display: flex !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 0.5rem !important;
+}
+
+.nav-item {
+  display: flex !important;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  transition: all 0.25s ease-in-out !important;
+  padding: 0.75rem 1.25rem !important;
+  border-radius: 0.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  position: relative !important;
+  overflow: hidden !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.nav-link:hover {
+  color: white !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  text-decoration: none !important;
+}
+
+.nav-link.active {
+  background: linear-gradient(
+    135deg,
+    #0066cc 0%,
+    #3385d6 50%,
+    #3182ce 100%
+  ) !important;
+  color: white !important;
+  font-weight: 700 !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 102, 204, 0.25),
+    0 4px 6px -2px rgba(0, 102, 204, 0.1) !important;
+  border-color: rgba(0, 102, 204, 0.5) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.nav-link.active::after {
+  content: "" !important;
+  position: absolute !important;
+  bottom: -1px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 24px !important;
+  height: 3px !important;
+  background: #ffd700 !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 0 8px #ffd700 !important;
+}
+
+/* ICONOS MODERNOS */
+.icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  transition: all 0.25s ease-in-out !important;
+  opacity: 0.8 !important;
+}
+
+.nav-link:hover .icon,
+.nav-link.active .icon {
+  opacity: 1 !important;
+}
+
+.icon-lg {
+  font-size: 1.125rem !important;
+}
+
+/* ICONOS CUBANOS ESPECÍFICOS */
+.icon-flag-cuba::before {
+  content: "🇨🇺" !important;
+}
+.icon-dashboard::before {
+  content: "📊" !important;
+}
+.icon-package::before {
+  content: "📦" !important;
+}
+.icon-user::before {
+  content: "👤" !important;
+}
+
+/* MENÚ DE USUARIO MODERNO */
+.user-menu {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+}
+
+.user-info {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding: 0.5rem 1rem !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 0.5rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+.user-name {
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* CONTENIDO PRINCIPAL */
+.app-content {
+  flex: 1 !important;
+  padding: 2rem 0 !important;
+  background: linear-gradient(
+    135deg,
+    #f8fafc 0%,
+    rgba(0, 102, 204, 0.03) 100%
+  ) !important;
+  min-height: calc(100vh - 72px) !important;
+}
+
+.container {
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 0 1rem !important;
+}
+
+/* DASHBOARD MODERNO */
+.dashboard-page {
+  background: transparent !important;
+  min-height: auto !important;
+  padding: 0 !important;
+}
+
+.dashboard-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 2rem !important;
+  padding: 1.5rem !important;
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-radius: 1rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.dashboard-header h1 {
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  margin: 0 !important;
+  background: linear-gradient(
+    135deg,
+    #0066cc 0%,
+    #3385d6 50%,
+    #3182ce 100%
+  ) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  text-shadow: none !important;
+}
+
+/* FORZAR ESTILOS EN ELEMENTOS EXISTENTES */
+.btn {
+  background: linear-gradient(
+    135deg,
+    #0066cc 0%,
+    #3385d6 50%,
+    #3182ce 100%
+  ) !important;
+  color: white !important;
+  border: 1px solid rgba(0, 102, 204, 0.3) !important;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  transition: all 0.25s ease-in-out !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 102, 204, 0.25),
+    0 4px 6px -2px rgba(0, 102, 204, 0.1) !important;
+}
+
+.btn:hover {
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 20px rgba(0, 102, 204, 0.4) !important;
+  color: white !important;
+  text-decoration: none !important;
+}
+
+/* APLICAR INMEDIATAMENTE */
+* {
+  box-sizing: border-box !important;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column !important;
+    gap: 1rem !important;
+    padding: 1rem !important;
+  }
+
+  .nav-menu {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 0.5rem !important;
+  }
+
+  .dashboard-header {
+    flex-direction: column !important;
+    gap: 1rem !important;
+    text-align: center !important;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.5rem !important;
+  }
+}

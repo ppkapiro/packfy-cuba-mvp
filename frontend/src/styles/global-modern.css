@@ -1,0 +1,469 @@
+/* 🇨🇺 PACKFY CUBA - ESTILOS MODERNOS GLOBALES PARA TODAS LAS PÁGINAS v4.0 */
+/* ================================================================================= */
+/* Aplicar estilos modernos glassmorphism cubanos a TODAS las páginas del sistema */
+
+/* ============================================ */
+/* 1. PÁGINAS PRINCIPALES - CONTAINERS MODERNOS */
+/* ============================================ */
+
+/* Gestión Unificada - Modernización completa */
+.min-h-screen {
+  background: linear-gradient(
+    135deg,
+    #f8fafc 0%,
+    rgba(0, 102, 204, 0.05) 25%,
+    rgba(255, 215, 0, 0.03) 50%,
+    rgba(229, 62, 62, 0.03) 75%,
+    #f8fafc 100%
+  ) !important;
+  min-height: 100vh !important;
+}
+
+.container {
+  max-width: 1400px !important;
+  margin: 0 auto !important;
+  padding: 1rem !important;
+}
+
+/* Headers modernos en todas las páginas */
+.text-4xl {
+  background: linear-gradient(
+    135deg,
+    #0066cc 0%,
+    #3385d6 50%,
+    #3182ce 100%
+  ) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  text-shadow: none !important;
+  font-weight: 800 !important;
+}
+
+/* ============================================ */
+/* 2. TARJETAS Y PANELES GLASSMORPHISM */
+/* ============================================ */
+
+/* Todas las tarjetas blancas convertir a glassmorphism */
+.bg-white {
+  background: rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 20px rgba(0, 102, 204, 0.1) !important;
+}
+
+/* Paneles de estadísticas modernos */
+.grid .bg-white {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-radius: 1rem !important;
+  padding: 1.5rem !important;
+  transition: all 0.3s ease-in-out !important;
+  border-left: 4px solid transparent !important;
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.1)
+  ) !important;
+}
+
+.grid .bg-white:hover {
+  transform: translateY(-4px) scale(1.02) !important;
+  box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.15),
+    0 15px 15px -5px rgba(0, 0, 0, 0.08), 0 0 25px rgba(0, 102, 204, 0.2) !important;
+}
+
+/* ============================================ */
+/* 3. BOTONES MODERNOS CUBANOS */
+/* ============================================ */
+
+/* Botones principales con efectos glassmorphism */
+.bg-gradient-to-r,
+button,
+.btn,
+[class*="btn-"] {
+  background: linear-gradient(
+    135deg,
+    #0066cc 0%,
+    #3385d6 50%,
+    #3182ce 100%
+  ) !important;
+  color: white !important;
+  border: 1px solid rgba(0, 102, 204, 0.3) !important;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 0.75rem !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  transition: all 0.3s ease-in-out !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 102, 204, 0.25),
+    0 4px 6px -2px rgba(0, 102, 204, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.bg-gradient-to-r:hover,
+button:hover,
+.btn:hover,
+[class*="btn-"]:hover {
+  transform: translateY(-3px) scale(1.05) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 25px rgba(0, 102, 204, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
+  text-decoration: none !important;
+}
+
+/* Efecto ripple en botones */
+.bg-gradient-to-r::before,
+button::before,
+.btn::before,
+[class*="btn-"]::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-radius: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  transition: width 0.3s ease-in-out, height 0.3s ease-in-out !important;
+}
+
+.bg-gradient-to-r:hover::before,
+button:hover::before,
+.btn:hover::before,
+[class*="btn-"]:hover::before {
+  width: 100px !important;
+  height: 100px !important;
+}
+
+/* Botones específicos cubanos */
+.from-red-600 {
+  background: linear-gradient(
+    135deg,
+    #e53e3e 0%,
+    #c53030 50%,
+    #9b2c2c 100%
+  ) !important;
+  box-shadow: 0 10px 15px -3px rgba(229, 62, 62, 0.25),
+    0 4px 6px -2px rgba(229, 62, 62, 0.1) !important;
+}
+
+.from-red-600:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 25px rgba(229, 62, 62, 0.4) !important;
+}
+
+/* ============================================ */
+/* 4. FORMULARIOS MODERNOS */
+/* ============================================ */
+
+/* Inputs modernos con efectos focus */
+input,
+select,
+textarea {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 0.5rem !important;
+  padding: 0.75rem 1rem !important;
+  color: #2d3748 !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease-in-out !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none !important;
+  border-color: rgba(0, 102, 204, 0.5) !important;
+  background: rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 102, 204, 0.1),
+    0 4px 6px -2px rgba(0, 102, 204, 0.05), 0 0 0 3px rgba(0, 102, 204, 0.1),
+    inset 0 2px 4px rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* ============================================ */
+/* 5. NAVEGACIÓN Y LAYOUT MODERNOS */
+/* ============================================ */
+
+/* Breadcrumbs y navegación secundaria */
+.text-gray-600 {
+  color: rgba(74, 85, 104, 0.8) !important;
+  font-weight: 500 !important;
+}
+
+.text-gray-800 {
+  color: rgba(45, 55, 72, 0.9) !important;
+  font-weight: 600 !important;
+}
+
+/* Labels modernos */
+label {
+  color: rgba(45, 55, 72, 0.8) !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  margin-bottom: 0.5rem !important;
+  display: block !important;
+}
+
+/* ============================================ */
+/* 6. TABLAS MODERNAS GLASSMORPHISM */
+/* ============================================ */
+
+/* Tabla principal moderna */
+table {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(15px) !important;
+  border-radius: 1rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  overflow: hidden !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+thead {
+  background: linear-gradient(
+    135deg,
+    #0066cc 0%,
+    #3385d6 50%,
+    #3182ce 100%
+  ) !important;
+}
+
+thead th {
+  color: white !important;
+  font-weight: 700 !important;
+  padding: 1rem 1.5rem !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+tbody tr {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+tbody tr:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: scale(1.01) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+tbody td {
+  padding: 1rem 1.5rem !important;
+  color: rgba(45, 55, 72, 0.9) !important;
+  font-weight: 500 !important;
+}
+
+/* ============================================ */
+/* 7. ESTADOS Y BADGES MODERNOS */
+/* ============================================ */
+
+/* Estados de envío modernos */
+.bg-blue-100 {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 102, 204, 0.15) 0%,
+    rgba(0, 102, 204, 0.05) 100%
+  ) !important;
+  color: #0066cc !important;
+  border: 1px solid rgba(0, 102, 204, 0.2) !important;
+  backdrop-filter: blur(5px) !important;
+}
+
+.bg-yellow-100 {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.15) 0%,
+    rgba(255, 215, 0, 0.05) 100%
+  ) !important;
+  color: #d69e2e !important;
+  border: 1px solid rgba(255, 215, 0, 0.2) !important;
+  backdrop-filter: blur(5px) !important;
+}
+
+.bg-green-100 {
+  background: linear-gradient(
+    135deg,
+    rgba(56, 161, 105, 0.15) 0%,
+    rgba(56, 161, 105, 0.05) 100%
+  ) !important;
+  color: #38a169 !important;
+  border: 1px solid rgba(56, 161, 105, 0.2) !important;
+  backdrop-filter: blur(5px) !important;
+}
+
+.bg-red-100 {
+  background: linear-gradient(
+    135deg,
+    rgba(229, 62, 62, 0.15) 0%,
+    rgba(229, 62, 62, 0.05) 100%
+  ) !important;
+  color: #e53e3e !important;
+  border: 1px solid rgba(229, 62, 62, 0.2) !important;
+  backdrop-filter: blur(5px) !important;
+}
+
+/* ============================================ */
+/* 8. EFECTOS DE HOVER Y ANIMACIONES */
+/* ============================================ */
+
+/* Animaciones sutiles para mejor UX */
+.transition-all {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Efectos hover para enlaces */
+a {
+  transition: all 0.2s ease-in-out !important;
+}
+
+a:hover {
+  transform: translateY(-1px) !important;
+  text-decoration: none !important;
+}
+
+/* ============================================ */
+/* 9. RESPONSIVE GLASSMORPHISM */
+/* ============================================ */
+
+/* Ajustes responsive para móvil */
+@media (max-width: 768px) {
+  .container {
+    padding: 0.5rem !important;
+  }
+
+  .grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  .text-4xl {
+    font-size: 1.875rem !important;
+  }
+
+  .bg-gradient-to-r,
+  button,
+  .btn {
+    padding: 0.625rem 1rem !important;
+    font-size: 0.875rem !important;
+  }
+}
+
+/* ============================================ */
+/* 10. ESPECÍFICOS PARA PÁGINAS CONOCIDAS */
+/* ============================================ */
+
+/* Dashboard específico */
+.dashboard-page {
+  background: transparent !important;
+}
+
+/* Gestión envíos específico */
+.envios-page {
+  background: transparent !important;
+}
+
+/* Formularios específicos */
+.form-container {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(20px) !important;
+  border-radius: 1.5rem !important;
+  padding: 2rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Premium badges y elementos especiales */
+.premium-badge {
+  background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%) !important;
+  color: #2d3748 !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 4px 6px -1px rgba(255, 140, 0, 0.3) !important;
+}
+
+/* ============================================ */
+/* 11. MODO OSCURO PREPARADO */
+/* ============================================ */
+
+@media (prefers-color-scheme: dark) {
+  .min-h-screen {
+    background: linear-gradient(
+      135deg,
+      #1a202c 0%,
+      rgba(0, 102, 204, 0.1) 25%,
+      rgba(255, 215, 0, 0.05) 50%,
+      rgba(229, 62, 62, 0.05) 75%,
+      #1a202c 100%
+    ) !important;
+  }
+
+  .bg-white {
+    background: rgba(45, 55, 72, 0.3) !important;
+    color: #f7fafc !important;
+  }
+
+  .text-gray-800 {
+    color: #f7fafc !important;
+  }
+
+  .text-gray-600 {
+    color: #e2e8f0 !important;
+  }
+}
+
+/* ============================================ */
+/* 12. CARGA Y TRANSICIONES SUAVES */
+/* ============================================ */
+
+/* Transición suave al cargar página */
+* {
+  box-sizing: border-box !important;
+}
+
+body {
+  overflow-x: hidden !important;
+}
+
+/* Animación de entrada para elementos */
+.fade-in {
+  animation: fadeInUp 0.6s ease-out forwards !important;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Aplicar fade-in automáticamente */
+.container > * {
+  animation: fadeInUp 0.6s ease-out forwards !important;
+}
+
+.container > *:nth-child(2) {
+  animation-delay: 0.1s !important;
+}
+
+.container > *:nth-child(3) {
+  animation-delay: 0.2s !important;
+}
+
+.container > *:nth-child(4) {
+  animation-delay: 0.3s !important;
+}

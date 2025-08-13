@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Package, Camera, QrCode, DollarSign, Star, CheckCircle, MapPin, User, Weight, Calculator } from 'lucide-react';
 import { api } from '../services/api';
-import '../styles/simple-mode.css';
+// 🇨🇺 Estilos cargados globalmente desde main.tsx
 
 // Interfaces mejoradas
 interface PackageData {
@@ -146,8 +146,7 @@ const SimpleAdvancedForm: React.FC = () => {
   const [tracking, setTracking] = useState<string>('');
   const [errors, setErrors] = useState<{[key: string]: string}>({});
 
-  // Debug logging
-  console.log('🔍 Render Debug - step:', step, 'priceBreakdown exists:', !!priceBreakdown);
+  // Debug logging removido para producción
 
   // Función simple para manejar cambios
   const handleFieldChange = useCallback((field: string, value: string) => {

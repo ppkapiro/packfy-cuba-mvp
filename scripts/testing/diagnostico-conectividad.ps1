@@ -1,5 +1,6 @@
 #!/usr/bin/env pwsh
-# Script de diagnóstico de conectividad para Packfy Cuba MVP
+# Script de diagnóstico de conectivi    $apiTest = Test-HttpEndpoint -Url "https://localhost:8000/api/"
+Write-Host "API Root (https://localhost:8000/api/): $(if ($apiTest.Success) { "✅ OK ($($apiTest.StatusCode))" } else { "❌ Error: $($apiTest.Error)" })" -ForegroundColor $(if ($apiTest.Success) { 'Green' } else { 'Red' })d para Packfy Cuba MVP
 
 Write-Host "🔍 DIAGNÓSTICO DE CONECTIVIDAD PACKFY" -ForegroundColor Cyan
 Write-Host "=====================================" -ForegroundColor Cyan
@@ -12,7 +13,8 @@ function Test-Port {
         $connection.Connect($HostAddress, $Port)
         $connection.Close()
         return $true
-    } catch {
+    }
+    catch {
         return $false
     }
 }
@@ -23,14 +25,15 @@ function Test-HttpEndpoint {
     try {
         $response = Invoke-WebRequest -Uri $Url -Method GET -TimeoutSec 10 -UseBasicParsing
         return @{
-            Success = $true
+            Success    = $true
             StatusCode = $response.StatusCode
-            Content = $response.Content.Substring(0, [Math]::Min(200, $response.Content.Length))
+            Content    = $response.Content.Substring(0, [Math]::Min(200, $response.Content.Length))
         }
-    } catch {
+    }
+    catch {
         return @{
             Success = $false
-            Error = $_.Exception.Message
+            Error   = $_.Exception.Message
         }
     }
 }
@@ -51,13 +54,14 @@ Write-Host "===================================" -ForegroundColor Yellow
 # Probar endpoints del backend
 if ($backend8000) {
     Write-Host "🔧 Probando backend directo..." -ForegroundColor Cyan
-    
-    $adminTest = Test-HttpEndpoint -Url "http://localhost:8000/admin/"
-    Write-Host "Admin (http://localhost:8000/admin/): $(if ($adminTest.Success) { "✅ OK ($($adminTest.StatusCode))" } else { "❌ Error: $($adminTest.Error)" })" -ForegroundColor $(if ($adminTest.Success) { 'Green' } else { 'Red' })
-    
+
+    $adminTest = Test-HttpEndpoint -Url "https://localhost:8000/admin/"
+    Write-Host "Admin (https://localhost:8000/admin/): $(if ($adminTest.Success) { "✅ OK ($($adminTest.StatusCode))" } else { "❌ Error: $($adminTest.Error)" })" -ForegroundColor $(if ($adminTest.Success) { 'Green' } else { 'Red' })
+
     $apiTest = Test-HttpEndpoint -Url "http://localhost:8000/api/"
     Write-Host "API Root (http://localhost:8000/api/): $(if ($apiTest.Success) { "✅ OK ($($apiTest.StatusCode))" } else { "❌ Error: $($apiTest.Error)" })" -ForegroundColor $(if ($apiTest.Success) { 'Green' } else { 'Red' })
-} else {
+}
+else {
     Write-Host "❌ Backend no disponible - no se pueden probar endpoints" -ForegroundColor Red
 }
 
@@ -65,17 +69,19 @@ if ($backend8000) {
 if ($frontend5173) {
     Write-Host ""
     Write-Host "⚛️ Probando frontend y proxy..." -ForegroundColor Cyan
-    
-    $frontendTest = Test-HttpEndpoint -Url "http://localhost:5173/"
-    Write-Host "Frontend (http://localhost:5173/): $(if ($frontendTest.Success) { "✅ OK ($($frontendTest.StatusCode))" } else { "❌ Error: $($frontendTest.Error)" })" -ForegroundColor $(if ($frontendTest.Success) { 'Green' } else { 'Red' })
-    
+
+    $frontendTest = Test-HttpEndpoint -Url "https://localhost:5173/"
+    Write-Host "Frontend (https://localhost:5173/): $(if ($frontendTest.Success) { "✅ OK ($($frontendTest.StatusCode))" } else { "❌ Error: $($frontendTest.Error)" })" -ForegroundColor $(if ($frontendTest.Success) { 'Green' } else { 'Red' })
+
     if ($backend8000) {
-        $proxyTest = Test-HttpEndpoint -Url "http://localhost:5173/api/"
-        Write-Host "Proxy (http://localhost:5173/api/): $(if ($proxyTest.Success) { "✅ OK ($($proxyTest.StatusCode))" } else { "❌ Error: $($proxyTest.Error)" })" -ForegroundColor $(if ($proxyTest.Success) { 'Green' } else { 'Red' })
-    } else {
+        $proxyTest = Test-HttpEndpoint -Url "https://localhost:5173/api/"
+        Write-Host "Proxy (https://localhost:5173/api/): $(if ($proxyTest.Success) { "✅ OK ($($proxyTest.StatusCode))" } else { "❌ Error: $($proxyTest.Error)" })" -ForegroundColor $(if ($proxyTest.Success) { 'Green' } else { 'Red' })
+    }
+    else {
         Write-Host "Proxy: ⚠️ No se puede probar (backend inactivo)" -ForegroundColor Yellow
     }
-} else {
+}
+else {
     Write-Host "❌ Frontend no disponible - no se pueden probar endpoints" -ForegroundColor Red
 }
 
@@ -94,10 +100,12 @@ try {
                 Write-Host "     📱 Acceso móvil: http://$($ip.IPAddress):5173" -ForegroundColor Cyan
             }
         }
-    } else {
+    }
+    else {
         Write-Host "⚠️ No se encontraron IPs locales válidas" -ForegroundColor Yellow
     }
-} catch {
+}
+catch {
     Write-Host "❌ Error obteniendo información de red: $($_.Exception.Message)" -ForegroundColor Red
 }
 
@@ -122,10 +130,12 @@ if ($viteConfig) {
         $viteContent = Get-Content "frontend\vite.config.ts" -Raw
         if ($viteContent -match "proxy.*api") {
             Write-Host "✅ Proxy configurado correctamente" -ForegroundColor Green
-        } else {
+        }
+        else {
             Write-Host "⚠️ Proxy no detectado en la configuración" -ForegroundColor Yellow
         }
-    } catch {
+    }
+    catch {
         Write-Host "❌ Error leyendo vite.config.ts" -ForegroundColor Red
     }
 }
@@ -156,28 +166,29 @@ if ($issues.Count -eq 0) {
     Write-Host "🎉 ¡TODO ESTÁ FUNCIONANDO CORRECTAMENTE!" -ForegroundColor Green
     Write-Host ""
     Write-Host "URLs disponibles:" -ForegroundColor Cyan
-    Write-Host "  🌐 Frontend: http://localhost:5173" -ForegroundColor Green
-    Write-Host "  🔧 Backend: http://localhost:8000" -ForegroundColor Green
-    Write-Host "  📚 Admin: http://localhost:8000/admin" -ForegroundColor Green
-    
+    Write-Host "  🌐 Frontend: https://localhost:5173" -ForegroundColor Green
+    Write-Host "  🔧 Backend: https://localhost:8000" -ForegroundColor Green
+    Write-Host "  📚 Admin: https://localhost:8000/admin" -ForegroundColor Green
+
     if ($localIPs) {
         $mobileIP = $localIPs | Where-Object { $_.IPAddress -like "192.168.*" -or $_.IPAddress -like "10.*" } | Select-Object -First 1
         if ($mobileIP) {
             Write-Host "  📱 Móvil: http://$($mobileIP.IPAddress):5173" -ForegroundColor Green
         }
     }
-} else {
+}
+else {
     Write-Host "❌ PROBLEMAS DETECTADOS:" -ForegroundColor Red
     foreach ($issue in $issues) {
         Write-Host "  • $issue" -ForegroundColor Red
     }
-    
+
     Write-Host ""
     Write-Host "💡 RECOMENDACIONES:" -ForegroundColor Yellow
     foreach ($rec in $recommendations) {
         Write-Host "  • $rec" -ForegroundColor Yellow
     }
-    
+
     Write-Host ""
     Write-Host "🚀 Para un inicio automático, ejecuta:" -ForegroundColor Cyan
     Write-Host "   .\inicio-robusto.ps1" -ForegroundColor Green

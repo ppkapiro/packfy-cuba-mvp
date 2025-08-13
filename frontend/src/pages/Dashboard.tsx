@@ -9,7 +9,7 @@ import DashboardStats from '../components/DashboardStats';
 import ErrorBoundary from '../components/ErrorBoundary';
 import ErrorFallback from '../components/ErrorFallback';
 import { Envio } from '../types';
-import '../styles/dashboard.css';
+// 🇨🇺 Estilos cargados globalmente desde main.tsx
 
 // Función auxiliar para formatear fechas de forma segura
 const formatearFechaSafe = (fecha: string | null | undefined): string => {

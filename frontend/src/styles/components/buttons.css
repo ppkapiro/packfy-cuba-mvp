@@ -1,0 +1,455 @@
+/* 🇨🇺 PACKFY CUBA - BOTONES MODERNOS v4.0 */
+/* ============================================= */
+/* Sistema de botones con glassmorphism y microinteracciones */
+
+/* ==========================================
+   🇨🇺 BOTÓN BASE MODERNO
+   ========================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-6);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
+  border: 1px solid transparent;
+  border-radius: var(--border-radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-normal) var(--ease-out-quart);
+  text-decoration: none;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+  background-clip: padding-box;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Efecto ripple para todos los botones */
+.btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width var(--transition-fast), height var(--transition-fast);
+}
+
+.btn:active::before {
+  width: 300px;
+  height: 300px;
+  transition: width 0s, height 0s;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  pointer-events: none;
+}
+
+.btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.25);
+  z-index: 1;
+}
+
+.btn:not(:disabled):hover {
+  transform: var(--transform-translate-y-sm);
+}
+
+.btn:not(:disabled):active {
+  transform: scale(0.98);
+  transition: transform var(--transition-fast);
+}
+
+/* ==========================================
+   🇨🇺 BOTONES GLASSMORPHISM
+   ========================================== */
+
+/* Botón Primario Glassmorphism */
+.btn-primary {
+  background: var(--gradient-primary);
+  color: var(--white);
+  border-color: rgba(0, 102, 204, 0.3);
+  box-shadow: var(--shadow-primary);
+  -webkit-backdrop-filter: var(--blur-sm);
+  backdrop-filter: var(--blur-sm);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--gradient-ocean);
+  box-shadow: var(--shadow-xl), 0 0 20px rgba(0, 102, 204, 0.4);
+  border-color: rgba(0, 102, 204, 0.5);
+}
+
+/* Botón Secundario Glassmorphism */
+.btn-secondary {
+  background: var(--gradient-secondary);
+  color: var(--white);
+  border-color: rgba(229, 62, 62, 0.3);
+  box-shadow: var(--shadow-secondary);
+  -webkit-backdrop-filter: var(--blur-sm);
+  backdrop-filter: var(--blur-sm);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--gradient-sunset);
+  box-shadow: var(--shadow-xl), 0 0 20px rgba(229, 62, 62, 0.4);
+  border-color: rgba(229, 62, 62, 0.5);
+}
+
+/* Botón de Acento Dorado */
+.btn-accent {
+  background: var(--gradient-accent);
+  color: var(--gray-900);
+  border-color: rgba(255, 215, 0, 0.4);
+  box-shadow: var(--shadow-accent);
+  font-weight: var(--font-weight-bold);
+  -webkit-backdrop-filter: var(--blur-sm);
+  backdrop-filter: var(--blur-sm);
+}
+
+.btn-accent:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ff8c00 100%);
+  box-shadow: var(--shadow-xl), 0 0 25px rgba(255, 215, 0, 0.6);
+  color: var(--white);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* ==========================================
+   🇨🇺 BOTONES OUTLINE MODERNOS
+   ========================================== */
+.btn-outline {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  -webkit-backdrop-filter: var(--blur-md);
+  backdrop-filter: var(--blur-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: var(--primary);
+  color: var(--white);
+  box-shadow: var(--shadow-primary);
+  transform: var(--transform-translate-y-sm) var(--transform-scale-sm);
+}
+
+.btn-outline-success {
+  color: var(--success);
+  border-color: var(--success);
+}
+
+.btn-outline-success:hover:not(:disabled) {
+  background: var(--gradient-success);
+  color: var(--white);
+  box-shadow: var(--shadow-success);
+}
+
+.btn-outline-warning {
+  color: var(--warning);
+  border-color: var(--warning);
+}
+
+.btn-outline-warning:hover:not(:disabled) {
+  background: var(--gradient-warning);
+  color: var(--white);
+  box-shadow: var(--shadow-accent);
+}
+
+/* ==========================================
+   🇨🇺 BOTONES FANTASMA
+   ========================================== */
+.btn-ghost {
+  background: transparent;
+  color: var(--gray-600);
+  border: 1px solid transparent;
+  box-shadow: none;
+}
+
+/* ==========================================
+   🇨🇺 BOTONES DE ESTADO MODERNOS
+   ========================================== */
+.btn-success {
+  background: var(--gradient-success);
+  color: var(--white);
+  border-color: rgba(56, 161, 105, 0.3);
+  box-shadow: var(--shadow-success);
+}
+
+.btn-success:hover:not(:disabled) {
+  background: var(--gradient-tropical);
+  box-shadow: var(--shadow-xl), 0 0 20px rgba(56, 161, 105, 0.4);
+}
+
+.btn-warning {
+  background: var(--gradient-warning);
+  color: var(--gray-900);
+  border-color: rgba(237, 137, 54, 0.3);
+  box-shadow: var(--shadow-accent);
+  font-weight: var(--font-weight-medium);
+}
+
+.btn-warning:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ed8936 0%, #ffd700 100%);
+  color: var(--white);
+  box-shadow: var(--shadow-xl), 0 0 20px rgba(237, 137, 54, 0.4);
+}
+
+.btn-error {
+  background: var(--gradient-error);
+  color: var(--white);
+  border-color: rgba(229, 62, 62, 0.3);
+  box-shadow: var(--shadow-secondary);
+}
+
+.btn-error:hover:not(:disabled) {
+  background: var(--gradient-sunset);
+  box-shadow: var(--shadow-xl), 0 0 20px rgba(229, 62, 62, 0.4);
+}
+
+/* ==========================================
+   🇨🇺 TAMAÑOS DE BOTONES MODERNOS
+   ========================================== */
+.btn-xs {
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: var(--font-size-xs);
+  border-radius: var(--border-radius-md);
+  gap: var(--spacing-1);
+}
+
+.btn-sm {
+  padding: var(--spacing-2) var(--spacing-4);
+  font-size: var(--font-size-sm);
+  border-radius: var(--border-radius-md);
+  gap: var(--spacing-1);
+}
+
+.btn-md {
+  padding: var(--spacing-3) var(--spacing-6);
+  font-size: var(--font-size-base);
+  border-radius: var(--border-radius-lg);
+  gap: var(--spacing-2);
+}
+
+.btn-lg {
+  padding: var(--spacing-4) var(--spacing-8);
+  font-size: var(--font-size-lg);
+  border-radius: var(--border-radius-lg);
+  gap: var(--spacing-3);
+  font-weight: var(--font-weight-bold);
+}
+
+.btn-xl {
+  padding: var(--spacing-5) var(--spacing-10);
+  font-size: var(--font-size-xl);
+  border-radius: var(--border-radius-xl);
+  gap: var(--spacing-3);
+  font-weight: var(--font-weight-bold);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================
+   🇨🇺 VARIANTES ESPECIALES CUBANAS
+   ========================================== */
+
+/* Botón de ancho completo */
+.btn-full {
+  width: 100%;
+  justify-content: center;
+}
+
+/* Botón circular moderno */
+.btn-circle {
+  border-radius: var(--border-radius-full);
+  aspect-ratio: 1;
+  padding: var(--spacing-3);
+  min-width: auto;
+}
+
+/* Botón con efecto glassmorphism intenso */
+.btn-glass {
+  background: rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter: var(--blur-lg);
+  backdrop-filter: var(--blur-lg);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--primary);
+  font-weight: var(--font-weight-bold);
+}
+
+.btn-glass:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: var(--shadow-glass-hover);
+  color: var(--primary-dark);
+}
+
+/* Botón flotante cubano */
+.btn-float {
+  box-shadow: var(--shadow-xl);
+  border: none;
+  background: var(--gradient-hero);
+  color: var(--white);
+}
+
+.btn-float:hover:not(:disabled) {
+  transform: var(--transform-translate-y-lg) var(--transform-scale-lg);
+  box-shadow: var(--shadow-2xl), 0 0 30px rgba(0, 102, 204, 0.5);
+}
+
+/* Botón con gradiente animado */
+.btn-animated {
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* ==========================================
+   🇨🇺 GRUPOS DE BOTONES
+   ========================================== */
+.btn-group {
+  display: inline-flex;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-group .btn {
+  border-radius: 0;
+  border-right-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.btn-group .btn:first-child {
+  border-top-left-radius: var(--border-radius-lg);
+  border-bottom-left-radius: var(--border-radius-lg);
+}
+
+.btn-group .btn:last-child {
+  border-top-right-radius: var(--border-radius-lg);
+  border-bottom-right-radius: var(--border-radius-lg);
+  border-right-width: 1px;
+}
+
+.btn-group .btn:hover {
+  z-index: 2;
+}
+
+/* ==========================================
+   🇨🇺 BOTONES RESPONSIVOS
+   ========================================== */
+@media (max-width: 768px) {
+  .btn {
+    padding: var(--spacing-3) var(--spacing-5);
+    font-size: var(--font-size-sm);
+  }
+
+  .btn-lg {
+    padding: var(--spacing-4) var(--spacing-6);
+    font-size: var(--font-size-base);
+  }
+
+  .btn-xl {
+    padding: var(--spacing-4) var(--spacing-8);
+    font-size: var(--font-size-lg);
+  }
+}
+.btn-icon {
+  padding: var(--spacing-3);
+  aspect-ratio: 1;
+}
+
+/* ==========================================
+   🇨🇺 GRUPOS DE BOTONES
+   ========================================== */
+.btn-group {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.btn-group .btn:not(:first-child) {
+  margin-left: -1px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.btn-group .btn:not(:last-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.btn-group .btn:hover {
+  z-index: 1;
+}
+
+/* ==========================================
+   🇨🇺 EFECTOS ESPECIALES
+   ========================================== */
+
+/* Efecto ripple para botones primarios */
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: var(--border-radius-full);
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s;
+}
+
+.btn-primary:active::after {
+  width: 300px;
+  height: 300px;
+  transition: width 0s, height 0s;
+}
+
+/* ==========================================
+   🇨🇺 BOTONES RESPONSIVOS
+   ========================================== */
+@media (max-width: 640px) {
+  .btn-responsive {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-group-responsive {
+    flex-direction: column;
+  }
+
+  .btn-group-responsive .btn {
+    margin-left: 0;
+    margin-top: -1px;
+    border-radius: var(--border-radius-md);
+  }
+
+  .btn-group-responsive .btn:not(:first-child) {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .btn-group-responsive .btn:not(:last-child) {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}

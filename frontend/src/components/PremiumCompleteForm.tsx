@@ -1,12 +1,12 @@
 import React, { useState, useCallback } from 'react';
-import { Package, Camera, QrCode, Star, CheckCircle, MapPin, User, Calculator, Printer, Save, Trash2 } from 'lucide-react';
+import { Package, Camera, QrCode, Star, CheckCircle, MapPin, User, Calculator, Printer, Save } from 'lucide-react';
 import { api } from '../services/api';
 import CameraService, { PackagePhoto as CameraPhoto } from '../services/camera';
 import PackageCamera from './PackageCamera';
-import '../styles/simple-mode.css';
+// 🇨🇺 Estilos cargados globalmente desde main.tsx
 
 // 🎯 FORMULARIO PREMIUM COMPLETO - Todas las funcionalidades
-// Combina lo mejor de ModernAdvancedForm y AdvancedPackageForm
+// Formulario avanzado con características premium completas
 
 // Interfaces premium completas
 interface PremiumPackageData {

@@ -49,6 +49,47 @@ dist/
 build/
 *.egg-info/
 
+# Archivos temporales y documentación de desarrollo
+*.md.tmp
+*-EN-PROGRESO.md
+ANALISIS-*.md
+BACKUP-*.md
+CONFIGURACION-*.md
+DISTRIBUCION-*.md
+DOCKER-*.md
+ELIMINACION-*.md
+ESTILOS-*.md
+FORMULARIOS-*.md
+HTTPS-*.md
+LIMPIEZA-*.md
+MODERNIZACION-*.md
+REPORTE-*.md
+RESOLUCION-*.md
+REVISION-*.md
+SISTEMA-*.md
+SOLUCION-*.md
+UNIFICACION-*.md
+
+# Scripts temporales de desarrollo
+actualizar-docker-*.ps1
+guia-*.ps1
+iniciar-*.ps1
+inicio-*.ps1
+verificar-*.ps1
+
+# Archivos de configuración específicos del entorno
+.env.https
+.env.unified
+
+# Certificados SSL temporales
+frontend/cert/
+frontend/certs/
+
+# Backups de configuración
+*.backup
+*.corrupted
+*_backup.*
+
 # Backup files
 *.backup
 *.bak

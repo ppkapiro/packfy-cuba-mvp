@@ -1,23 +1,21 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
-import Layout from './components/Layout';
+import Layout from './components/Layout';  // Layout clásico que funciona
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import NewShipment from './pages/NewShipment';
 import ShipmentDetail from './pages/ShipmentDetail';
-import TrackingPageFixed from './pages/TrackingPageFixed';
 import PublicTrackingPage from './pages/PublicTrackingPage';
 import DiagnosticPage from './pages/DiagnosticPage';
-import EnvioModePage from './pages/EnvioModePage';
+import ModernModeSelector from './components/ModernModeSelector';
 import SimpleAdvancedPage from './pages/SimpleAdvancedPage';
-import ModernAdvancedPage from './pages/ModernAdvancedPage';
-import GestionEnvios from './pages/GestionEnvios';
+import PremiumFormPage from './pages/PremiumFormPage';
+import GestionUnificada from './pages/GestionUnificada';
 import EditarEnvio from './pages/EditarEnvio';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import NetworkStatusBanner from './components/NetworkStatusBanner';
 
-// 🇨🇺 PACKFY CUBA - SISTEMA UNIFICADO v3.0
-import './styles/unified-system.css';
+// 🇨🇺 PACKFY CUBA - SISTEMA UNIFICADO v3.3 (estilos cargados desde main.tsx)
 
 // Componente de rutas protegidas
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -47,7 +45,7 @@ function App() {
               <Route path="/diagnostico" element={<DiagnosticPage />} />
               <Route path="/rastrear" element={<PublicTrackingPage />} />
 
-              {/* Rutas protegidas */}
+              {/* Rutas protegidas con navegación clásica funcional */}
               <Route
                 path="/"
                 element={
@@ -58,18 +56,13 @@ function App() {
               >
                 <Route index element={<Navigate to="/dashboard" />} />
                 <Route path="dashboard" element={<Dashboard />} />
-                <Route path="envios" element={<GestionEnvios />} />
-                <Route path="envios/modo" element={<EnvioModePage />} />
-                <Route path="gestion/gratuita" element={<GestionEnvios />} />
-                <Route path="gestion/premium" element={<GestionEnvios />} />
+                <Route path="envios" element={<GestionUnificada />} />
+                <Route path="envios/modo" element={<ModernModeSelector />} />
                 <Route path="envios/nuevo" element={<NewShipment />} />
                 <Route path="envios/:id" element={<ShipmentDetail />} />
                 <Route path="envios/:id/editar" element={<EditarEnvio />} />
                 <Route path="envios/simple" element={<SimpleAdvancedPage />} />
-                <Route path="envios/premium" element={<ModernAdvancedPage />} />
-                <Route path="envios/moderno" element={<ModernAdvancedPage />} />
-                <Route path="envios/modern" element={<ModernAdvancedPage />} />
-                <Route path="rastreo" element={<TrackingPageFixed />} />
+                <Route path="envios/premium" element={<PremiumFormPage />} />
               </Route>
             </Routes>
           </div>
