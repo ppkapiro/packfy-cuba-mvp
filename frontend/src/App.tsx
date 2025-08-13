@@ -68,6 +68,7 @@ function App() {
                 <Route path="envios/simple" element={<SimpleAdvancedPage />} />
                 <Route path="envios/premium" element={<ModernAdvancedPage />} />
                 <Route path="envios/moderno" element={<ModernAdvancedPage />} />
+                <Route path="envios/modern" element={<ModernAdvancedPage />} />
                 <Route path="rastreo" element={<TrackingPageFixed />} />
               </Route>
             </Routes>

@@ -1,8 +1,8 @@
 import React from 'react';
-import ModernAdvancedForm from '../components/ModernAdvancedForm';
+import PremiumCompleteForm from '../components/PremiumCompleteForm';
 
 const ModernAdvancedPage: React.FC = () => {
-  return <ModernAdvancedForm />;
+  return <PremiumCompleteForm />;
 };
 
 export default ModernAdvancedPage;

@@ -1,10 +1,10 @@
 import React from 'react';
-import SimpleForm from '../components/SimpleForm';
+import SimpleAdvancedForm from '../components/SimpleAdvancedForm';
 
 const SimpleAdvancedPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
-      <SimpleForm />
+      <SimpleAdvancedForm />
     </div>
   );
 };
