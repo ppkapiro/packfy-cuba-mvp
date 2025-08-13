@@ -1,0 +1,312 @@
+/* Estilos específicos para el Modo Simple */
+
+.simple-form-container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.simple-form-card {
+  background: white;
+  border-radius: 1.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.simple-form-header {
+  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.simple-form-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.simple-step-indicator {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.simple-step {
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.simple-step-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.simple-step-icon.active {
+  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+}
+
+.simple-step-icon.inactive {
+  background: #e5e7eb;
+  color: #6b7280;
+}
+
+.simple-step-label {
+  margin-left: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.simple-step-label.active {
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.simple-step-divider {
+  width: 2rem;
+  height: 1px;
+  background: #d1d5db;
+  margin: 0 1rem;
+}
+
+.simple-input-group {
+  background: #f8fafc;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e2e8f0;
+}
+
+.simple-input-group h4 {
+  color: #1e293b;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.simple-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.simple-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.simple-input.error {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.simple-error-message {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.simple-price-breakdown {
+  background: linear-gradient(135deg, #ecfdf5 0%, #f0f9ff 100%);
+  border: 1px solid #22c55e;
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+.simple-price-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.simple-price-item:last-child {
+  border-bottom: none;
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: #059669;
+}
+
+.simple-button {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.simple-button-primary {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  border: none;
+}
+
+.simple-button-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+}
+
+.simple-button-secondary {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.simple-button-secondary:hover {
+  background: #e5e7eb;
+}
+
+.simple-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.simple-photo-preview {
+  background: #f8fafc;
+  border: 2px dashed #d1d5db;
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.simple-photo-preview.has-photo {
+  background: #ecfdf5;
+  border-color: #22c55e;
+}
+
+.simple-photo-icon {
+  width: 4rem;
+  height: 4rem;
+  background: #f3f4f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.simple-photo-icon.success {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.simple-tracking-display {
+  background: #eff6ff;
+  border: 1px solid #3b82f6;
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.simple-tracking-number {
+  font-family: "Courier New", monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e40af;
+  background: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  margin: 1rem 0;
+}
+
+.simple-info-box {
+  background: #fef7cd;
+  border: 1px solid #f59e0b;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.simple-info-box h5 {
+  color: #92400e;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.simple-info-box ul {
+  color: #78350f;
+  font-size: 0.875rem;
+}
+
+.simple-animation-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.simple-animation-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .simple-form-container {
+    padding: 0.5rem;
+  }
+
+  .simple-step-indicator {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .simple-step-divider {
+    display: none;
+  }
+
+  .simple-input-group {
+    padding: 1rem;
+  }
+
+  .simple-button {
+    padding: 1rem;
+    font-size: 0.875rem;
+  }
+}

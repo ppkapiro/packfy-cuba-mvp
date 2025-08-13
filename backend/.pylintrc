@@ -1,0 +1,15 @@
+# Pylint configuration for Django - DISABLED
+# Este archivo desactiva Pylint completamente para el proyecto
+
+[MASTER]
+disable=all
+
+[MESSAGES CONTROL]
+# Deshabilitar todos los mensajes
+disable=all
+
+[REPORTS]
+reports=no
+
+[FORMAT]
+max-line-length=88

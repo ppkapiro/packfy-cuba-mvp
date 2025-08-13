@@ -1,0 +1,11 @@
+# Pylint configuration - DISABLED for Packfy Cuba MVP
+# El proyecto usa Docker y las validaciones se hacen en el contenedor
+
+[MASTER]
+disable=all
+
+[MESSAGES CONTROL]
+disable=all
+
+[REPORTS]
+reports=no

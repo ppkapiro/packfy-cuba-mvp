@@ -58,7 +58,8 @@ function App() {
               >
                 <Route index element={<Navigate to="/dashboard" />} />
                 <Route path="dashboard" element={<Dashboard />} />
-                <Route path="envios" element={<EnvioModePage />} />
+                <Route path="envios" element={<GestionEnvios />} />
+                <Route path="envios/modo" element={<EnvioModePage />} />
                 <Route path="gestion/gratuita" element={<GestionEnvios />} />
                 <Route path="gestion/premium" element={<GestionEnvios />} />
                 <Route path="envios/nuevo" element={<NewShipment />} />
