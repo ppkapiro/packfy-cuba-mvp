@@ -250,6 +250,8 @@ export const Chatbot: React.FC<ChatbotProps> = ({
       <div className={`fixed ${getPositionClasses()} z-50`}>
         <button
           onClick={() => setIsOpen(true)}
+          title="Abrir Chat de Ayuda"
+          aria-label="Abrir asistente virtual"
           className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 animate-pulse"
         >
           <MessageCircle className="w-6 h-6" />
@@ -299,6 +301,8 @@ export const Chatbot: React.FC<ChatbotProps> = ({
             </button>
             <button
               onClick={() => setIsOpen(false)}
+              title="Cerrar Chat"
+              aria-label="Cerrar asistente virtual"
               className="p-1 text-gray-300 hover:text-white transition-colors"
             >
               <X className="w-4 h-4" />
@@ -386,9 +390,9 @@ export const Chatbot: React.FC<ChatbotProps> = ({
                     </div>
                     <div className="bg-white/10 p-3 rounded-2xl rounded-bl-md">
                       <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce" />
-                        <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
-                        <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                        <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce typing-dot-1" />
+                        <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce typing-dot-2" />
+                        <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce typing-dot-3" />
                       </div>
                     </div>
                   </div>

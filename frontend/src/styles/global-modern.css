@@ -47,8 +47,8 @@
 /* Todas las tarjetas blancas convertir a glassmorphism */
 .bg-white {
   background: rgba(255, 255, 255, 0.25) !important;
-  backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
+  backdrop-filter: blur(20px) !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 20px rgba(0, 102, 204, 0.1) !important;
@@ -169,6 +169,7 @@ input,
 select,
 textarea {
   background: rgba(255, 255, 255, 0.2) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
   backdrop-filter: blur(10px) !important;
   border: 1px solid rgba(255, 255, 255, 0.3) !important;
   border-radius: 0.5rem !important;
@@ -223,6 +224,7 @@ label {
 /* Tabla principal moderna */
 table {
   background: rgba(255, 255, 255, 0.15) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
   backdrop-filter: blur(15px) !important;
   border-radius: 1rem !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
@@ -278,6 +280,7 @@ tbody td {
   ) !important;
   color: #0066cc !important;
   border: 1px solid rgba(0, 102, 204, 0.2) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
   backdrop-filter: blur(5px) !important;
 }
 
@@ -289,6 +292,7 @@ tbody td {
   ) !important;
   color: #d69e2e !important;
   border: 1px solid rgba(255, 215, 0, 0.2) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
   backdrop-filter: blur(5px) !important;
 }
 
@@ -300,6 +304,7 @@ tbody td {
   ) !important;
   color: #38a169 !important;
   border: 1px solid rgba(56, 161, 105, 0.2) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
   backdrop-filter: blur(5px) !important;
 }
 
@@ -311,6 +316,7 @@ tbody td {
   ) !important;
   color: #e53e3e !important;
   border: 1px solid rgba(229, 62, 62, 0.2) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
   backdrop-filter: blur(5px) !important;
 }
 
@@ -377,6 +383,7 @@ a:hover {
 /* Formularios específicos */
 .form-container {
   background: rgba(255, 255, 255, 0.2) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
   backdrop-filter: blur(20px) !important;
   border-radius: 1.5rem !important;
   padding: 2rem !important;
@@ -461,6 +468,35 @@ body {
 }
 
 .container > *:nth-child(3) {
+  animation-delay: 0.2s !important;
+}
+
+/* Clases para animaciones de typing indicator */
+.typing-dot-1 {
+  animation-delay: 0s !important;
+}
+
+.typing-dot-2 {
+  animation-delay: 0.1s !important;
+}
+
+.typing-dot-3 {
+  animation-delay: 0.2s !important;
+}
+
+/* Clase para barra de confianza dinámica */
+.confidence-bar {
+  width: var(--confidence-width, 0%) !important;
+}
+
+/* Clase para transiciones de imagen optimizada */
+.optimized-image-transition {
+  transition: opacity 0.3s ease-in-out !important;
+  opacity: var(--image-opacity, 1) !important;
+  filter: var(--image-filter, none) !important;
+}
+
+.container > *:nth-child(4) {
   animation-delay: 0.2s !important;
 }
 

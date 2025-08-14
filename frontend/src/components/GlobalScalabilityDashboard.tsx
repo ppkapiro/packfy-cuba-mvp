@@ -1,9 +1,8 @@
 // 🇨🇺 PACKFY CUBA - Dashboard Global de Escalabilidad v4.0
 import React, { useState, useEffect } from 'react';
+import '../styles/components/scalability-dashboard.css';
 import {
   Globe,
-  BarChart3,
-  TrendingUp,
   Users,
   Package,
   DollarSign,
@@ -11,16 +10,11 @@ import {
   Activity,
   Zap,
   Shield,
-  Database,
-  Cloud,
   RefreshCw,
   AlertTriangle,
   CheckCircle,
   XCircle,
-  Clock,
-  Server,
-  Cpu,
-  HardDrive
+  Clock
 } from 'lucide-react';
 
 interface GlobalMetrics {
@@ -307,6 +301,8 @@ export const GlobalScalabilityDashboard: React.FC<{ className?: string }> = ({ c
             value={selectedRegion}
             onChange={(e) => setSelectedRegion(e.target.value)}
             className="bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm"
+            aria-label="Seleccionar región global"
+            title="Selecciona una región para visualizar estadísticas específicas"
           >
             {regions.map(region => (
               <option key={region.code} value={region.code} className="bg-gray-800">
@@ -425,11 +421,10 @@ export const GlobalScalabilityDashboard: React.FC<{ className?: string }> = ({ c
                     <div className="flex items-center gap-2">
                       <div className="flex-1 bg-gray-700 rounded-full h-2">
                         <div
-                          className={`h-2 rounded-full transition-all duration-300 ${
-                            region.load > 80 ? 'bg-red-500' :
-                            region.load > 60 ? 'bg-yellow-500' : 'bg-green-500'
+                          className={`h-2 rounded-full load-bar load-${Math.round(region.load / 5) * 5} ${
+                            region.load > 80 ? 'load-bar-high' :
+                            region.load > 60 ? 'load-bar-medium' : 'load-bar-low'
                           }`}
-                          style={{ width: `${Math.min(region.load, 100)}%` }}
                         />
                       </div>
                       <span className="text-sm font-medium text-white w-8">

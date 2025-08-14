@@ -54,9 +54,10 @@ class SecureTokenObtainPairView(TokenObtainPairView):
         # Log del intento de login
         ip = self._get_client_ip(request)
         user_agent = request.META.get("HTTP_USER_AGENT", "")
-        username = request.data.get("username", "unknown")
+        # Como el modelo Usuario usa email como USERNAME_FIELD, buscamos email
+        email = request.data.get("email", "unknown")
 
-        logger.info(f"Login attempt for username: {username} from IP: {ip}")
+        logger.info(f"Login attempt for username: {email} from IP: {ip}")
 
         # Verificar si la IP está bloqueada
         if self._is_ip_blocked(ip):
@@ -70,12 +71,12 @@ class SecureTokenObtainPairView(TokenObtainPairView):
             )
 
         # Validación de campos requeridos
-        if not username or not request.data.get("password"):
-            self._log_failed_attempt(ip, username, "missing_credentials")
+        if not email or not request.data.get("password"):
+            self._log_failed_attempt(ip, email, "missing_credentials")
             return Response(
                 {
                     "error": "Invalid credentials",
-                    "detail": "Username and password are required",
+                    "detail": "Email and password are required",
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
@@ -85,8 +86,8 @@ class SecureTokenObtainPairView(TokenObtainPairView):
             response = super().post(request, *args, **kwargs)
 
             if response.status_code == 200:
-                # Login exitoso
-                user = Usuario.objects.get(username=username)
+                # Login exitoso - buscar usuario por email ya que es el USERNAME_FIELD
+                user = Usuario.objects.get(email=email)
                 self._log_successful_login(user, ip, user_agent)
 
                 # Crear tokens seguros
@@ -108,14 +109,14 @@ class SecureTokenObtainPairView(TokenObtainPairView):
 
             else:
                 # Login fallido
-                self._log_failed_attempt(ip, username, "invalid_credentials")
+                self._log_failed_attempt(ip, email, "invalid_credentials")
                 self._track_failed_attempt(ip)
 
             return response
 
         except Exception as e:
-            logger.error(f"Login error for {username}: {str(e)}")
-            self._log_failed_attempt(ip, username, "system_error")
+            logger.error(f"Login error for {email}: {str(e)}")
+            self._log_failed_attempt(ip, email, "system_error")
             return Response(
                 {
                     "error": "Authentication failed",

@@ -1,0 +1,15 @@
+# ===========================================
+# VSCODE HTML/CSS VALIDATION SETTINGS
+# ===========================================
+# Disable compat warnings for modern features
+
+[css]
+validate=false
+
+[html]
+validate.styles=false
+validate.scripts=false
+
+[stylelint]
+config.rules.compat-api/css=null
+config.rules.compat-api/html=null

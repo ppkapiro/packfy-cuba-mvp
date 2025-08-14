@@ -2,6 +2,7 @@
 // Compresión automática y lazy loading de imágenes
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+import '../styles/components/images.css'
 
 interface OptimizedImageProps {
   src: string
@@ -143,7 +144,7 @@ export function OptimizedImage({
         width={width}
         height={height}
         className={`
-          optimized-image
+          optimized-image optimized-image-transition
           ${isLoaded ? 'loaded' : 'loading'}
           ${error ? 'error' : ''}
         `}
@@ -157,11 +158,6 @@ export function OptimizedImage({
         onError={() => {
           setError(true)
           onError?.()
-        }}
-        style={{
-          transition: 'opacity 0.3s ease-in-out',
-          opacity: isLoaded ? 1 : 0.7,
-          filter: isLoaded ? 'none' : 'blur(1px)',
         }}
       />
 

@@ -1,0 +1,46 @@
+/* ===========================================
+   AI DASHBOARD COMPONENT STYLES
+   ========================================== */
+
+.confidence-bar {
+  width: var(--confidence-width, 0%);
+}
+
+.confidence-bar-0 {
+  width: 0%;
+}
+.confidence-bar-10 {
+  width: 10%;
+}
+.confidence-bar-20 {
+  width: 20%;
+}
+.confidence-bar-30 {
+  width: 30%;
+}
+.confidence-bar-40 {
+  width: 40%;
+}
+.confidence-bar-50 {
+  width: 50%;
+}
+.confidence-bar-60 {
+  width: 60%;
+}
+.confidence-bar-70 {
+  width: 70%;
+}
+.confidence-bar-80 {
+  width: 80%;
+}
+.confidence-bar-90 {
+  width: 90%;
+}
+.confidence-bar-100 {
+  width: 100%;
+}
+
+/* Utilidad para establecer el ancho dinámicamente */
+.ai-dashboard .confidence-bar {
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

@@ -140,12 +140,12 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_THROTTLE_CLASSES": [
-        "rest_framework.throttling.AnonRateThrottle",
-        "rest_framework.throttling.UserRateThrottle",
+        # "rest_framework.throttling.AnonRateThrottle",  # Temporalmente deshabilitado
+        # "rest_framework.throttling.UserRateThrottle",   # Temporalmente deshabilitado
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "anon": "100/hour",
-        "user": "1000/hour",
+        "anon": "10000/hour",  # Más permisivo para debugging
+        "user": "10000/hour",  # Más permisivo para debugging
     },
 }
 

@@ -1,0 +1,168 @@
+{
+  "// 🚀 CONFIGURACIÓN VS CODE OPTIMIZADA": "Rendimiento mejorado manteniendo funcionalidad",
+
+  "// === TERMINAL ESENCIAL ===": "Solo PowerShell 7 principal",
+  "terminal.integrated.defaultProfile.windows": "PowerShell 7",
+  "terminal.integrated.enablePersistentSessions": false,
+  "terminal.integrated.fontSize": 13,
+  "terminal.integrated.fontFamily": "CascadiaCode Nerd Font",
+  "terminal.integrated.scrollback": 5000,
+
+  "// === ARCHIVOS Y CODIFICACIÓN ===": "Configuración UTF-8 optimizada",
+  "files.encoding": "utf8",
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 2000,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+
+  "// === EDITOR OPTIMIZADO ===": "Configuración equilibrada",
+  "editor.fontSize": 14,
+  "editor.fontFamily": "CascadiaCode Nerd Font, Consolas, 'Courier New'",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": false,
+  "editor.formatOnType": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "editor.cursorBlinking": "smooth",
+  "editor.smoothScrolling": true,
+  "editor.minimap.enabled": false,
+  "editor.wordWrap": "on",
+
+  "// === BÚSQUEDA OPTIMIZADA ===": "Exclusiones para mejor rendimiento",
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.git": true,
+    "**/venv": true,
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/coverage": true,
+    "**/.nyc_output": true,
+    "**/archive": true
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/coverage": true,
+    "**/archive": true
+  },
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/.git/**": true,
+    "**/dist/**": true,
+    "**/build/**": true,
+    "**/__pycache__/**": true,
+    "**/venv/**": true,
+    "**/archive/**": true
+  },
+
+  "// === PYTHON OPTIMIZADO ===": "Solo lo esencial",
+  "python.defaultInterpreterPath": "python",
+  "python.terminal.activateEnvironment": false,
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.autoSearchPaths": true,
+  "python.analysis.extraPaths": ["${workspaceFolder}/backend"],
+  "python.analysis.exclude": [
+    "**/node_modules/**",
+    "**/venv/**",
+    "**/__pycache__/**",
+    "**/archive/**"
+  ],
+
+  "// === TYPESCRIPT/JAVASCRIPT ===": "Configuración eficiente",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.preferences.includePackageJsonAutoImports": "on",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+
+  "// === GIT OPTIMIZADO ===": "Control de versiones esencial",
+  "git.autofetch": false,
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "git.decorations.enabled": true,
+  "diffEditor.ignoreTrimWhitespace": false,
+
+  "// === INTERFAZ SIMPLIFICADA ===": "UI optimizada",
+  "workbench.colorTheme": "Visual Studio 2017 Dark - C++",
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.startupEditor": "none",
+  "workbench.editor.enablePreview": false,
+  "workbench.sideBar.location": "left",
+  "workbench.panel.defaultLocation": "bottom",
+  "workbench.tree.indent": 15,
+
+  "// === EXTENSIONES OPTIMIZADAS ===": "Solo lo necesario",
+  "extensions.autoUpdate": false,
+  "extensions.ignoreRecommendations": true,
+
+  "// === FORMATTERS POR LENGUAJE ===": "Configuración específica",
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
+    "editor.wordWrap": "on"
+  },
+
+  "// === VALIDACIÓN OPTIMIZADA ===": "Linting eficiente",
+  "css.validate": false,
+  "scss.validate": false,
+  "css.lint.compatibleVendorPrefixes": "ignore",
+  "css.lint.vendorPrefix": "ignore",
+  "css.lint.unknownProperties": "ignore",
+  "html.validate.styles": false,
+  "html.validate.scripts": false,
+
+  "// === MARKDOWNLINT ===": "Reglas relajadas",
+  "markdownlint.config": {
+    "MD034": false,
+    "MD040": false,
+    "MD024": false,
+    "MD026": false,
+    "MD036": false,
+    "MD029": false,
+    "MD031": false
+  },
+
+  "// === RENDIMIENTO ===": "Configuraciones para velocidad",
+  "security.workspace.trust.untrustedFiles": "prompt",
+  "security.workspace.trust.enabled": false,
+  "telemetry.telemetryLevel": "off"
+}

@@ -13,8 +13,8 @@
     rgba(255, 255, 255, 0.25) 0%,
     rgba(255, 255, 255, 0.1) 100%
   ) !important;
-  backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
+  backdrop-filter: blur(20px) !important;
   border-radius: 1.5rem !important;
   padding: 2rem !important;
   margin-bottom: 2rem !important;
@@ -37,8 +37,8 @@
     rgba(255, 255, 255, 0.3) 0%,
     rgba(255, 255, 255, 0.1) 100%
   ) !important;
-  backdrop-filter: blur(15px) !important;
   -webkit-backdrop-filter: blur(15px) !important;
+  backdrop-filter: blur(15px) !important;
   border-radius: 1rem !important;
   padding: 1.5rem !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
@@ -119,8 +119,8 @@
   color: white !important;
   border-radius: 0.5rem !important;
   padding: 0.75rem !important;
-  backdrop-filter: blur(5px) !important;
   -webkit-backdrop-filter: blur(5px) !important;
+  backdrop-filter: blur(5px) !important;
 }
 
 .filtros-panel input::placeholder {
@@ -159,8 +159,8 @@
     rgba(255, 255, 255, 0.25) 0%,
     rgba(255, 255, 255, 0.1) 100%
   ) !important;
-  backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
+  backdrop-filter: blur(20px) !important;
   border-radius: 1.5rem !important;
   padding: 2rem !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
@@ -267,8 +267,8 @@
   margin: 2rem 0 !important;
   padding: 1rem !important;
   background: rgba(255, 255, 255, 0.1) !important;
-  backdrop-filter: blur(10px) !important;
   -webkit-backdrop-filter: blur(10px) !important;
+  backdrop-filter: blur(10px) !important;
   border-radius: 0.75rem !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
@@ -319,8 +319,8 @@
 /* Tarjeta de login */
 .login-card {
   background: rgba(255, 255, 255, 0.15) !important;
-  backdrop-filter: blur(25px) !important;
   -webkit-backdrop-filter: blur(25px) !important;
+  backdrop-filter: blur(25px) !important;
   border-radius: 2rem !important;
   padding: 3rem 2rem !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
@@ -354,8 +354,8 @@
     rgba(255, 255, 255, 0.2) 0%,
     rgba(255, 255, 255, 0.1) 100%
   ) !important;
-  backdrop-filter: blur(15px) !important;
   -webkit-backdrop-filter: blur(15px) !important;
+  backdrop-filter: blur(15px) !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
   border-radius: 1rem !important;
   padding: 1.5rem !important;
@@ -487,8 +487,8 @@
   padding: 0.5rem 1rem !important;
   border-radius: 0.5rem !important;
   font-size: 0.875rem !important;
-  backdrop-filter: blur(10px) !important;
   -webkit-backdrop-filter: blur(10px) !important;
+  backdrop-filter: blur(10px) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
@@ -500,16 +500,16 @@
   font-weight: 600 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
-  backdrop-filter: blur(5px) !important;
   -webkit-backdrop-filter: blur(5px) !important;
+  backdrop-filter: blur(5px) !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
 
 /* Modales modernos */
 .modal-modern {
   background: rgba(255, 255, 255, 0.2) !important;
-  backdrop-filter: blur(25px) !important;
   -webkit-backdrop-filter: blur(25px) !important;
+  backdrop-filter: blur(25px) !important;
   border-radius: 1.5rem !important;
   border: 1px solid rgba(255, 255, 255, 0.3) !important;
   box-shadow: 0 40px 50px -10px rgba(0, 0, 0, 0.3),

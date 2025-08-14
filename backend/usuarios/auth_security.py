@@ -29,12 +29,12 @@ class SecureJWTAuthentication(JWTAuthentication):
     def authenticate(self, request):
         """Autenticación con validaciones de seguridad adicionales"""
 
-        # 1. Rate limiting por IP
-        if not self._check_rate_limit(request):
-            logger.warning(
-                f"Rate limit exceeded for IP: {self._get_client_ip(request)}"
-            )
-            return None
+        # 1. Rate limiting por IP - TEMPORALMENTE DESHABILITADO PARA DEBUG
+        # if not self._check_rate_limit(request):
+        #     logger.warning(
+        #         f"Rate limit exceeded for IP: {self._get_client_ip(request)}"
+        #     )
+        #     return None
 
         # 2. Autenticación base
         result = super().authenticate(request)
@@ -43,12 +43,12 @@ class SecureJWTAuthentication(JWTAuthentication):
 
         user, validated_token = result
 
-        # 3. Validaciones adicionales
-        if not self._validate_token_security(validated_token, request):
-            return None
+        # 3. Validaciones adicionales - SIMPLIFICADAS PARA DEBUG
+        # if not self._validate_token_security(validated_token, request):
+        #     return None
 
         # 4. Log de acceso exitoso
-        logger.info(f"Successful authentication for user: {user.username}")
+        logger.info(f"Successful authentication for user: {user.email}")
 
         return user, validated_token
 

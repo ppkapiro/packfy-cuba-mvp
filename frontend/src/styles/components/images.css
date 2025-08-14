@@ -1,0 +1,37 @@
+/* ===========================================
+   OPTIMIZED IMAGE COMPONENT STYLES
+   ========================================== */
+
+.optimized-image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.optimized-image {
+  --image-opacity: 0.7;
+  --image-filter: blur(1px);
+
+  opacity: var(--image-opacity);
+  filter: var(--image-filter);
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.optimized-image.loaded {
+  --image-opacity: 1;
+  --image-filter: none;
+}
+
+.optimized-image.loading {
+  --image-opacity: 0.7;
+  --image-filter: blur(1px);
+}
+
+.optimized-image.error {
+  --image-opacity: 0.5;
+  --image-filter: grayscale(100%);
+}
+
+.optimized-image-transition {
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

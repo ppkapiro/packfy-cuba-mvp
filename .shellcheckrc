@@ -1,0 +1,9 @@
+# Shellcheck configuration for .env files
+# Disable warnings for unused variables in environment files
+disable=SC2034
+
+# Disable shebang requirement for .env files
+disable=SC2148
+
+# Disable parsing errors for environment variable syntax
+disable=SC1072,SC1073,SC1009

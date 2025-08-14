@@ -107,16 +107,16 @@ scrape_configs:
       - target_label: __address__
         replacement: blackbox-exporter:9115
 
-# Configuración de almacenamiento
-storage:
-  tsdb:
-    path: /prometheus/data
-    retention.time: 15d
-    retention.size: 50GB
-    wal-compression: true
+# Configuración de almacenamiento - Estas propiedades deben configurarse como argumentos de línea de comandos
+# storage:
+#   tsdb:
+#     path: /prometheus/data  # Usar --storage.tsdb.path=/prometheus/data
+#     retention.time: 15d     # Usar --storage.tsdb.retention.time=15d
+#     retention.size: 50GB    # Usar --storage.tsdb.retention.size=50GB
+#     wal-compression: true   # Usar --storage.tsdb.wal-compression=true
 
-# Configuración de consultas
-query:
-  timeout: 2m
-  max_concurrent: 20
-  max_samples: 50000000
+# Configuración de consultas - Estas propiedades deben configurarse como argumentos de línea de comandos
+# query:
+#   timeout: 2m             # Usar --query.timeout=2m
+#   max_concurrent: 20      # Usar --query.max-concurrency=20
+#   max_samples: 50000000   # Usar --query.max-samples=50000000

@@ -1,0 +1,88 @@
+/* ===========================================
+   GLOBAL SCALABILITY DASHBOARD STYLES
+   ========================================== */
+
+/* Progress bars for load levels */
+.load-bar {
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.load-bar-low {
+  width: var(--load-width);
+  background-color: #10b981; /* green-500 */
+}
+
+.load-bar-medium {
+  width: var(--load-width);
+  background-color: #f59e0b; /* yellow-500 */
+}
+
+.load-bar-high {
+  width: var(--load-width);
+  background-color: #ef4444; /* red-500 */
+}
+
+/* Utility classes for specific load percentages */
+.load-0 {
+  --load-width: 0%;
+}
+.load-5 {
+  --load-width: 5%;
+}
+.load-10 {
+  --load-width: 10%;
+}
+.load-15 {
+  --load-width: 15%;
+}
+.load-20 {
+  --load-width: 20%;
+}
+.load-25 {
+  --load-width: 25%;
+}
+.load-30 {
+  --load-width: 30%;
+}
+.load-35 {
+  --load-width: 35%;
+}
+.load-40 {
+  --load-width: 40%;
+}
+.load-45 {
+  --load-width: 45%;
+}
+.load-50 {
+  --load-width: 50%;
+}
+.load-55 {
+  --load-width: 55%;
+}
+.load-60 {
+  --load-width: 60%;
+}
+.load-65 {
+  --load-width: 65%;
+}
+.load-70 {
+  --load-width: 70%;
+}
+.load-75 {
+  --load-width: 75%;
+}
+.load-80 {
+  --load-width: 80%;
+}
+.load-85 {
+  --load-width: 85%;
+}
+.load-90 {
+  --load-width: 90%;
+}
+.load-95 {
+  --load-width: 95%;
+}
+.load-100 {
+  --load-width: 100%;
+}

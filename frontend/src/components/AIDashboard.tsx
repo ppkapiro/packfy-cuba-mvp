@@ -1,5 +1,6 @@
 // 🇨🇺 PACKFY CUBA - Dashboard de Inteligencia Artificial v4.0
 import React, { useState, useEffect } from 'react';
+import '../styles/components/ai-dashboard.css';
 import {
   Brain,
   TrendingUp,
@@ -264,11 +265,13 @@ export const AIDashboard: React.FC<{ className?: string }> = ({ className = '' }
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm text-gray-300 mb-2">Origen</label>
+                    <label htmlFor="prediction-origin" className="block text-sm text-gray-300 mb-2">Origen</label>
                     <select
+                      id="prediction-origin"
                       value={predictionForm.origin}
                       onChange={(e) => setPredictionForm(prev => ({ ...prev, origin: e.target.value }))}
                       className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white"
+                      aria-label="Seleccionar ciudad de origen"
                     >
                       {cubanCities.map(city => (
                         <option key={city.value} value={city.value} className="bg-gray-800">
@@ -279,11 +282,13 @@ export const AIDashboard: React.FC<{ className?: string }> = ({ className = '' }
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-300 mb-2">Destino</label>
+                    <label htmlFor="prediction-destination" className="block text-sm text-gray-300 mb-2">Destino</label>
                     <select
+                      id="prediction-destination"
                       value={predictionForm.destination}
                       onChange={(e) => setPredictionForm(prev => ({ ...prev, destination: e.target.value }))}
                       className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white"
+                      aria-label="Seleccionar ciudad de destino"
                     >
                       {cubanCities.map(city => (
                         <option key={city.value} value={city.value} className="bg-gray-800">
@@ -296,8 +301,9 @@ export const AIDashboard: React.FC<{ className?: string }> = ({ className = '' }
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm text-gray-300 mb-2">Peso (kg)</label>
+                    <label htmlFor="prediction-weight" className="block text-sm text-gray-300 mb-2">Peso (kg)</label>
                     <input
+                      id="prediction-weight"
                       type="number"
                       value={predictionForm.weight}
                       onChange={(e) => setPredictionForm(prev => ({ ...prev, weight: Number(e.target.value) }))}
@@ -305,15 +311,18 @@ export const AIDashboard: React.FC<{ className?: string }> = ({ className = '' }
                       min="0.1"
                       max="50"
                       step="0.1"
+                      aria-label="Peso del paquete en kilogramos"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-300 mb-2">Prioridad</label>
+                    <label htmlFor="prediction-priority" className="block text-sm text-gray-300 mb-2">Prioridad</label>
                     <select
+                      id="prediction-priority"
                       value={predictionForm.priority}
                       onChange={(e) => setPredictionForm(prev => ({ ...prev, priority: e.target.value }))}
                       className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white"
+                      aria-label="Seleccionar prioridad de envío"
                     >
                       <option value="economy" className="bg-gray-800">Económico</option>
                       <option value="normal" className="bg-gray-800">Normal</option>
@@ -372,8 +381,7 @@ export const AIDashboard: React.FC<{ className?: string }> = ({ className = '' }
                     </div>
                     <div className="w-full bg-gray-700 rounded-full h-2">
                       <div
-                        className="bg-purple-500 h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${deliveryPrediction.confidence * 100}%` }}
+                        className={`bg-purple-500 h-2 rounded-full transition-all duration-300 confidence-bar confidence-bar-${Math.round(deliveryPrediction.confidence * 10) * 10}`}
                       />
                     </div>
                   </div>
@@ -463,33 +471,39 @@ export const AIDashboard: React.FC<{ className?: string }> = ({ className = '' }
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm text-gray-300 mb-2">Peso (kg)</label>
+                    <label htmlFor="anomaly-weight" className="block text-sm text-gray-300 mb-2">Peso (kg)</label>
                     <input
+                      id="anomaly-weight"
                       type="number"
                       value={anomalyForm.weight}
                       onChange={(e) => setAnomalyForm(prev => ({ ...prev, weight: Number(e.target.value) }))}
                       className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white"
+                      aria-label="Peso del paquete para detección de anomalías"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-300 mb-2">Valor Declarado ($)</label>
+                    <label htmlFor="anomaly-value" className="block text-sm text-gray-300 mb-2">Valor Declarado ($)</label>
                     <input
+                      id="anomaly-value"
                       type="number"
                       value={anomalyForm.declared_value}
                       onChange={(e) => setAnomalyForm(prev => ({ ...prev, declared_value: Number(e.target.value) }))}
                       className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white"
+                      aria-label="Valor declarado del paquete"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm text-gray-300 mb-2">Envíos del día</label>
+                  <label htmlFor="anomaly-daily-count" className="block text-sm text-gray-300 mb-2">Envíos del día</label>
                   <input
+                    id="anomaly-daily-count"
                     type="number"
                     value={anomalyForm.sender_daily_count}
                     onChange={(e) => setAnomalyForm(prev => ({ ...prev, sender_daily_count: Number(e.target.value) }))}
                     className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white"
+                    aria-label="Número de envíos realizados en el día"
                   />
                 </div>
 
