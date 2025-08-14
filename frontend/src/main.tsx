@@ -1,9 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
-
-// 🇨🇺 PACKFY CUBA - Sistema CSS Unificado y Optimizado v3.3
-// Reducido de 6,575 a 1,606 líneas (75.6% optimización)
 import './styles/main.css'
 
 // 📱 Service Worker PWA optimizado para móvil

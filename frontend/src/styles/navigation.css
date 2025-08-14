@@ -292,12 +292,12 @@
   .nav-list {
     gap: var(--space-1);
   }
-  
+
   .nav-link {
     padding: var(--space-2) var(--space-3);
     font-size: var(--font-size-sm);
   }
-  
+
   .user-name {
     display: none;
   }
@@ -307,7 +307,7 @@
   .mobile-menu-toggle {
     display: block;
   }
-  
+
   .main-nav {
     position: fixed;
     top: 64px;
@@ -322,35 +322,35 @@
     max-height: calc(100vh - 64px);
     overflow-y: auto;
   }
-  
+
   .main-nav.open {
     transform: translateY(0);
     opacity: 1;
     visibility: visible;
   }
-  
+
   .nav-list {
     flex-direction: column;
     padding: var(--space-4);
     gap: var(--space-2);
   }
-  
+
   .nav-link {
     padding: var(--space-4);
     font-size: var(--font-size-base);
     border-radius: var(--radius-lg);
     justify-content: flex-start;
   }
-  
+
   .nav-link:hover {
     background-color: rgba(255, 255, 255, 0.15);
     transform: translateX(4px);
   }
-  
+
   .user-info {
     gap: var(--space-2);
   }
-  
+
   .user-avatar {
     width: 28px;
     height: 28px;
@@ -361,16 +361,16 @@
   .header-container {
     padding: var(--space-3);
   }
-  
+
   .logo {
     font-size: var(--font-size-lg);
   }
-  
+
   .logo-icon {
     width: 28px;
     height: 28px;
   }
-  
+
   .btn-logout {
     padding: var(--space-2);
     font-size: var(--font-size-xs);
@@ -398,7 +398,7 @@
 
 /* 🎯 Indicador de página activa mejorado */
 .nav-link.active::before {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -1px;
   left: 50%;
@@ -426,13 +426,18 @@
 }
 
 .nav-link::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
   transition: left var(--transition-slow);
 }
 
@@ -446,7 +451,7 @@
 }
 
 .nav-loading::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -457,8 +462,12 @@
 }
 
 @keyframes loading-bar {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* 🎨 Mejoras para PWA */
@@ -487,13 +496,109 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transform: translateY(-1px);
   }
-  
+
   .logo:hover {
     transform: scale(1.05);
   }
-  
+
   .user-avatar:hover {
     transform: rotate(360deg);
     transition: transform 0.6s ease;
+  }
+}
+
+/* 🔍 HEADER PÚBLICO - PARA RASTREAR SIN LOGIN */
+.public-header {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: var(--shadow-cuba);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.public-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-6);
+  min-height: 64px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.public-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-lg);
+  color: white;
+  text-decoration: none;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-lg);
+  transition: var(--transition-normal);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+}
+
+.public-logo:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.public-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.public-nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  color: white;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-medium);
+  transition: var(--transition-normal);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.public-nav-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Móvil - Header público */
+@media (max-width: 768px) {
+  .public-header-content {
+    padding: var(--space-3) var(--space-4);
+    min-height: 56px;
+  }
+
+  .public-logo {
+    font-size: var(--font-size-base);
+    padding: var(--space-2);
+  }
+
+  .public-nav {
+    gap: var(--space-2);
+  }
+
+  .public-nav-link {
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-size-sm);
+  }
+
+  .public-nav-link span:last-child {
+    display: none;
   }
 }

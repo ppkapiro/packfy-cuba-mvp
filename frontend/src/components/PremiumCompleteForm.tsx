@@ -465,21 +465,21 @@ const PremiumCompleteForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50 py-8 px-4">
+    <div className="min-h-screen packfy-hero py-8 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div className="glassmorphism rounded-2xl shadow-2xl overflow-hidden">
 
-          {/* Header Premium */}
+          {/* Header Premium Moderno */}
           <div className="bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 p-6 text-center text-white">
-            <div className="inline-flex items-center bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full text-sm font-bold mb-4">
+            <div className="glassmorphism px-6 py-3 rounded-full text-sm font-bold mb-4 inline-flex items-center">
               <Star className="w-5 h-5 mr-2" />
-              MODO PREMIUM - COMPLETO
+              ✨ MODO PREMIUM - COMPLETO 🏆
             </div>
-            <h1 className="text-3xl font-bold mb-2">
-              🏆 Packfy Cuba Premium
+            <h1 className="text-3xl font-bold mb-2 flex items-center justify-center gap-2">
+              🇨� Packfy Cuba Premium ✨
             </h1>
             <p className="text-purple-100">
-              Formulario completo con todas las funcionalidades premium
+              🚀 Formulario completo con todas las funcionalidades premium
             </p>
           </div>
 

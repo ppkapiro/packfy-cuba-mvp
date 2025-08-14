@@ -1,20 +1,19 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import Layout from './components/Layout';  // Layout clásico que funciona
+import PublicHeader from './components/PublicHeader';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
-import NewShipment from './pages/NewShipment';
 import ShipmentDetail from './pages/ShipmentDetail';
 import PublicTrackingPage from './pages/PublicTrackingPage';
 import DiagnosticPage from './pages/DiagnosticPage';
-import ModernModeSelector from './components/ModernModeSelector';
 import SimpleAdvancedPage from './pages/SimpleAdvancedPage';
 import PremiumFormPage from './pages/PremiumFormPage';
 import GestionUnificada from './pages/GestionUnificada';
 import EditarEnvio from './pages/EditarEnvio';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import NetworkStatusBanner from './components/NetworkStatusBanner';
-import AIPage from './pages/AIPage';
+import ModeSelector from './components/ModeSelector';
 
 // 🇨🇺 PACKFY CUBA - SISTEMA UNIFICADO v3.3 (estilos cargados desde main.tsx)
 
@@ -27,6 +26,16 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   return <>{children}</>;
+}
+
+// Wrapper para páginas públicas con header
+function PublicPageWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <PublicHeader />
+      {children}
+    </>
+  );
 }
 
 function App() {
@@ -42,9 +51,9 @@ function App() {
           <div className="app-content">
             <Routes>
               {/* Rutas públicas */}
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/diagnostico" element={<DiagnosticPage />} />
-              <Route path="/rastrear" element={<PublicTrackingPage />} />
+              <Route path="/login" element={<PublicPageWrapper><LoginPage /></PublicPageWrapper>} />
+              <Route path="/diagnostico" element={<PublicPageWrapper><DiagnosticPage /></PublicPageWrapper>} />
+              <Route path="/rastrear" element={<PublicPageWrapper><PublicTrackingPage /></PublicPageWrapper>} />
 
               {/* Rutas protegidas con navegación clásica funcional */}
               <Route
@@ -57,14 +66,12 @@ function App() {
               >
                 <Route index element={<Navigate to="/dashboard" />} />
                 <Route path="dashboard" element={<Dashboard />} />
-                <Route path="ai" element={<AIPage />} />
                 <Route path="envios" element={<GestionUnificada />} />
-                <Route path="envios/modo" element={<ModernModeSelector />} />
-                <Route path="envios/nuevo" element={<NewShipment />} />
-                <Route path="envios/:id" element={<ShipmentDetail />} />
-                <Route path="envios/:id/editar" element={<EditarEnvio />} />
+                <Route path="envios/nuevo" element={<ModeSelector />} />
                 <Route path="envios/simple" element={<SimpleAdvancedPage />} />
                 <Route path="envios/premium" element={<PremiumFormPage />} />
+                <Route path="envios/:id" element={<ShipmentDetail />} />
+                <Route path="envios/:id/editar" element={<EditarEnvio />} />
               </Route>
             </Routes>
           </div>

@@ -1,0 +1,131 @@
+/* NavigationFix.css - Corrección específica para el problema de hover bleeding */
+
+/* Forzar reset completo en la navegación para evitar interferencia de Tailwind */
+nav[class*="desktopNav"] {
+  /* Eliminar todo gap y spacing de Tailwind */
+  gap: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+nav[class*="desktopNav"] > * {
+  /* Cada elemento de navegación completamente aislado */
+  margin: 0 2px !important; /* Espacio controlado manualmente */
+  padding: 8px 16px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  border-radius: 8px !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  transition: all 0.2s ease !important;
+  border: 1px solid transparent !important;
+  position: relative !important;
+  isolation: isolate !important;
+  box-sizing: border-box !important;
+}
+
+/* Estado inactivo */
+nav[class*="desktopNav"] > *:not([class*="Active"]) {
+  color: #6b7280 !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+/* Hover solo para elementos inactivos */
+nav[class*="desktopNav"] > *:not([class*="Active"]):hover {
+  color: #111827 !important;
+  background-color: #f9fafb !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  transform: none !important; /* Sin efectos que puedan afectar hermanos */
+}
+
+/* Estado activo */
+nav[class*="desktopNav"] > *[class*="Active"] {
+  color: #1d4ed8 !important;
+  background-color: #dbeafe !important;
+  border-color: rgba(29, 78, 216, 0.2) !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+/* El activo NO debe cambiar en hover */
+nav[class*="desktopNav"] > *[class*="Active"]:hover {
+  color: #1d4ed8 !important;
+  background-color: #dbeafe !important;
+  border-color: rgba(29, 78, 216, 0.2) !important;
+  transform: none !important;
+}
+
+/* Prevenir que los pseudo-elementos afecten elementos hermanos */
+nav[class*="desktopNav"] > *::before,
+nav[class*="desktopNav"] > *::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Reset específico para eliminar clases de Tailwind problemáticas */
+.space-x-1 > * + *,
+.space-x-2 > * + *,
+.space-x-3 > * + *,
+.space-x-4 > * + * {
+  margin-left: 0 !important;
+}
+
+/* Asegurar que solo el elemento individual reciba estilos */
+[class*="navItem"] {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Especificidad extra para elementos con múltiples clases */
+nav a[class*="navItem"] {
+  margin: 0 2px !important;
+}
+
+/* Fix específico para el problema visual que vemos */
+header nav a {
+  margin: 0 2px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  text-decoration: none !important;
+  border: 1px solid transparent !important;
+  transition: all 0.2s ease !important;
+  position: relative !important;
+  isolation: isolate !important;
+}
+
+/* Hover debe ser individual y no afectar hermanos */
+header nav a:hover {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+header nav a:not(:hover) {
+  /* Forzar reset cuando NO está en hover */
+  background-color: var(--nav-bg, transparent) !important;
+  color: var(--nav-color, #6b7280) !important;
+  border-color: var(--nav-border, transparent) !important;
+}
+
+/* Variables CSS para estados */
+header nav a[class*="Active"] {
+  --nav-bg: #dbeafe;
+  --nav-color: #1d4ed8;
+  --nav-border: rgba(29, 78, 216, 0.2);
+}
+
+header nav a:not([class*="Active"]) {
+  --nav-bg: transparent;
+  --nav-color: #6b7280;
+  --nav-border: transparent;
+}
+
+header nav a:not([class*="Active"]):hover {
+  --nav-bg: #f9fafb !important;
+  --nav-color: #111827 !important;
+  --nav-border: rgba(0, 0, 0, 0.1) !important;
+}

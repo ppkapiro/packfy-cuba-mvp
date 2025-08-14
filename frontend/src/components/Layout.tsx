@@ -27,7 +27,7 @@ const Layout = () => {
             <span>Packfy Cuba</span>
           </Link>
 
-          {/* Navegación principal */}
+          {/* Navegación principal - SIMPLIFICADA */}
           <nav className="nav-main">
             <ul className="nav-menu">
               <li className="nav-item">
@@ -41,11 +41,11 @@ const Layout = () => {
               </li>
               <li className="nav-item">
                 <Link
-                  to="/envios/modo"
-                  className={`nav-link ${isActiveRoute('/envios/modo') ? 'active' : ''}`}
+                  to="/envios/nuevo"
+                  className={`nav-link ${isActiveRoute('/envios/nuevo') ? 'active' : ''}`}
                 >
                   <span className="icon icon-package"></span>
-                  <span>Nuevo</span>
+                  <span>Crear Envío</span>
                 </Link>
               </li>
               <li className="nav-item">
@@ -55,15 +55,6 @@ const Layout = () => {
                 >
                   <span className="icon icon-package"></span>
                   <span>Gestión</span>
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link
-                  to="/ai"
-                  className={`nav-link ${isActiveRoute('/ai') ? 'active' : ''}`}
-                >
-                  <span className="icon icon-dashboard"></span>
-                  <span>IA</span>
                 </Link>
               </li>
             </ul>

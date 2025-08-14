@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Package, Camera, QrCode, DollarSign, Star, CheckCircle, MapPin, User, Weight, Calculator } from 'lucide-react';
 import { api } from '../services/api';
 // 🇨🇺 Estilos cargados globalmente desde main.tsx
@@ -121,6 +122,7 @@ const SimpleQRService = {
 
 // Componente Modo Simple (Gratuito) - Mejorado
 const SimpleAdvancedForm: React.FC = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState<'info' | 'price' | 'photo' | 'qr'>('info');
 
   const [formData, setFormData] = useState<PackageData>({
@@ -438,13 +440,13 @@ Precio: $${priceBreakdown?.totalCUP.toLocaleString()} CUP`);
                 <p className="text-white/90 text-sm mb-3">
                   ¿Necesitas funciones avanzadas?
                 </p>
-                <a
-                  href="/envios"
+                <button
+                  onClick={() => navigate('/envios/premium')}
                   className="inline-flex items-center bg-white text-blue-600 px-6 py-2 rounded-full font-bold text-sm hover:bg-blue-50 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                 >
                   <Star className="w-4 h-4 mr-2" />
                   Actualizar a Premium ✨
-                </a>
+                </button>
               </div>
             </div>
           </div>
