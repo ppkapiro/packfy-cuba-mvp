@@ -1,0 +1,315 @@
+# 🇨🇺 PACKFY CUBA - Configuración Alertmanager v4.0
+
+global:
+  # Configuración SMTP para notificaciones por email
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'alertas@packfy.cu'
+  smtp_auth_username: 'alertas@packfy.cu'
+  smtp_auth_password: 'packfy_alert_password_2024'
+  smtp_require_tls: true
+
+  # Configuración Slack
+  slack_api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+
+  # URLs de resolución
+  resolve_timeout: 5m
+
+# Plantillas personalizadas
+templates:
+  - '/etc/alertmanager/templates/*.tmpl'
+
+# Configuración de rutas
+route:
+  # Agrupación por defecto
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+
+  # Receptor por defecto
+  receiver: 'default-receiver'
+
+  # Rutas específicas
+  routes:
+    # Alertas críticas - notificación inmediata
+    - match:
+        severity: critical
+      receiver: 'critical-alerts'
+      group_wait: 5s
+      repeat_interval: 15m
+      routes:
+        # Infraestructura crítica
+        - match:
+            service: infrastructure
+          receiver: 'infrastructure-critical'
+        # Base de datos crítica
+        - match:
+            service: database
+          receiver: 'database-critical'
+        # Aplicación crítica
+        - match:
+            service: backend
+          receiver: 'backend-critical'
+
+    # Alertas de warning - notificación agrupada
+    - match:
+        severity: warning
+      receiver: 'warning-alerts'
+      group_wait: 30s
+      repeat_interval: 2h
+
+    # Alertas de seguridad - notificación inmediata
+    - match:
+        service: security
+      receiver: 'security-alerts'
+      group_wait: 5s
+      repeat_interval: 30m
+
+    # Alertas de negocio - notificación durante horario laboral
+    - match:
+        service: business
+      receiver: 'business-alerts'
+      group_wait: 1m
+      repeat_interval: 4h
+
+    # Alertas de monitoreo - solo durante horario de trabajo
+    - match:
+        service: monitoring
+      receiver: 'monitoring-alerts'
+      group_wait: 2m
+      repeat_interval: 8h
+
+# Inhibición de alertas
+inhibit_rules:
+  # Si el servidor está caído, no alertar sobre servicios específicos
+  - source_match:
+      alertname: 'ServiceDown'
+    target_match:
+      instance: '.*'
+    equal: ['instance']
+
+  # Si hay alto uso de CPU, no alertar sobre tiempo de respuesta
+  - source_match:
+      alertname: 'HighCPUUsage'
+    target_match:
+      alertname: 'HighResponseTime'
+    equal: ['instance']
+
+  # Si la base de datos está caída, no alertar sobre conexiones
+  - source_match:
+      alertname: 'ServiceDown'
+      job: 'postgres-exporter'
+    target_match:
+      alertname: 'DatabaseConnectionsHigh'
+
+# Configuración de receptores
+receivers:
+  # === RECEPTOR POR DEFECTO ===
+  - name: 'default-receiver'
+    email_configs:
+      - to: 'devops@packfy.cu'
+        subject: '🚨 PACKFY CUBA - Alerta {{ .GroupLabels.alertname }}'
+        body: |
+          {{ range .Alerts }}
+          **Alerta:** {{ .Annotations.summary }}
+          **Descripción:** {{ .Annotations.description }}
+          **Severidad:** {{ .Labels.severity }}
+          **Servicio:** {{ .Labels.service }}
+          **Timestamp:** {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+          **Dashboard:** http://grafana:3000/d/packfy-main-dashboard
+          {{ end }}
+
+  # === ALERTAS CRÍTICAS ===
+  - name: 'critical-alerts'
+    email_configs:
+      - to: 'admin@packfy.cu, devops@packfy.cu'
+        subject: '🔴 CRÍTICO - PACKFY CUBA - {{ .GroupLabels.alertname }}'
+        body: |
+          ⚠️ **ALERTA CRÍTICA DETECTADA** ⚠️
+
+          {{ range .Alerts }}
+          **Alerta:** {{ .Annotations.summary }}
+          **Descripción:** {{ .Annotations.description }}
+          **Severidad:** {{ .Labels.severity }}
+          **Servicio:** {{ .Labels.service }}
+          **Host:** {{ .Labels.instance }}
+          **Inicio:** {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+          **Estado:** {{ .Status }}
+
+          **Acciones Recomendadas:**
+          1. Verificar estado del servicio inmediatamente
+          2. Revisar logs en Kibana: http://kibana:5601
+          3. Monitorear métricas en Grafana: http://grafana:3000
+          {{ end }}
+
+          **Equipo de Guardia:** +53 5xxx-xxxx
+
+    slack_configs:
+      - api_url: '{{ .slack_api_url }}'
+        channel: '#alerts-critical'
+        title: '🔴 Alerta Crítica - PACKFY CUBA'
+        text: |
+          {{ range .Alerts }}
+          *{{ .Annotations.summary }}*
+          Servicio: {{ .Labels.service }}
+          Host: {{ .Labels.instance }}
+          Descripción: {{ .Annotations.description }}
+          {{ end }}
+        send_resolved: true
+
+  # === ALERTAS DE INFRAESTRUCTURA ===
+  - name: 'infrastructure-critical'
+    email_configs:
+      - to: 'infraestructura@packfy.cu'
+        subject: '🏗️ INFRAESTRUCTURA CRÍTICA - {{ .GroupLabels.alertname }}'
+        body: |
+          🏗️ **PROBLEMA DE INFRAESTRUCTURA DETECTADO**
+
+          {{ range .Alerts }}
+          **Alerta:** {{ .Annotations.summary }}
+          **Descripción:** {{ .Annotations.description }}
+          **Host:** {{ .Labels.instance }}
+          **Timestamp:** {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+
+          **Métricas Relevantes:**
+          - CPU, Memoria, Disco, Red
+          - Revisar en Grafana: http://grafana:3000/d/node-exporter
+          {{ end }}
+
+  # === ALERTAS DE BASE DE DATOS ===
+  - name: 'database-critical'
+    email_configs:
+      - to: 'dba@packfy.cu, devops@packfy.cu'
+        subject: '💾 BASE DE DATOS CRÍTICA - {{ .GroupLabels.alertname }}'
+        body: |
+          💾 **PROBLEMA EN BASE DE DATOS**
+
+          {{ range .Alerts }}
+          **Alerta:** {{ .Annotations.summary }}
+          **Descripción:** {{ .Annotations.description }}
+          **Database:** PostgreSQL
+          **Timestamp:** {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+
+          **Acciones Inmediatas:**
+          1. Verificar conexiones activas
+          2. Revisar logs de PostgreSQL
+          3. Comprobar espacio en disco
+          4. Verificar replicación (si aplica)
+          {{ end }}
+
+  # === ALERTAS DE BACKEND ===
+  - name: 'backend-critical'
+    email_configs:
+      - to: 'desarrollo@packfy.cu'
+        subject: '⚛️ BACKEND CRÍTICO - {{ .GroupLabels.alertname }}'
+        body: |
+          ⚛️ **PROBLEMA EN APLICACIÓN BACKEND**
+
+          {{ range .Alerts }}
+          **Alerta:** {{ .Annotations.summary }}
+          **Descripción:** {{ .Annotations.description }}
+          **Servicio:** Django/Python
+          **Timestamp:** {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+
+          **Verificar:**
+          1. Logs de aplicación en Kibana
+          2. Métricas de performance
+          3. Estado de workers Celery
+          4. Conexiones a base de datos
+          {{ end }}
+
+  # === ALERTAS DE WARNING ===
+  - name: 'warning-alerts'
+    email_configs:
+      - to: 'monitoreo@packfy.cu'
+        subject: '⚠️ WARNING - PACKFY CUBA - {{ .GroupLabels.alertname }}'
+        body: |
+          ⚠️ **ALERTA DE ADVERTENCIA**
+
+          {{ range .Alerts }}
+          **Alerta:** {{ .Annotations.summary }}
+          **Descripción:** {{ .Annotations.description }}
+          **Severidad:** {{ .Labels.severity }}
+          **Servicio:** {{ .Labels.service }}
+          **Timestamp:** {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+          {{ end }}
+
+          Revisar cuando sea posible.
+
+  # === ALERTAS DE SEGURIDAD ===
+  - name: 'security-alerts'
+    email_configs:
+      - to: 'seguridad@packfy.cu, admin@packfy.cu'
+        subject: '🔒 SEGURIDAD - PACKFY CUBA - {{ .GroupLabels.alertname }}'
+        body: |
+          🔒 **ALERTA DE SEGURIDAD**
+
+          {{ range .Alerts }}
+          **Alerta:** {{ .Annotations.summary }}
+          **Descripción:** {{ .Annotations.description }}
+          **Timestamp:** {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+
+          **Investigar inmediatamente:**
+          1. Logs de autenticación
+          2. Intentos de acceso sospechosos
+          3. Patrones de tráfico anómalos
+          {{ end }}
+
+    slack_configs:
+      - api_url: '{{ .slack_api_url }}'
+        channel: '#security-alerts'
+        title: '🔒 Alerta de Seguridad'
+        text: |
+          {{ range .Alerts }}
+          *{{ .Annotations.summary }}*
+          {{ .Annotations.description }}
+          {{ end }}
+
+  # === ALERTAS DE NEGOCIO ===
+  - name: 'business-alerts'
+    email_configs:
+      - to: 'negocio@packfy.cu'
+        subject: '📊 NEGOCIO - PACKFY CUBA - {{ .GroupLabels.alertname }}'
+        body: |
+          📊 **ALERTA DE MÉTRICAS DE NEGOCIO**
+
+          {{ range .Alerts }}
+          **Alerta:** {{ .Annotations.summary }}
+          **Descripción:** {{ .Annotations.description }}
+          **Timestamp:** {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+
+          **Revisar:**
+          1. Dashboard de métricas de negocio
+          2. Volumen de transacciones
+          3. Tasas de error
+          {{ end }}
+
+  # === ALERTAS DE MONITOREO ===
+  - name: 'monitoring-alerts'
+    email_configs:
+      - to: 'devops@packfy.cu'
+        subject: '📊 MONITOREO - {{ .GroupLabels.alertname }}'
+        body: |
+          📊 **PROBLEMA EN SISTEMA DE MONITOREO**
+
+          {{ range .Alerts }}
+          **Alerta:** {{ .Annotations.summary }}
+          **Descripción:** {{ .Annotations.description }}
+          **Timestamp:** {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+          {{ end }}
+
+# Configuración de tiempo de resolución automática
+mute_time_intervals:
+  - name: 'maintenance-window'
+    time_intervals:
+      - times:
+        - start_time: '02:00'
+          end_time: '04:00'
+        weekdays: ['sunday']
+
+  - name: 'business-hours'
+    time_intervals:
+      - times:
+        - start_time: '08:00'
+          end_time: '18:00'
+        weekdays: ['monday:friday']

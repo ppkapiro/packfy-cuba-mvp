@@ -1,3 +1,5 @@
+# 🇨🇺 PACKFY CUBA - Requerimientos Optimizados v4.0
+
 # Requerimientos principales
 Django>=4.2.0,<4.3.0
 
@@ -11,8 +13,28 @@ drf-yasg>=1.21.5
 # Base de datos
 psycopg2-binary>=2.9.6
 
+# 📊 CACHÉ Y PERFORMANCE
+django-redis>=5.2.0
+redis>=4.5.0
+django-cachalot>=2.5.1  # ORM query caching
+django-debug-toolbar>=4.1.0  # Solo para desarrollo
+
+# 🗜️ COMPRESIÓN Y OPTIMIZACIÓN
+django-compressor>=4.3.1
+whitenoise>=6.5.0  # Servir archivos estáticos optimizados
+gunicorn>=20.1.0  # WSGI server optimizado
+
 # HTTPS y SSL
 django-sslserver>=0.22
+
+# 📊 MONITOREO Y LOGGING
+django-extensions>=3.2.0
+sentry-sdk>=1.28.0  # Error tracking
+
+# 📱 PWA Y NOTIFICACIONES PUSH
+pywebpush>=1.14.0  # Notificaciones web push
+cryptography>=41.0.0  # Para claves VAPID
+ecdsa>=0.18.0  # Firma digital para VAPID
 
 # Utilidades
 python-dotenv>=1.0.0
@@ -20,6 +42,7 @@ Pillow>=10.0.0  # Para el manejo de imágenes
 pyyaml>=6.0.1
 requests>=2.31.0
 python-dateutil>=2.8.2
+celery>=5.2.0  # Para tareas asíncronas
 
 # Pruebas
 pytest>=7.3.1

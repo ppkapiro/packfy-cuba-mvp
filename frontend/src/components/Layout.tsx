@@ -57,6 +57,15 @@ const Layout = () => {
                   <span>Gestión</span>
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link
+                  to="/ai"
+                  className={`nav-link ${isActiveRoute('/ai') ? 'active' : ''}`}
+                >
+                  <span className="icon icon-dashboard"></span>
+                  <span>IA</span>
+                </Link>
+              </li>
             </ul>
           </nav>
 

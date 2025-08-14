@@ -32,14 +32,19 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "usuarios.security_middleware.SecurityHeadersMiddleware",  # 🔒 Headers de seguridad
+    "usuarios.security_middleware.RateLimitMiddleware",  # 🛡️ Rate limiting
+    "usuarios.security_middleware.RequestLoggingMiddleware",  # 📊 Logging detallado
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "usuarios.security_middleware.CSRFSecurityMiddleware",  # 🔐 CSRF adicional
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "usuarios.middleware.ProteccionUsuariosDemoMiddleware",  # Protección usuarios demo
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "usuarios.security_middleware.SecurityMonitoringMiddleware",  # 🕵️ Detección de ataques
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -127,22 +132,33 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "usuarios.auth_security.SecureJWTAuthentication",  # 🔒 JWT seguro
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.BasicAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "100/hour",
+        "user": "1000/hour",
+    },
 }
 
-# Simple JWT settings
+# Simple JWT settings mejoradas
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "ROTATE_REFRESH_TOKENS": False,
+    "ACCESS_TOKEN_LIFETIME": timedelta(
+        minutes=30
+    ),  # 🔒 Más corto para seguridad
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),  # 🔄 7 días para refresh
+    "ROTATE_REFRESH_TOKENS": True,  # 🔄 Rotar tokens
+    "BLACKLIST_AFTER_ROTATION": True,  # 🚫 Blacklist old tokens
     "BLACKLIST_AFTER_ROTATION": False,
     "UPDATE_LAST_LOGIN": False,
     "ALGORITHM": "HS256",

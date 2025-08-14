@@ -1,0 +1,370 @@
+# 🇨🇺 PACKFY CUBA - Docker Compose Monitoring v4.0
+
+version: "3.8"
+
+services:
+  # ===============================
+  # PROMETHEUS & ALERTING
+  # ===============================
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    container_name: packfy-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=15d"
+      - "--storage.tsdb.retention.size=50GB"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--web.enable-lifecycle"
+      - "--web.enable-admin-api"
+    networks:
+      - monitoring
+    depends_on:
+      - backend
+      - postgres
+      - redis
+
+  alertmanager:
+    image: prom/alertmanager:v0.25.0
+    container_name: packfy-alertmanager
+    restart: unless-stopped
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./monitoring/alertmanager:/etc/alertmanager
+      - alertmanager_data:/alertmanager
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+      - "--web.external-url=http://localhost:9093"
+    networks:
+      - monitoring
+
+  # ===============================
+  # GRAFANA DASHBOARDS
+  # ===============================
+  grafana:
+    image: grafana/grafana:10.0.0
+    container_name: packfy-grafana
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=packfy2024!
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+      - GF_FEATURE_TOGGLES_ENABLE=publicDashboards
+      - GF_SERVER_DOMAIN=localhost
+      - GF_SERVER_ROOT_URL=http://localhost:3001
+    networks:
+      - monitoring
+    depends_on:
+      - prometheus
+
+  # ===============================
+  # ELK STACK PARA LOGS
+  # ===============================
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
+    container_name: packfy-elasticsearch
+    restart: unless-stopped
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ELASTIC_PASSWORD=packfy2024!
+    networks:
+      - monitoring
+    mem_limit: 1g
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.8.0
+    container_name: packfy-kibana
+    restart: unless-stopped
+    ports:
+      - "5601:5601"
+    volumes:
+      - ./monitoring/kibana/config:/usr/share/kibana/config
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=packfy2024!
+    networks:
+      - monitoring
+    depends_on:
+      - elasticsearch
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.8.0
+    container_name: packfy-logstash
+    restart: unless-stopped
+    ports:
+      - "5000:5000/tcp"
+      - "5044:5044"
+    volumes:
+      - ./monitoring/elk/logstash/pipeline:/usr/share/logstash/pipeline
+      - ./monitoring/elk/logstash/config:/usr/share/logstash/config
+      - /var/log:/var/log:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
+      - ENVIRONMENT=production
+      - APP_VERSION=4.0
+    networks:
+      - monitoring
+    depends_on:
+      - elasticsearch
+
+  # ===============================
+  # EXPORTERS PARA MÉTRICAS
+  # ===============================
+  node_exporter:
+    image: prom/node-exporter:v1.6.0
+    container_name: packfy-node-exporter
+    restart: unless-stopped
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.rootfs=/rootfs"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    networks:
+      - monitoring
+
+  postgres_exporter:
+    image: prometheuscommunity/postgres-exporter:v0.12.0
+    container_name: packfy-postgres-exporter
+    restart: unless-stopped
+    ports:
+      - "9187:9187"
+    environment:
+      - DATA_SOURCE_NAME=postgresql://packfy_user:packfy_password@postgres:5432/packfy_db?sslmode=disable
+    networks:
+      - monitoring
+      - packfy-network
+    depends_on:
+      - postgres
+
+  redis_exporter:
+    image: oliver006/redis_exporter:v1.52.0
+    container_name: packfy-redis-exporter
+    restart: unless-stopped
+    ports:
+      - "9121:9121"
+    environment:
+      - REDIS_ADDR=redis://redis:6379
+      - REDIS_PASSWORD=""
+    networks:
+      - monitoring
+      - packfy-network
+    depends_on:
+      - redis
+
+  nginx_exporter:
+    image: nginx/nginx-prometheus-exporter:0.11.0
+    container_name: packfy-nginx-exporter
+    restart: unless-stopped
+    ports:
+      - "9113:9113"
+    command:
+      - -nginx.scrape-uri=http://nginx:80/nginx_status
+    networks:
+      - monitoring
+      - packfy-network
+    depends_on:
+      - nginx
+
+  blackbox_exporter:
+    image: prom/blackbox-exporter:v0.24.0
+    container_name: packfy-blackbox-exporter
+    restart: unless-stopped
+    ports:
+      - "9115:9115"
+    volumes:
+      - ./monitoring/blackbox:/etc/blackbox_exporter
+    networks:
+      - monitoring
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.0
+    container_name: packfy-cadvisor
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    privileged: true
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    networks:
+      - monitoring
+
+  # ===============================
+  # HERRAMIENTAS ADICIONALES
+  # ===============================
+
+  # Uptime Kuma para monitoreo de uptime
+  uptime-kuma:
+    image: louislam/uptime-kuma:1.23.0
+    container_name: packfy-uptime-kuma
+    restart: unless-stopped
+    ports:
+      - "3002:3001"
+    volumes:
+      - uptime_kuma_data:/app/data
+    networks:
+      - monitoring
+
+  # Jaeger para tracing distribuido
+  jaeger:
+    image: jaegertracing/all-in-one:1.48
+    container_name: packfy-jaeger
+    restart: unless-stopped
+    ports:
+      - "16686:16686"
+      - "14268:14268"
+      - "14250:14250"
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    networks:
+      - monitoring
+
+  # Portainer para gestión de contenedores
+  portainer:
+    image: portainer/portainer-ce:2.19.0
+    container_name: packfy-portainer
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - monitoring
+
+  # ===============================
+  # SERVICIOS PRINCIPALES (REFERENCIA)
+  # ===============================
+  backend:
+    extends:
+      file: docker-compose.yml
+      service: backend
+    networks:
+      - packfy-network
+      - monitoring
+
+  frontend:
+    extends:
+      file: docker-compose.yml
+      service: frontend
+    networks:
+      - packfy-network
+      - monitoring
+
+  postgres:
+    extends:
+      file: docker-compose.yml
+      service: postgres
+    networks:
+      - packfy-network
+      - monitoring
+
+  redis:
+    extends:
+      file: docker-compose.yml
+      service: redis
+    networks:
+      - packfy-network
+      - monitoring
+
+  nginx:
+    extends:
+      file: docker-compose.yml
+      service: nginx
+    networks:
+      - packfy-network
+      - monitoring
+
+# ===============================
+# VOLÚMENES PERSISTENTES
+# ===============================
+volumes:
+  prometheus_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/prometheus
+
+  grafana_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/grafana
+
+  elasticsearch_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/elasticsearch
+
+  alertmanager_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/alertmanager
+
+  uptime_kuma_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/uptime-kuma
+
+  portainer_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/portainer
+
+# ===============================
+# REDES
+# ===============================
+networks:
+  monitoring:
+    driver: bridge
+    name: packfy-monitoring
+
+  packfy-network:
+    external: true

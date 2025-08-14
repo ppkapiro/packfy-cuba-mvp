@@ -14,6 +14,7 @@ import GestionUnificada from './pages/GestionUnificada';
 import EditarEnvio from './pages/EditarEnvio';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import NetworkStatusBanner from './components/NetworkStatusBanner';
+import AIPage from './pages/AIPage';
 
 // 🇨🇺 PACKFY CUBA - SISTEMA UNIFICADO v3.3 (estilos cargados desde main.tsx)
 
@@ -56,6 +57,7 @@ function App() {
               >
                 <Route index element={<Navigate to="/dashboard" />} />
                 <Route path="dashboard" element={<Dashboard />} />
+                <Route path="ai" element={<AIPage />} />
                 <Route path="envios" element={<GestionUnificada />} />
                 <Route path="envios/modo" element={<ModernModeSelector />} />
                 <Route path="envios/nuevo" element={<NewShipment />} />

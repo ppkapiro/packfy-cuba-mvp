@@ -1,0 +1,244 @@
+# 🇨🇺 PACKFY CUBA - Configuración de Load Balancer v4.0
+version: "3.8"
+
+services:
+  # Load Balancer Principal (HAProxy)
+  load-balancer:
+    image: haproxy:2.8-alpine
+    container_name: packfy-load-balancer
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8404:8404" # Stats
+    volumes:
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      - ./certs:/etc/ssl/certs:ro
+    networks:
+      - packfy-network
+    restart: unless-stopped
+    depends_on:
+      - backend-1
+      - backend-2
+      - backend-3
+    healthcheck:
+      test: ["CMD", "haproxy", "-c", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Instancias Backend Escalables
+  backend-1:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    container_name: packfy-backend-1
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings_production
+      - DATABASE_URL=postgresql://packfy:${DB_PASSWORD}@postgres-primary:5432/packfy_cuba
+      - REDIS_URL=redis://redis-cluster:6379
+      - INSTANCE_ID=backend-1
+      - REGION=cuba-east
+    volumes:
+      - backend-static:/app/static
+      - backend-media:/app/media
+    networks:
+      - packfy-network
+    restart: unless-stopped
+    depends_on:
+      - postgres-primary
+      - redis-cluster
+
+  backend-2:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    container_name: packfy-backend-2
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings_production
+      - DATABASE_URL=postgresql://packfy:${DB_PASSWORD}@postgres-primary:5432/packfy_cuba
+      - REDIS_URL=redis://redis-cluster:6379
+      - INSTANCE_ID=backend-2
+      - REGION=cuba-west
+    volumes:
+      - backend-static:/app/static
+      - backend-media:/app/media
+    networks:
+      - packfy-network
+    restart: unless-stopped
+    depends_on:
+      - postgres-primary
+      - redis-cluster
+
+  backend-3:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    container_name: packfy-backend-3
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings_production
+      - DATABASE_URL=postgresql://packfy:${DB_PASSWORD}@postgres-primary:5432/packfy_cuba
+      - REDIS_URL=redis://redis-cluster:6379
+      - INSTANCE_ID=backend-3
+      - REGION=cuba-central
+    volumes:
+      - backend-static:/app/static
+      - backend-media:/app/media
+    networks:
+      - packfy-network
+    restart: unless-stopped
+    depends_on:
+      - postgres-primary
+      - redis-cluster
+
+  # Frontend con CDN
+  frontend-cdn:
+    image: nginx:1.25-alpine
+    container_name: packfy-frontend-cdn
+    ports:
+      - "3000:80"
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/mime.types:/etc/nginx/mime.types:ro
+    networks:
+      - packfy-network
+    restart: unless-stopped
+    depends_on:
+      - load-balancer
+
+  # PostgreSQL Primary con Replicación
+  postgres-primary:
+    image: postgres:16-alpine
+    container_name: packfy-postgres-primary
+    environment:
+      - POSTGRES_DB=packfy_cuba
+      - POSTGRES_USER=packfy
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_REPLICATION_USER=replicator
+      - POSTGRES_REPLICATION_PASSWORD=${REPLICATION_PASSWORD}
+    volumes:
+      - postgres-primary-data:/var/lib/postgresql/data
+      - ./postgres/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ./postgres/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
+    networks:
+      - packfy-network
+    restart: unless-stopped
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+
+  # PostgreSQL Replica (Read-only)
+  postgres-replica:
+    image: postgres:16-alpine
+    container_name: packfy-postgres-replica
+    environment:
+      - POSTGRES_DB=packfy_cuba
+      - POSTGRES_USER=packfy
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - PGUSER=postgres
+      - POSTGRES_MASTER_SERVICE=postgres-primary
+    volumes:
+      - postgres-replica-data:/var/lib/postgresql/data
+    networks:
+      - packfy-network
+    restart: unless-stopped
+    depends_on:
+      - postgres-primary
+
+  # Redis Cluster para Caché Distribuido
+  redis-cluster:
+    image: redis:7-alpine
+    container_name: packfy-redis-cluster
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-cluster-data:/data
+      - ./redis/redis.conf:/etc/redis/redis.conf:ro
+    networks:
+      - packfy-network
+    restart: unless-stopped
+    command: redis-server /etc/redis/redis.conf
+
+  # Redis Sentinel para Alta Disponibilidad
+  redis-sentinel:
+    image: redis:7-alpine
+    container_name: packfy-redis-sentinel
+    volumes:
+      - ./redis/sentinel.conf:/etc/redis/sentinel.conf:ro
+    networks:
+      - packfy-network
+    restart: unless-stopped
+    depends_on:
+      - redis-cluster
+    command: redis-sentinel /etc/redis/sentinel.conf
+
+  # Elasticsearch para Búsqueda Distribuida
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: packfy-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - packfy-network
+    restart: unless-stopped
+
+  # Prometheus para Monitoreo
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: packfy-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - packfy-network
+    restart: unless-stopped
+
+  # Grafana para Visualización
+  grafana:
+    image: grafana/grafana:latest
+    container_name: packfy-grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - packfy-network
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+
+  # Jaeger para Tracing Distribuido
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: packfy-jaeger
+    ports:
+      - "16686:16686"
+      - "14268:14268"
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    networks:
+      - packfy-network
+    restart: unless-stopped
+
+networks:
+  packfy-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  postgres-primary-data:
+  postgres-replica-data:
+  redis-cluster-data:
+  elasticsearch-data:
+  prometheus-data:
+  grafana-data:
+  backend-static:
+  backend-media:
