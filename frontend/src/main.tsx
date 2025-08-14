@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
+import './styles/master-unified.css'
 import './styles/main.css'
 
 // 📱 Service Worker PWA optimizado para móvil

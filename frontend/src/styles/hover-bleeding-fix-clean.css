@@ -1,0 +1,62 @@
+/* 🇨🇺 PACKFY CUBA - FIX ESPECÍFICO PARA HOVER BLEEDING */
+/* ======================================================= */
+/* SOLO previene el hover bleeding preservando estilos originales bonitos */
+
+/* Fix para prevenir hover bleeding usando CSS containment */
+.nav-link {
+  /* Usar containment para aislar efectos de hover */
+  contain: layout style !important;
+  /* Crear contexto de apilamiento independiente */
+  isolation: isolate !important;
+  /* Asegurar que cada elemento sea independiente */
+  will-change: transform, background-color !important;
+}
+
+/* Prevenir que hover se propague a elementos hermanos usando selectores específicos */
+.nav-link:not(:hover):not(.active) {
+  /* Mantener estilos originales cuando no está en hover ni activo */
+  /* No sobrescribir - dejar que critical.css maneje los estilos */
+}
+
+/* Para elementos adyacentes, usar counter-hover para cancelar efectos no deseados */
+.nav-link + .nav-link:not(:hover):not(.active) {
+  /* Reset cualquier efecto residual de hover del elemento anterior */
+  transform: none !important;
+  transition: all 0.25s ease-in-out !important;
+}
+
+/* Fix específico para acciones rápidas */
+.quick-action {
+  contain: layout style !important;
+  isolation: isolate !important;
+  will-change: transform, background-color !important;
+}
+
+/* Usar CSS Grid o Flexbox gap para separar visualmente elementos y prevenir bleeding */
+.nav-menu,
+.user-menu {
+  contain: layout !important;
+  gap: 0.5rem !important;
+}
+
+/* Fix avanzado: usar pseudo-elementos para crear "buffers" entre elementos */
+.nav-link::before {
+  content: "" !important;
+  position: absolute !important;
+  left: -2px !important;
+  right: -2px !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
+}
+
+/* Asegurar que el fondo de gradiente original se preserve para elementos activos */
+.nav-link.active {
+  /* No tocar - dejar que critical.css maneje completamente */
+}
+
+/* Asegurar que el hover original se preserve */
+.nav-link:hover:not(.active) {
+  /* No tocar - dejar que critical.css maneje completamente */
+}

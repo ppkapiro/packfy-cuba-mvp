@@ -29,6 +29,7 @@ interface EnvioFormData {
 const NewShipment = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showManualRedirect, setShowManualRedirect] = useState(false);
   const navigate = useNavigate();
 
   const { register, handleSubmit, formState: { errors } } = useForm<EnvioFormData>({
@@ -39,7 +40,9 @@ const NewShipment = () => {
       largo: 0,
       valor_declarado: 0
     }
-  });  const onSubmit: SubmitHandler<EnvioFormData> = async (data) => {
+  });
+
+  const onSubmit: SubmitHandler<EnvioFormData> = async (data) => {
     setLoading(true);
     setError('');
 
@@ -54,190 +57,207 @@ const NewShipment = () => {
         valor_declarado: parseFloat(data.valor_declarado.toString())
       };
 
-      console.log('Datos a enviar:', formattedData);
+      console.log('🚀 Enviando datos del nuevo envío:', formattedData);
 
-      // Intentar crear el envío
       const response = await enviosAPI.create(formattedData);
-      console.log('Envío creado con éxito:', response.data);
+      console.log('✅ Envío creado exitosamente:', response.data);
 
-      // Guardar el estado de éxito en sessionStorage y localStorage para mayor persistencia
-      const mensaje = 'Envío creado exitosamente';
-      sessionStorage.setItem('_lastEnvioSuccess', mensaje);
-      localStorage.setItem('_temp_success_message', mensaje);
-      localStorage.setItem('_temp_success_timestamp', new Date().toISOString());
+      // Intentar redirigir
+      const numeroGuia = (response.data as any)?.numero_guia || (response.data as any)?.id;
 
-      // Sistema mejorado de redirección con múltiples capas de seguridad
-      try {
-        // Primero, intentar navegación con react-router (más limpia)
-        console.log('Intentando navegación primaria con React Router');
-        navigate('/dashboard', {
-          replace: true,
-          state: { success: mensaje }
-        });
+      if (numeroGuia) {
+        console.log('🔄 Redirigiendo al dashboard...');
 
-        // Segunda capa: Establecer un timer para verificar si la navegación funcionó
-        const navTimer = setTimeout(() => {
-          console.log('Verificando si la navegación fue exitosa...');
+        // Intentar múltiples métodos de redirección
+        try {
+          navigate('/dashboard', {
+            state: {
+              mensaje: `Envío ${numeroGuia} creado exitosamente`,
+              tipo: 'success'
+            },
+            replace: true
+          });
 
-          // Si todavía estamos en la página de nuevo envío, usar Window.location
-          if (window.location.pathname.includes('/envios/nuevo')) {
-            console.log('Parece que la navegación con React Router falló, aplicando fallback');
-            // Usar window.location.assign en lugar de window.location.href para evitar problemas de caché
-            window.location.assign('/dashboard?success=true&t=' + new Date().getTime());
-          }
-        }, 800); // Tiempo reducido para responder más rápido
+          // Backup: redirección directa después de un delay
+          setTimeout(() => {
+            if (window.location.pathname === '/envios/nuevo') {
+              console.log('🔄 Redirección de respaldo...');
+              window.location.href = '/dashboard';
+            }
+          }, 1000);
 
-        // Tercera capa: Botón manual que aparece después de 2 segundos (ver en el return)
-        return () => {
-          clearTimeout(navTimer); // Limpiar el timer si el componente se desmonta
-        };
-      } catch (navError) {
-        console.error('Error durante la navegación:', navError);
-        // Fallback inmediato si hay alguna excepción durante la navegación
-        window.location.assign('/dashboard?success=true&fallback=true&t=' + new Date().getTime());
-      }
-    } catch (err: any) {
-      console.error('Error completo:', err);
-
-      // Manejo mejorado de errores
-      if (err.response?.data) {
-        // Si es un objeto de errores de validación de Django Rest Framework
-        if (typeof err.response.data === 'object') {
-          const errorMessages = Object.entries(err.response.data)
-            .map(([field, messages]) => `${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`)
-            .join('; ');
-          setError(`Errores de validación: ${errorMessages}`);
-        } else {
-          setError(err.response.data.detail || err.response.data || 'Error al crear el envío');
+        } catch (navError) {
+          console.error('❌ Error en navigate:', navError);
+          window.location.href = '/dashboard';
         }
-      } else {
-        setError('Error al crear el envío: No se pudo conectar con el servidor');
       }
+
+    } catch (err: any) {
+      console.error('❌ Error al crear envío:', err);
+      setError(
+        err.response?.data?.detail ||
+        err.response?.data?.message ||
+        err.message ||
+        'Error al crear el envío'
+      );
     } finally {
       setLoading(false);
     }
   };
-    // Estado para mostrar el botón de fallback después de cierto tiempo
-  const [showManualRedirect, setShowManualRedirect] = useState(false);
 
-  // Mostrar el botón de redirección manual después de un tiempo
+  // Mostrar botones manuales si la redirección no funciona
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (loading) {
-      timer = setTimeout(() => {
+    if (!loading) return;
+
+    const timer = setTimeout(() => {
+      if (loading) {
         setShowManualRedirect(true);
-      }, 2000);
-    }
+      }
+    }, 3000);
+
     return () => clearTimeout(timer);
   }, [loading]);
 
   return (
-    <div className="new-shipment-page">
-      <h1>Nuevo Envío</h1>
-      {error && <div className="alert alert-error">{error}</div>}
+    <div className="page-container new-shipment-page">
+      {/* Header de la página */}
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">📦 Nuevo Envío</h1>
+          <p className="page-subtitle">Registra un nuevo paquete en el sistema</p>
+        </div>
+        <div className="page-actions">
+          <button
+            type="button"
+            onClick={() => navigate('/dashboard')}
+            className="btn btn-secondary"
+          >
+            🔙 Volver al Dashboard
+          </button>
+        </div>
+      </div>
 
-      {loading && (
-        <div className="alert alert-info">
-          <p>Procesando su solicitud...</p>
-          <p>Si no es redirigido automáticamente después de crear el envío, use los botones a continuación.</p>
-
-          {showManualRedirect && (
-            <div className="manual-redirect-buttons">
-              <p><strong>Parece que hay un problema con la redirección automática.</strong></p>
-              <button
-                type="button"
-                onClick={() => {
-                  window.location.assign('/dashboard');
-                }}
-                className="btn btn-primary"
-              >
-                Ir al Dashboard (Opción 1)
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  // Usar una ruta diferente primero y luego redirigir
-                  window.location.assign('/?redirect_to=dashboard&t=' + new Date().getTime());
-                }}
-                className="btn btn-secondary"
-              >
-                Ir al Dashboard (Opción 2)
-              </button>
-            </div>
-          )}
+      {/* Alertas */}
+      {error && (
+        <div className="alert alert-error">
+          <span>{error}</span>
+          <button
+            className="close-button"
+            onClick={() => setError('')}
+          >
+            ✕
+          </button>
         </div>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="envio-form">
+      {loading && (
+        <div className="alert alert-info">
+          <div>
+            <p><strong>⏳ Procesando su solicitud...</strong></p>
+            <p>Si no es redirigido automáticamente después de crear el envío, use los botones a continuación.</p>
+
+            {showManualRedirect && (
+              <div className="d-flex gap-2 mt-3">
+                <button
+                  type="button"
+                  onClick={() => window.location.assign('/dashboard')}
+                  className="btn btn-primary btn-sm"
+                >
+                  Ir al Dashboard
+                </button>
+                <button
+                  type="button"
+                  onClick={() => window.location.assign('/envios')}
+                  className="btn btn-secondary btn-sm"
+                >
+                  Ver Envíos
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Formulario principal */}
+      <form onSubmit={handleSubmit(onSubmit)} className="form-container">
+
+        {/* Sección: Información del Paquete */}
         <div className="form-section">
-          <h2>Información del Paquete</h2>
+          <h3 className="form-section-title">📦 Información del Paquete</h3>
 
           <div className="alert alert-info">
-            <strong>📄 Número de Guía:</strong> Se generará automáticamente cuando se cree el envío (formato: PKF########)
+            <span><strong>💡 Importante:</strong> El número de guía se generará automáticamente una vez creado el envío.</span>
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label>Valor Declarado</label>
+              <label className="form-label" htmlFor="valor_declarado">Valor Declarado (USD):</label>
               <input
                 type="number"
                 step="0.01"
+                id="valor_declarado"
                 {...register('valor_declarado', { required: true, min: 0 })}
                 className={`form-control ${errors.valor_declarado ? 'is-invalid' : ''}`}
               />
               {errors.valor_declarado && <span className="error-message">Valor inválido</span>}
             </div>
-          </div>          <div className="form-group">
-            <label>Descripción</label>
+
+            <div className="form-group">
+              <label className="form-label" htmlFor="peso">Peso (kg):</label>
+              <input
+                type="number"
+                step="0.01"
+                id="peso"
+                {...register('peso', { required: true, min: 0.01 })}
+                className={`form-control ${errors.peso ? 'is-invalid' : ''}`}
+              />
+              {errors.peso && <span className="error-message">Valor inválido</span>}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="descripcion">Descripción del contenido:</label>
             <textarea
+              id="descripcion"
               {...register('descripcion', { required: true })}
               className={`form-control ${errors.descripcion ? 'is-invalid' : ''}`}
               rows={3}
-            ></textarea>
+            />
             {errors.descripcion && <span className="error-message">Este campo es requerido</span>}
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label>Peso (kg)</label>
+              <label className="form-label" htmlFor="alto">Alto (cm):</label>
               <input
                 type="number"
                 step="0.01"
-                {...register('peso', { required: true, min: 0 })}
-                className={`form-control ${errors.peso ? 'is-invalid' : ''}`}
-              />
-              {errors.peso && <span className="error-message">Valor inválido</span>}
-            </div>
-
-            <div className="form-group">
-              <label>Alto (cm)</label>
-              <input
-                type="number"
-                step="0.1"
-                {...register('alto', { required: true, min: 0 })}
+                id="alto"
+                {...register('alto', { required: true, min: 0.01 })}
                 className={`form-control ${errors.alto ? 'is-invalid' : ''}`}
               />
               {errors.alto && <span className="error-message">Valor inválido</span>}
             </div>
 
             <div className="form-group">
-              <label>Ancho (cm)</label>
+              <label className="form-label" htmlFor="ancho">Ancho (cm):</label>
               <input
                 type="number"
-                step="0.1"
-                {...register('ancho', { required: true, min: 0 })}
+                step="0.01"
+                id="ancho"
+                {...register('ancho', { required: true, min: 0.01 })}
                 className={`form-control ${errors.ancho ? 'is-invalid' : ''}`}
               />
               {errors.ancho && <span className="error-message">Valor inválido</span>}
             </div>
 
             <div className="form-group">
-              <label>Largo (cm)</label>
+              <label className="form-label" htmlFor="largo">Largo (cm):</label>
               <input
                 type="number"
-                step="0.1"
-                {...register('largo', { required: true, min: 0 })}
+                step="0.01"
+                id="largo"
+                {...register('largo', { required: true, min: 0.01 })}
                 className={`form-control ${errors.largo ? 'is-invalid' : ''}`}
               />
               {errors.largo && <span className="error-message">Valor inválido</span>}
@@ -245,133 +265,157 @@ const NewShipment = () => {
           </div>
         </div>
 
+        {/* Sección: Información del Remitente */}
         <div className="form-section">
-          <h2>Información del Remitente</h2>
-
-          <div className="form-group">
-            <label>Nombre</label>
-            <input
-              type="text"
-              {...register('remitente_nombre', { required: true })}
-              className={`form-control ${errors.remitente_nombre ? 'is-invalid' : ''}`}
-            />
-            {errors.remitente_nombre && <span className="error-message">Este campo es requerido</span>}
-          </div>
-
-          <div className="form-group">
-            <label>Dirección</label>
-            <textarea
-              {...register('remitente_direccion', { required: true })}
-              className={`form-control ${errors.remitente_direccion ? 'is-invalid' : ''}`}
-              rows={2}
-            ></textarea>
-            {errors.remitente_direccion && <span className="error-message">Este campo es requerido</span>}
-          </div>
+          <h3 className="form-section-title">👤 Información del Remitente</h3>
 
           <div className="form-row">
             <div className="form-group">
-              <label>Teléfono</label>
+              <label className="form-label" htmlFor="remitente_nombre">Nombre completo:</label>
               <input
                 type="text"
+                id="remitente_nombre"
+                {...register('remitente_nombre', { required: true })}
+                className={`form-control ${errors.remitente_nombre ? 'is-invalid' : ''}`}
+              />
+              {errors.remitente_nombre && <span className="error-message">Este campo es requerido</span>}
+            </div>
+
+            <div className="form-group">
+              <label className="form-label" htmlFor="remitente_telefono">Teléfono:</label>
+              <input
+                type="tel"
+                id="remitente_telefono"
                 {...register('remitente_telefono', { required: true })}
                 className={`form-control ${errors.remitente_telefono ? 'is-invalid' : ''}`}
               />
               {errors.remitente_telefono && <span className="error-message">Este campo es requerido</span>}
             </div>
-
-            <div className="form-group">
-              <label>Email</label>
-              <input
-                type="email"
-                {...register('remitente_email')}
-                className="form-control"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="form-section">
-          <h2>Información del Destinatario</h2>
-
-          <div className="form-group">
-            <label>Nombre</label>
-            <input
-              type="text"
-              {...register('destinatario_nombre', { required: true })}
-              className={`form-control ${errors.destinatario_nombre ? 'is-invalid' : ''}`}
-            />
-            {errors.destinatario_nombre && <span className="error-message">Este campo es requerido</span>}
-          </div>
-
-          <div className="form-group">
-            <label>Dirección</label>
-            <textarea
-              {...register('destinatario_direccion', { required: true })}
-              className={`form-control ${errors.destinatario_direccion ? 'is-invalid' : ''}`}
-              rows={2}
-            ></textarea>
-            {errors.destinatario_direccion && <span className="error-message">Este campo es requerido</span>}
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label>Teléfono</label>
+              <label className="form-label" htmlFor="remitente_direccion">Dirección completa:</label>
+              <textarea
+                id="remitente_direccion"
+                {...register('remitente_direccion', { required: true })}
+                className={`form-control ${errors.remitente_direccion ? 'is-invalid' : ''}`}
+                rows={2}
+              />
+              {errors.remitente_direccion && <span className="error-message">Este campo es requerido</span>}
+            </div>
+
+            <div className="form-group">
+              <label className="form-label" htmlFor="remitente_email">Email:</label>
+              <input
+                type="email"
+                id="remitente_email"
+                {...register('remitente_email', { required: true })}
+                className={`form-control ${errors.remitente_email ? 'is-invalid' : ''}`}
+              />
+              {errors.remitente_email && <span className="error-message">Este campo es requerido</span>}
+            </div>
+          </div>
+        </div>
+
+        {/* Sección: Información del Destinatario */}
+        <div className="form-section">
+          <h3 className="form-section-title">🎯 Información del Destinatario</h3>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label" htmlFor="destinatario_nombre">Nombre completo:</label>
               <input
                 type="text"
+                id="destinatario_nombre"
+                {...register('destinatario_nombre', { required: true })}
+                className={`form-control ${errors.destinatario_nombre ? 'is-invalid' : ''}`}
+              />
+              {errors.destinatario_nombre && <span className="error-message">Este campo es requerido</span>}
+            </div>
+
+            <div className="form-group">
+              <label className="form-label" htmlFor="destinatario_telefono">Teléfono:</label>
+              <input
+                type="tel"
+                id="destinatario_telefono"
                 {...register('destinatario_telefono', { required: true })}
                 className={`form-control ${errors.destinatario_telefono ? 'is-invalid' : ''}`}
               />
               {errors.destinatario_telefono && <span className="error-message">Este campo es requerido</span>}
             </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label" htmlFor="destinatario_direccion">Dirección completa:</label>
+              <textarea
+                id="destinatario_direccion"
+                {...register('destinatario_direccion', { required: true })}
+                className={`form-control ${errors.destinatario_direccion ? 'is-invalid' : ''}`}
+                rows={2}
+              />
+              {errors.destinatario_direccion && <span className="error-message">Este campo es requerido</span>}
+            </div>
 
             <div className="form-group">
-              <label>Email</label>
+              <label className="form-label" htmlFor="destinatario_email">Email:</label>
               <input
                 type="email"
-                {...register('destinatario_email')}
+                id="destinatario_email"
+                {...register('destinatario_email', { required: true })}
+                className={`form-control ${errors.destinatario_email ? 'is-invalid' : ''}`}
+              />
+              {errors.destinatario_email && <span className="error-message">Este campo es requerido</span>}
+            </div>
+          </div>
+        </div>
+
+        {/* Sección: Información de Entrega */}
+        <div className="form-section">
+          <h3 className="form-section-title">📅 Información de Entrega</h3>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label" htmlFor="fecha_entrega_estimada">Fecha estimada de entrega:</label>
+              <input
+                type="date"
+                id="fecha_entrega_estimada"
+                {...register('fecha_entrega_estimada')}
                 className="form-control"
+                min={new Date().toISOString().split('T')[0]}
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label" htmlFor="notas">Notas adicionales:</label>
+              <textarea
+                id="notas"
+                {...register('notas')}
+                className="form-control"
+                rows={2}
+                placeholder="Instrucciones especiales, comentarios, etc."
               />
             </div>
           </div>
         </div>
 
-        <div className="form-section">
-          <h2>Información Adicional</h2>
-
-          <div className="form-group">
-            <label>Fecha Estimada de Entrega</label>
-            <input
-              type="date"
-              {...register('fecha_entrega_estimada')}
-              className="form-control"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Notas Adicionales</label>
-            <textarea
-              {...register('notas')}
-              className="form-control"
-              rows={3}
-            ></textarea>
-          </div>
-        </div>
-
-        <div className="form-actions">
+        {/* Botones de acción */}
+        <div className="d-flex gap-3 justify-center">
           <button
-            type="button"
-            onClick={() => navigate(-1)}
-            className="btn btn-secondary"
+            type="submit"
+            disabled={loading}
+            className="btn btn-primary btn-lg"
           >
-            Cancelar
+            {loading ? '⏳ Creando...' : '📦 Crear Envío'}
           </button>
 
           <button
-            type="submit"
-            className="btn"
-            disabled={loading}
+            type="button"
+            onClick={() => navigate('/dashboard')}
+            className="btn btn-secondary btn-lg"
           >
-            {loading ? 'Guardando...' : 'Crear Envío'}
+            ❌ Cancelar
           </button>
         </div>
       </form>
