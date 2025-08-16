@@ -1,10 +1,13 @@
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import MobileBottomNav from './MobileBottomNav';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Layout = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   console.log('Layout: Renderizando Layout, usuario:', user);
 
@@ -33,7 +36,7 @@ const Layout = () => {
               <li className="nav-item">
                 <Link
                   to="/dashboard"
-                  className={`nav-link ${isActiveRoute('/dashboard') ? 'active' : ''}`}
+                  className={`nav-link hover-lift ripple pressable ${isActiveRoute('/dashboard') ? 'active' : ''}`}
                 >
                   <span className="icon icon-dashboard"></span>
                   <span>Dashboard</span>
@@ -42,7 +45,7 @@ const Layout = () => {
               <li className="nav-item">
                 <Link
                   to="/envios/nuevo"
-                  className={`nav-link ${isActiveRoute('/envios/nuevo') ? 'active' : ''}`}
+                  className={`nav-link hover-lift ripple pressable ${isActiveRoute('/envios/nuevo') ? 'active' : ''}`}
                 >
                   <span className="icon icon-package"></span>
                   <span>Crear Envío</span>
@@ -51,7 +54,7 @@ const Layout = () => {
               <li className="nav-item">
                 <Link
                   to="/envios"
-                  className={`nav-link ${isActiveRoute('/envios') && !isActiveRoute('/envios/nuevo') ? 'active' : ''}`}
+                  className={`nav-link hover-lift ripple pressable ${isActiveRoute('/envios') && !isActiveRoute('/envios/nuevo') ? 'active' : ''}`}
                 >
                   <span className="icon icon-package"></span>
                   <span>Gestión</span>
@@ -62,12 +65,16 @@ const Layout = () => {
 
           {/* Menú de usuario */}
           <div className="user-menu">
+            <button onClick={toggleTheme} className="nav-link hover-lift ripple pressable" aria-label="Cambiar tema">
+              <span className="icon icon-sun"></span>
+              <span>{theme === 'dark' ? 'Claro' : 'Oscuro'}</span>
+            </button>
             {user ? (
               <div className="user-info">
                 <span className="user-name">
                   {user.nombre || user.email?.split('@')[0]}
                 </span>
-                <button onClick={handleLogout} className="nav-link">
+                <button onClick={handleLogout} className="nav-link hover-lift ripple pressable">
                   <span className="icon icon-user"></span>
                   <span>Salir</span>
                 </button>
@@ -87,6 +94,9 @@ const Layout = () => {
           <Outlet />
         </div>
       </main>
+
+      {/* 📱 Navegación móvil inferior - Solo visible en móvil */}
+      <MobileBottomNav />
     </div>
   );
 };

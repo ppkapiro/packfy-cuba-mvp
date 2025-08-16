@@ -1,6 +1,5 @@
 // 🇨🇺 PACKFY CUBA - Dashboard Global de Escalabilidad v4.0
 import React, { useState, useEffect } from 'react';
-import '../styles/components/scalability-dashboard.css';
 import {
   Globe,
   Users,

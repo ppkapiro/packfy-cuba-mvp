@@ -3,7 +3,10 @@
 
 import os
 
-from .settings import *
+from . import settings_base as base
+
+# Re-exportar símbolos necesarios para Django (mantener nombres)
+from .settings_base import *  # noqa
 
 # 🔧 CONFIGURACIÓN DE DESARROLLO
 DEBUG = True
@@ -13,16 +16,24 @@ ENVIRONMENT = "development"
 SECRET_KEY = os.getenv(
     "DJANGO_SECRET_KEY", "django-insecure-dev-key-v4-glassmorphism"
 )
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", "backend"]
 
-# 🌐 CORS - Desarrollo permisivo
+# 📱 ALLOWED_HOSTS - Móvil + PC
+allowed_hosts_env = os.getenv(
+    "DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,0.0.0.0,backend"
+)
+ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(",")]
+
+# 🌐 CORS - Desarrollo permisivo + Móvil
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+
+# CORS origins desde variables de entorno
+cors_origins_env = os.getenv(
+    "CORS_ALLOWED_ORIGINS",
+    "http://localhost:5173,https://localhost:5173,http://127.0.0.1:5173,https://127.0.0.1:5173",
+)
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "https://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://127.0.0.1:5173",
+    origin.strip() for origin in cors_origins_env.split(",")
 ]
 
 # 📧 EMAIL - Mock para desarrollo
@@ -77,7 +88,15 @@ USE_L10N = True
 # 📊 DEBUG TOOLBAR para desarrollo
 if DEBUG:
     INSTALLED_APPS += ["debug_toolbar"]
-    MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware"]
+    MIDDLEWARE = [
+        "django.middleware.security.SecurityMiddleware",
+        "usuarios.security_middleware.SecurityHeadersMiddleware",
+        "usuarios.security_middleware.RateLimitMiddleware",
+        "usuarios.security_middleware.RequestLoggingMiddleware",
+        *MIDDLEWARE,  # base list
+        "usuarios.security_middleware.SecurityMonitoringMiddleware",
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    ]
     INTERNAL_IPS = ["127.0.0.1", "localhost"]
 
 # 🔧 CONFIGURACIONES ESPECÍFICAS DE DESARROLLO

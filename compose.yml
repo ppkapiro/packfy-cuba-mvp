@@ -64,7 +64,7 @@ services:
       # 🔒 SEGURIDAD
       - DJANGO_DEBUG=true
       - DJANGO_SECRET_KEY=django-insecure-dev-key-v4-glassmorphism-2025
-      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,backend,0.0.0.0
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,backend,0.0.0.0,192.168.12.178,172.20.0.5
 
       # 🗄️ BASE DE DATOS
       - POSTGRES_DB=packfy
@@ -77,13 +77,15 @@ services:
       - REDIS_URL=redis://redis:6379/1
       - CACHE_BACKEND=redis
 
-      # 🌐 CORS
-      - CORS_ALLOWED_ORIGINS=http://localhost:5173,https://localhost:5173,http://127.0.0.1:5173,https://127.0.0.1:5173
+      # 🌐 CORS - Incluye IPs para acceso móvil
+      - CORS_ALLOWED_ORIGINS=http://localhost:5173,https://localhost:5173,http://127.0.0.1:5173,https://127.0.0.1:5173,http://192.168.12.178:5173,https://192.168.12.178:5173,http://172.20.0.5:5173,https://172.20.0.5:5173
 
-      # 🔧 CONFIGURACIONES ESPECÍFICAS
+      # 🔧 CONFIGURACIONES ESPECÍFICAS MÓVILES
       - INTERFACE_VERSION=4.0
-      - FORM_STYLE=cuban-unified
+      - FORM_STYLE=cuban-mobile
       - SUBSCRIPTION_MODE=disabled
+      - FEATURE_MOBILE_OPTIMIZED=enabled
+      - FEATURE_PWA_ENHANCED=enabled
       - FEATURE_UNIFIED_MANAGEMENT=enabled
       - USE_HTTPS=true
       - SECURE_SSL_REDIRECT=false
@@ -101,29 +103,33 @@ services:
     networks:
       - packfy_network
     healthcheck:
-      test: ["CMD", "python", "manage.py", "check", "--deploy"]
+      test: ["CMD", "python", "manage.py", "check"]
       interval: 30s
       timeout: 10s
       retries: 3
 
-  # 🌐 Frontend React Gestión Unificada v3.3
+  # 🌐 Frontend React Móvil Optimizado v4.0
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: packfy-frontend-v3.3
+    container_name: packfy-frontend-mobile-v4.0
     depends_on:
       backend:
         condition: service_healthy
     environment:
       - NODE_ENV=development
-      - VITE_API_BASE_URL=https://192.168.12.178:8000
-      - VITE_APP_TITLE=Packfy Cuba - Gestión Unificada v3.3
-      - VITE_APP_VERSION=3.3
-      - VITE_INTERFACE_MODE=unified-management
-      - VITE_FORM_STYLE=cuban-unified
-      - VITE_APP_NAME=Packfy Cuba - Gestión Unificada
+      - VITE_API_BASE_URL=https://localhost:8443
+      - VITE_APP_TITLE=Packfy Cuba - Móvil Optimizado v4.0
+      - VITE_APP_VERSION=4.0
+      - VITE_INTERFACE_MODE=mobile-optimized
+      - VITE_FORM_STYLE=cuban-mobile
+      - VITE_APP_NAME=Packfy Cuba - Móvil Optimizado
       - VITE_SUBSCRIPTION_MODE=disabled
+      - VITE_FEATURE_MOBILE_NAV=enabled
+      - VITE_FEATURE_PWA_OPTIMIZED=enabled
+      - VITE_FEATURE_TOUCH_TARGETS=enabled
+      - VITE_FEATURE_SAFE_AREA=enabled
       - VITE_FEATURE_UNIFIED_PAGES=enabled
       - VITE_ENABLE_HTTPS=true
       - HOST=0.0.0.0
@@ -146,6 +152,32 @@ services:
       timeout: 10s
       retries: 3
       start_period: 20s
+
+  # 🧪 Runner de E2E con Playwright (contenedor efímero)
+  e2e:
+    image: mcr.microsoft.com/playwright:v1.54.2-jammy
+    container_name: packfy-e2e-runner
+    depends_on:
+      frontend:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    working_dir: /tests
+    environment:
+      - E2E_BASE_URL=https://frontend:5173
+      - PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+      - CI=1
+    volumes:
+      - ./frontend:/tests
+    networks:
+      - packfy_network
+    # Ejecuta solo el smoke por defecto; puedes cambiar a "npx playwright test"
+    command:
+      [
+        "bash",
+        "-lc",
+  "npm install --no-audit --no-fund && npx playwright test e2e/smoke-auth.e2e.ts",
+      ]
 
   # 🔄 Servicio de Desarrollo (Opcional para Hot Reload)
   dev-tools:

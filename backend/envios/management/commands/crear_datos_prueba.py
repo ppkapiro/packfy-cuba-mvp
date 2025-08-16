@@ -1,9 +1,9 @@
-"""
-🇨🇺 PACKFY CUBA - Comando Django para crear datos de prueba
+"""🇨🇺 PACKFY CUBA - Comando Django para crear datos de prueba
+
+Actualizado para el modelo actual de `Envio` (usa numero_guia autogenerado y campos remitente/destinatario).
 """
 
 import random
-from datetime import datetime, timedelta
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
@@ -13,192 +13,90 @@ from envios.models import Envio
 Usuario = get_user_model()
 
 
+REMITENTES = [
+    "Carlos Rodríguez",
+    "Ana Gómez",
+    "Luis Pérez",
+    "María Fernández",
+    "Jorge Díaz",
+    "Elena Suárez",
+    "Raúl Martínez",
+    "Lucía Romero",
+    "Pedro Alonso",
+    "Sonia Herrera",
+]
+
+DESTINATARIOS = [
+    "Yoandry López",
+    "Yanelis Cruz",
+    "Michel González",
+    "Isabel Pardo",
+    "Reinier Peña",
+    "Claudia Ramos",
+    "Roberto Linares",
+    "Giselle Blanco",
+    "Armando Guerra",
+    "Dunia Del Río",
+]
+
+DIRECCIONES = [
+    "Vedado, La Habana",
+    "Centro Habana, La Habana",
+    "Playa, La Habana",
+    "Habana Vieja, La Habana",
+    "Santiago de Cuba",
+    "Camagüey",
+    "Holguín",
+    "Santa Clara",
+    "Matanzas",
+    "Cienfuegos",
+]
+
+DESCRIPCIONES = [
+    "Ropa y textiles",
+    "Electrónica pequeña",
+    "Medicamentos básicos",
+    "Accesorios móviles",
+    "Zapatos deportivos",
+    "Alimentos no perecederos",
+    "Artículos de higiene",
+    "Juguetes infantiles",
+    "Herramientas manuales",
+    "Libros y papelería",
+]
+
+
 class Command(BaseCommand):
-    help = "Crea 20 envíos de prueba para PACKFY CUBA"
+    help = "Crea 20 envíos de prueba con datos variados (numero_guia autogenerado)"
 
     def handle(self, *args, **options):
-        self.stdout.write("🇨🇺 CREANDO DATOS DE PRUEBA PARA PACKFY CUBA...")
+        self.stdout.write("🇨🇺 Generando envíos de prueba...")
 
-        # Datos realistas cubanos
-        nombres_cubanos = [
-            "María José García",
-            "Carlos Manuel Rodríguez",
-            "Ana Beatriz López",
-            "José Antonio Martínez",
-            "Carmen Elena Pérez",
-            "Roberto Carlos Sánchez",
-            "Yolanda María Fernández",
-            "Miguel Ángel González",
-            "Laura Isabel Díaz",
-            "Francisco Javier Herrera",
-            "Rosa María Castro",
-            "Eduardo Luis Torres",
-            "Marisol Esperanza Ruiz",
-            "Antonio José Ramírez",
-            "Silvia Carolina Morales",
-            "Rafael Alberto Jiménez",
-            "Esperanza del Carmen Vargas",
-            "Luis Miguel Ortega",
-            "Carmen Rosa Delgado",
-            "Jorge Alberto Mendoza",
-        ]
-
-        direcciones_cuba = [
-            "Calle 23 #456, Vedado, La Habana",
-            "Avenida 26 #123, Nuevo Vedado, La Habana",
-            "Calle Real #89, Centro Habana",
-            "Malecón #234, Habana Vieja",
-            "5ta Avenida #567, Miramar, Playa",
-            "Calle L #345, Vedado, La Habana",
-            "Avenida Carlos III #678, Centro Habana",
-            "Calle 17 #890, Vedado, La Habana",
-            "Paseo #123, Plaza de la Revolución",
-            "Línea #456, Vedado, La Habana",
-            "Calle Obispo #789, Habana Vieja",
-            "Avenida Rancho Boyeros #234, Arroyo Naranjo",
-            "Calle San Lázaro #567, Centro Habana",
-            "Calle G #890, Vedado, La Habana",
-            "Avenida Salvador Allende #123, Cerro",
-            "Calle Zanja #456, Centro Habana",
-            "Calle 21 #789, Vedado, La Habana",
-            "Avenida 41 #234, Playa",
-            "Calle Galiano #567, Centro Habana",
-            "Calle San Rafael #890, Centro Habana",
-        ]
-
-        productos_cubanos = [
-            "Medicamentos para diabetes",
-            "Ropa de bebé",
-            "Teléfono móvil Samsung",
-            "Productos de aseo personal",
-            "Suplementos vitamínicos",
-            "Ropa de mujer talla M",
-            "Zapatos deportivos Nike",
-            "Laptop HP",
-            "Productos de belleza",
-            "Herramientas de trabajo",
-            "Juguetes para niños",
-            "Ropa de hombre talla L",
-            "Electrodomésticos pequeños",
-            "Productos para el cabello",
-            "Medicamentos cardiológicos",
-            "Equipos electrónicos",
-            "Cosméticos y perfumes",
-            "Ropa deportiva",
-            "Productos alimenticios",
-            "Accesorios para teléfonos",
-        ]
-
-        ciudades_origen = [
-            "Miami, FL",
-            "Madrid, España",
-            "México DF, México",
-            "Toronto, Canadá",
-            "Ciudad de Panamá, Panamá",
-            "Caracas, Venezuela",
-            "Buenos Aires, Argentina",
-            "Roma, Italia",
-            "París, Francia",
-            "Nueva York, NY",
-        ]
-
-        estados_posibles = [
-            "pendiente",
-            "en_transito",
-            "en_aduana",
-            "entregado",
-        ]
-        tipos_envio = ["estandar", "express", "premium"]
-
-        # Obtener o crear usuario de prueba
-        try:
-            usuario = Usuario.objects.get(username="admin")
-        except Usuario.DoesNotExist:
-            self.stdout.write("⚠️ Creando usuario admin para las pruebas...")
-            usuario = Usuario.objects.create_user(
-                username="admin",
-                email="admin@packfy.cu",
-                password="admin123",
-                first_name="Administrador",
-                last_name="Sistema",
-            )
-
-        # Limpiar envíos existentes de prueba
-        envios_existentes = Envio.objects.filter(
-            numero_tracking__startswith="PKY"
+        usuario, _ = Usuario.objects.get_or_create(
+            email="demo@packfy.cu",
+            defaults={"username": "demo", "password": "demo12345"},
         )
-        if envios_existentes.exists():
-            self.stdout.write(
-                f"🗑️ Eliminando {envios_existentes.count()} envíos existentes..."
-            )
-            envios_existentes.delete()
 
-        envios_creados = []
-
-        self.stdout.write("📦 Creando 20 envíos de prueba...")
-
+        creados = []
         for i in range(20):
-            # Generar datos aleatorios pero realistas
-            numero_tracking = f"PKY{2025}{(i+1):03d}{random.randint(100, 999)}"
-            nombre_destinatario = nombres_cubanos[i]
-            direccion_destinatario = direcciones_cuba[i]
-            descripcion = productos_cubanos[i]
-            peso = round(random.uniform(0.5, 15.0), 2)
-            valor_declarado = round(random.uniform(50.0, 1500.0), 2)
-            ciudad_origen = random.choice(ciudades_origen)
-            estado = random.choice(estados_posibles)
-            tipo_envio = random.choice(tipos_envio)
-
-            # Fechas realistas
-            fecha_envio = datetime.now() - timedelta(
-                days=random.randint(1, 30)
-            )
-
-            if estado == "entregado":
-                fecha_entrega = fecha_envio + timedelta(
-                    days=random.randint(7, 21)
-                )
-            else:
-                fecha_entrega = None
-
-            # Calcular costo basado en peso y tipo
-            costo_base = peso * 12.50  # $12.50 por kg
-            if tipo_envio == "express":
-                costo_base *= 1.5
-            elif tipo_envio == "premium":
-                costo_base *= 2.0
-
-            costo_envio = round(costo_base, 2)
-
-            # Crear el envío
             envio = Envio.objects.create(
-                numero_tracking=numero_tracking,
-                usuario=usuario,
-                nombre_destinatario=nombre_destinatario,
-                direccion_destinatario=direccion_destinatario,
-                telefono_destinatario=f"537{random.randint(1000, 9999)}{random.randint(1000, 9999)}",
-                descripcion=descripcion,
-                peso=Decimal(str(peso)),
-                valor_declarado=Decimal(str(valor_declarado)),
-                costo_envio=Decimal(str(costo_envio)),
-                ciudad_origen=ciudad_origen,
-                estado=estado,
-                tipo_envio=tipo_envio,
-                fecha_envio=fecha_envio,
-                fecha_entrega=fecha_entrega,
-                notas_especiales=f"Envío #{i+1} - Datos de prueba generados automáticamente",
+                descripcion=random.choice(DESCRIPCIONES),
+                peso=Decimal(str(round(random.uniform(0.3, 8.0), 2))),
+                remitente_nombre=random.choice(REMITENTES),
+                remitente_direccion=random.choice(DIRECCIONES),
+                remitente_telefono=f"53{random.randint(50000000, 59999999)}",
+                destinatario_nombre=random.choice(DESTINATARIOS),
+                destinatario_direccion=random.choice(DIRECCIONES),
+                destinatario_telefono=f"53{random.randint(30000000, 39999999)}",
+                creado_por=usuario,
+                actualizado_por=usuario,
             )
-
-            envios_creados.append(envio)
-
-            # Mostrar progreso
+            creados.append(envio.numero_guia)
             self.stdout.write(
-                f"  ✅ {numero_tracking} - {nombre_destinatario} - {descripcion[:30]}... - {estado}"
+                f"  ✅ {envio.numero_guia} - {envio.destinatario_nombre} ({envio.peso}kg)"
             )
 
-        self.stdout.write(
-            f"\n🎉 ¡COMPLETADO! Se crearon {len(envios_creados)} envíos de prueba exitosamente."
-        )
+        self.stdout.write(f"\n🎉 {len(creados)} envíos creados correctamente.")
 
         # Estadísticas
         estadisticas = {}

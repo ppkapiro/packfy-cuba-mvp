@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { enviosAPI } from '../services/api';
-import { Envio } from '../types';
-import axios from 'axios';
 
 interface DashboardStatsData {
   total: number;
@@ -27,126 +25,25 @@ const DashboardStats: React.FC = () => {
     console.log("DashboardStats: Iniciando carga de estadísticas");
 
     try {
-      // Simulamos obtener estadísticas desde los envíos
-      // En un entorno real, esto se haría con un endpoint específico
-      console.log("DashboardStats: Realizando llamada a enviosAPI.getAll");
-      const response = await enviosAPI.getAll(1, 1000); // Traer todos para calcular estadísticas
-      console.log("DashboardStats: Respuesta de la API recibida", response);
-
+      console.log("DashboardStats: Solicitando /envios/estadisticas/");
+      const response = await enviosAPI.getEstadisticas();
       if (!response.data) {
-        console.error("DashboardStats: La respuesta no contiene datos:", response);
         setError('La respuesta de la API no contiene datos');
-        setLoading(false);
         return;
       }
-
-      const responseData = response.data as any; // Type assertion para evitar errores TypeScript
-      const envios = responseData?.results || [];
-      console.log("DashboardStats: Envíos obtenidos:", envios.length);      // Si no hay envíos, mostrar estadísticas vacías en lugar de error
-      if (envios.length === 0) {
-        setStats({
-          total: 0,
-          porEstado: {},
-          pendientes: 0,
-          entregadosHoy: 0,
-          recientes: 0
-        });
-        setLoading(false);
-        return;
-      }
-
-      // Fecha actual
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      // Calcular estadísticas
-      const porEstado: {[key: string]: number} = {};
-      let pendientes = 0;
-      let entregadosHoy = 0;
-      let recientes = 0;
-
-      envios.forEach((envio: Envio) => {
-        try {
-          // Conteo por estado
-          const estadoKey = envio.estado_display || envio.estado_actual || 'Desconocido';
-          porEstado[estadoKey] = (porEstado[estadoKey] || 0) + 1;
-
-          // Envíos pendientes (no entregados/cancelados/devueltos)
-          if (envio.estado_actual && !['ENTREGADO', 'CANCELADO', 'DEVUELTO'].includes(envio.estado_actual.toUpperCase())) {
-            pendientes++;
-          }
-
-          // Envíos entregados hoy
-          if (envio.estado_actual && envio.estado_actual.toUpperCase() === 'ENTREGADO' && envio.ultima_actualizacion) {
-            const fechaActualizacion = new Date(envio.ultima_actualizacion);
-            if (fechaActualizacion >= today) {
-              entregadosHoy++;
-            }
-          }
-
-          // Envíos recientes (últimos 7 días)
-          if (envio.fecha_creacion) {
-            const fechaRegistro = new Date(envio.fecha_creacion);
-            const sevenDaysAgo = new Date();
-            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-            if (fechaRegistro >= sevenDaysAgo) {
-              recientes++;
-            }
-          }
-        } catch (e) {
-          console.error("DashboardStats: Error procesando envío:", e, envio);
-        }
-      });
-
-      setStats({
-        total: envios.length,
+      const d: any = response.data;
+      const porEstado = d.porEstado || d.por_estado || {};
+      const statsMapped: DashboardStatsData = {
+        total: d.total ?? 0,
         porEstado,
-        pendientes,
-        entregadosHoy,
-        recientes
-      });
-
-      console.log("DashboardStats: Estadísticas calculadas:", {
-        total: envios.length,
-        porEstado,
-        pendientes,
-        entregadosHoy,
-        recientes
-      });
-
+        pendientes: d.pendientes ?? 0,
+        entregadosHoy: d.entregadosHoy ?? d.entregados_hoy ?? 0,
+        recientes: d.recientes ?? 0,
+      };
+      setStats(statsMapped);
     } catch (error: unknown) {
-      console.error("DashboardStats: Error en loadStats:", error);
-      // Imprimir detalles completos del error para depuración
-      try {
-        console.error("DashboardStats: Error completo:", JSON.stringify(error, null, 2));
-      } catch {
-        console.error("DashboardStats: No se pudo convertir el error a JSON");
-      }
-
-      // Mostrar mensaje más específico según el tipo de error
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as any; // Type casting para acceder a propiedades de axios
-        if (axiosError.response) {
-          // Error de respuesta del servidor
-          console.error("DashboardStats: Error de respuesta:", axiosError.response.status, axiosError.response.statusText);
-          setError(`Error al cargar estadísticas: ${axiosError.response.status} - ${axiosError.response.statusText}`);
-        } else if (axiosError.request) {
-          // No se recibió respuesta
-          console.error("DashboardStats: No se recibió respuesta del servidor");
-          setError('No se recibió respuesta del servidor. Compruebe su conexión.');
-        } else {
-          // Error en la configuración de la solicitud
-          const errorMessage = axiosError.message || 'Error desconocido';
-          console.error("DashboardStats: Error en configuración de solicitud:", errorMessage);
-          setError(`Error al configurar la solicitud: ${errorMessage}`);
-        }
-      } else if (error instanceof Error) {
-        console.error("DashboardStats: Error general:", error.message);
-        setError(`Error: ${error.message}`);
-      } else {
-        console.error("DashboardStats: Error desconocido");
-        setError('Error desconocido al cargar las estadísticas');
-      }
+      console.error("DashboardStats: Error cargando estadísticas:", error);
+      setError('No se pudieron cargar las estadísticas');
     } finally {
       setLoading(false);
     }

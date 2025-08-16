@@ -1,0 +1,196 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.7, pytest-8.4.1, pluggy-1.6.0 -- C:\Users\pepec\Projects\Packfy\paqueteria-cuba-mvp\backend\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+django: version: 4.2.23, settings: config.settings_test (from env)
+rootdir: C:\Users\pepec\Projects\Packfy\paqueteria-cuba-mvp\backend
+configfile: pytest.ini
+plugins: cov-6.2.1, django-4.11.1
+collecting ... collected 12 items
+
+tests/test_cache_rastrear.py::test_rastrear_cache FAILED                 [  8%]
+tests/test_envios_api.py::TestEnvioAPI::test_create_envio_valid_data FAILED [ 16%]
+tests/test_envios_api.py::TestEnvioAPI::test_list_envios_authenticated FAILED [ 25%]
+tests/test_envios_api.py::TestEnvioAPI::test_list_envios_unauthenticated FAILED [ 33%]
+tests/test_envios_api.py::TestEnvioAPI::test_user_cannot_access_other_company_envios FAILED [ 41%]
+tests/test_envios_estadisticas.py::test_estadisticas_endpoint FAILED     [ 50%]
+tests/test_logging_request_id.py::test_request_id_and_logging PASSED     [ 58%]
+tests/test_metrics_rate_limit.py::test_metrics_endpoint PASSED           [ 66%]
+tests/test_metrics_rate_limit.py::test_rate_limit_applies PASSED         [ 75%]
+tests/test_pagination_limits.py::test_pagination_max_page_size FAILED    [ 83%]
+tests/test_pagination_limits.py::test_pagination_fields_present FAILED   [ 91%]
+tests/test_smoke.py::test_smoke PASSED                                   [100%]
+
+================================== FAILURES ===================================
+_____________________________ test_rastrear_cache _____________________________
+.venv\Lib\site-packages\django\db\backends\utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:328: in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.IntegrityError: NOT NULL constraint failed: envios_envio.peso
+
+The above exception was the direct cause of the following exception:
+tests\test_cache_rastrear.py:9: in test_rastrear_cache
+    envio = Envio.objects.create(
+.venv\Lib\site-packages\django\db\models\manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\models\query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+envios\models.py:96: in save
+    super().save(*args, **kwargs)
+.venv\Lib\site-packages\django\db\models\base.py:814: in save
+    self.save_base(
+.venv\Lib\site-packages\django\db\models\base.py:877: in save_base
+    updated = self._save_table(
+.venv\Lib\site-packages\django\db\models\base.py:1020: in _save_table
+    results = self._do_insert(
+.venv\Lib\site-packages\django\db\models\base.py:1061: in _do_insert
+    return manager._insert(
+.venv\Lib\site-packages\django\db\models\manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\models\query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\models\sql\compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv\Lib\site-packages\django\db\backends\utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv\Lib\site-packages\django\db\backends\utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv\Lib\site-packages\django\db\backends\utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:328: in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: envios_envio.peso
+---------------------------- Captured stdout setup ----------------------------
+Operations to perform:
+  Synchronize unmigrated apps: corsheaders, messages, rest_framework, rest_framework_simplejwt, staticfiles
+  Apply all migrations: admin, auth, contenttypes, empresas, envios, sessions, token_blacklist, usuarios
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0001_initial... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying usuarios.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying empresas.0001_initial... OK
+  Applying envios.0001_initial... OK
+  Applying envios.0002_initial... OK
+  Applying envios.0002_envio_indexes_uuidguide... OK
+  Applying envios.0003_envio_stats_matview... OK
+  Applying envios.0004_envio_stats_matview_index... OK
+  Applying sessions.0001_initial... OK
+  Applying token_blacklist.0001_initial... OK
+  Applying token_blacklist.0002_outstandingtoken_jti_hex... OK
+  Applying token_blacklist.0003_auto_20171017_2007... OK
+  Applying token_blacklist.0004_auto_20171017_2013... OK
+  Applying token_blacklist.0005_remove_outstandingtoken_jti... OK
+  Applying token_blacklist.0006_auto_20171017_2113... OK
+  Applying token_blacklist.0007_auto_20171017_2214... OK
+  Applying token_blacklist.0008_migrate_to_bigautofield... OK
+  Applying token_blacklist.0010_fix_migrate_to_bigautofield... OK
+  Applying token_blacklist.0011_linearizes_history... OK
+  Applying token_blacklist.0012_alter_outstandingtoken_user... OK
+  Applying token_blacklist.0013_alter_blacklistedtoken_options_and_more... OK
+  Applying usuarios.0002_alter_usuario_managers... OK
+---------------------------- Captured stderr setup ----------------------------
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+__________________ TestEnvioAPI.test_create_envio_valid_data __________________
+tests\test_envios_api.py:25: in setUp
+    self.empresa = Empresa.objects.create(
+.venv\Lib\site-packages\django\db\models\manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\models\query.py:656: in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\models\base.py:567: in __init__
+    raise TypeError(
+E   TypeError: Empresa() got unexpected keyword arguments: 'codigo', 'activa'
+_________________ TestEnvioAPI.test_list_envios_authenticated _________________
+tests\test_envios_api.py:25: in setUp
+    self.empresa = Empresa.objects.create(
+.venv\Lib\site-packages\django\db\models\manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\models\query.py:656: in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\models\base.py:567: in __init__
+    raise TypeError(
+E   TypeError: Empresa() got unexpected keyword arguments: 'codigo', 'activa'
+________________ TestEnvioAPI.test_list_envios_unauthenticated ________________
+tests\test_envios_api.py:25: in setUp
+    self.empresa = Empresa.objects.create(
+.venv\Lib\site-packages\django\db\models\manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\models\query.py:656: in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\models\base.py:567: in __init__
+    raise TypeError(
+E   TypeError: Empresa() got unexpected keyword arguments: 'codigo', 'activa'
+__________ TestEnvioAPI.test_user_cannot_access_other_company_envios __________
+tests\test_envios_api.py:25: in setUp
+    self.empresa = Empresa.objects.create(
+.venv\Lib\site-packages\django\db\models\manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\models\query.py:656: in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\models\base.py:567: in __init__
+    raise TypeError(
+E   TypeError: Empresa() got unexpected keyword arguments: 'codigo', 'activa'
+_________________________ test_estadisticas_endpoint __________________________
+tests\test_envios_estadisticas.py:10: in test_estadisticas_endpoint
+    user = django_user_model.objects.create_user(username="u1", password="p1")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: CustomUserManager.create_user() missing 1 required positional argument: 'email'
+________________________ test_pagination_max_page_size ________________________
+tests\test_pagination_limits.py:8: in test_pagination_max_page_size
+    user = django_user_model.objects.create_user(username="u1", password="p1")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: CustomUserManager.create_user() missing 1 required positional argument: 'email'
+_______________________ test_pagination_fields_present ________________________
+tests\test_pagination_limits.py:18: in test_pagination_fields_present
+    user = django_user_model.objects.create_user(username="u2", password="p1")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: CustomUserManager.create_user() missing 1 required positional argument: 'email'
+=========================== short test summary info ===========================
+FAILED tests/test_cache_rastrear.py::test_rastrear_cache - django.db.utils.IntegrityError: NOT NULL constraint failed: envios_envio.peso
+FAILED tests/test_envios_api.py::TestEnvioAPI::test_create_envio_valid_data - TypeError: Empresa() got unexpected keyword arguments: 'codigo', 'activa'
+FAILED tests/test_envios_api.py::TestEnvioAPI::test_list_envios_authenticated - TypeError: Empresa() got unexpected keyword arguments: 'codigo', 'activa'
+FAILED tests/test_envios_api.py::TestEnvioAPI::test_list_envios_unauthenticated - TypeError: Empresa() got unexpected keyword arguments: 'codigo', 'activa'
+FAILED tests/test_envios_api.py::TestEnvioAPI::test_user_cannot_access_other_company_envios - TypeError: Empresa() got unexpected keyword arguments: 'codigo', 'activa'
+FAILED tests/test_envios_estadisticas.py::test_estadisticas_endpoint - TypeError: CustomUserManager.create_user() missing 1 required positional argument: 'email'
+FAILED tests/test_pagination_limits.py::test_pagination_max_page_size - TypeError: CustomUserManager.create_user() missing 1 required positional argument: 'email'
+FAILED tests/test_pagination_limits.py::test_pagination_fields_present - TypeError: CustomUserManager.create_user() missing 1 required positional argument: 'email'
+========================= 8 failed, 4 passed in 2.04s =========================

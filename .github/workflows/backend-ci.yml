@@ -1,0 +1,55 @@
+name: Backend CI (Django)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Run backend tests (lint + coverage)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~\AppData\Local\pip\Cache
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/backend/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Run test runner (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        working-directory: backend
+        run: |
+          ./run_tests.ps1 -Lint -Coverage
+
+      - name: Run test runner (Linux)
+        if: runner.os == 'Linux'
+        shell: bash
+        working-directory: backend
+        run: |
+          pwsh -NoLogo -NoProfile -File ./run_tests.ps1 -Lint -Coverage
+
+      - name: Upload backend logs and coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-logs-${{ runner.os }}
+          path: |
+            backend/logs
+            backend/logs/htmlcov

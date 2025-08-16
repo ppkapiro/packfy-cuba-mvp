@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🇨🇺 Packfy - Test Sin CSS</title>
+    <style>
+        /* SOLO CSS BÁSICO MÍNIMO */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+            color: #333;
+        }
+        .box {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #007cba;
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>🇨🇺 Packfy Cuba - Test Sin CSS Complejo</h1>
+        <p class="success">✅ Esta página usa CSS MÍNIMO</p>
+        <p>Si esta página carga pero la principal no, el problema es el CSS complejo.</p>
+    </div>
+
+    <div class="box">
+        <h3>📱 Información del Dispositivo</h3>
+        <p><strong>User-Agent:</strong> <span id="ua"></span></p>
+        <p><strong>Pantalla:</strong> <span id="screen"></span></p>
+        <p><strong>Protocolo:</strong> <span id="protocol"></span></p>
+    </div>
+
+    <div class="box">
+        <h3>🧪 Tests de Funcionalidad</h3>
+        <a href="javascript:testAPI()" class="button">Test API</a>
+        <a href="javascript:testCSS()" class="button">Test CSS Original</a>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        // Información básica
+        document.getElementById('ua').textContent = navigator.userAgent;
+        document.getElementById('screen').textContent = screen.width + 'x' + screen.height;
+        document.getElementById('protocol').textContent = window.location.protocol;
+
+        function log(msg, type) {
+            const results = document.getElementById('results');
+            const color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'black';
+            results.innerHTML += '<p style="color: ' + color + ';">' + msg + '</p>';
+        }
+
+        async function testAPI() {
+            log('🔄 Probando API...', 'info');
+            try {
+                const response = await fetch('/api/health/', { method: 'GET' });
+                if (response.ok) {
+                    log('✅ API funciona correctamente', 'success');
+                } else {
+                    log('❌ API devuelve: ' + response.status, 'error');
+                }
+            } catch (error) {
+                log('❌ Error API: ' + error.message, 'error');
+            }
+        }
+
+        function testCSS() {
+            log('🔄 Probando página principal con CSS...', 'info');
+            window.open('/', '_blank');
+            log('⚠️ Verifica si la página principal carga en la nueva pestaña', 'info');
+        }
+
+        // Log inicial
+        console.log('🇨🇺 Test sin CSS cargado');
+        log('✅ JavaScript funcionando correctamente', 'success');
+    </script>
+</body>
+</html>

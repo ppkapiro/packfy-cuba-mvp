@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { enviosAPI } from '../services/api';
+import Skeleton, { SkeletonText, SkeletonRow } from '../components/Skeleton';
 
-// 🇨🇺 PACKFY CUBA - GESTIÓN COMPLETA DE ENVÍOS UNIFICADA
+// 🇨🇺 PACKFY CUBA - GESTIÓN COMPLETA DE ENVÍOS UNIFICADA v4.1
 // Página principal para administrar todos los envíos con estilos consistentes
+// ⚡ OPTIMIZADA: React.memo + useMemo para performance
 
 interface Envio {
   id: string;
@@ -68,37 +70,39 @@ const GestionUnificada: React.FC = () => {
     }
   };
 
-  // Filtrar envíos basado en los criterios de búsqueda
-  const enviosFiltrados = envios.filter(envio => {
-    // Filtro por estado
-    if (filtroEstado && envio.estado_actual !== filtroEstado) {
-      return false;
-    }
-
-    // Filtro por término de búsqueda
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-
-      switch (tipoBusqueda) {
-        case 'remitente':
-          return envio.remitente_nombre?.toLowerCase().includes(term);
-        case 'destinatario':
-          return envio.destinatario_nombre?.toLowerCase().includes(term);
-        case 'guia':
-          return envio.numero_guia?.toLowerCase().includes(term);
-        case 'todos':
-        default:
-          return (
-            envio.numero_guia?.toLowerCase().includes(term) ||
-            envio.remitente_nombre?.toLowerCase().includes(term) ||
-            envio.destinatario_nombre?.toLowerCase().includes(term) ||
-            envio.descripcion?.toLowerCase().includes(term)
-          );
+  // Filtrar envíos basado en los criterios de búsqueda - OPTIMIZADO con useMemo
+  const enviosFiltrados = useMemo(() => {
+    return envios.filter(envio => {
+      // Filtro por estado
+      if (filtroEstado && envio.estado_actual !== filtroEstado) {
+        return false;
       }
-    }
 
-    return true;
-  });
+      // Filtro por término de búsqueda
+      if (searchTerm) {
+        const term = searchTerm.toLowerCase();
+
+        switch (tipoBusqueda) {
+          case 'remitente':
+            return envio.remitente_nombre?.toLowerCase().includes(term);
+          case 'destinatario':
+            return envio.destinatario_nombre?.toLowerCase().includes(term);
+          case 'guia':
+            return envio.numero_guia?.toLowerCase().includes(term);
+          case 'todos':
+          default:
+            return (
+              envio.numero_guia?.toLowerCase().includes(term) ||
+              envio.remitente_nombre?.toLowerCase().includes(term) ||
+              envio.destinatario_nombre?.toLowerCase().includes(term) ||
+              envio.descripcion?.toLowerCase().includes(term)
+            );
+        }
+      }
+
+      return true;
+    });
+  }, [envios, filtroEstado, searchTerm, tipoBusqueda]);
 
   // Función para obtener el color del estado
   const getEstadoColor = (estado: string) => {
@@ -132,13 +136,15 @@ const GestionUnificada: React.FC = () => {
     }
   };
 
-  // Calcular estadísticas
-  const estadisticas = {
-    total: envios.length,
-    recibidos: envios.filter(e => e.estado_actual === 'RECIBIDO').length,
-    enTransito: envios.filter(e => e.estado_actual === 'EN_TRANSITO').length,
-    entregados: envios.filter(e => e.estado_actual === 'ENTREGADO').length
-  };
+  // Calcular estadísticas con useMemo para evitar recálculos innecesarios
+  const estadisticas = useMemo(() => {
+    return {
+      total: envios.length,
+      recibidos: envios.filter(e => e.estado_actual === 'RECIBIDO').length,
+      enTransito: envios.filter(e => e.estado_actual === 'EN_TRANSITO').length,
+      entregados: envios.filter(e => e.estado_actual === 'ENTREGADO').length
+    };
+  }, [envios]);
 
   // Función para eliminar envío
   const eliminarEnvio = async (id: string) => {
@@ -159,11 +165,15 @@ const GestionUnificada: React.FC = () => {
   // Vista de carga
   if (loading) {
     return (
-      <div className="page-container gestion-page">
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <h2>Cargando envíos...</h2>
-          <p>Por favor espere un momento</p>
+      <div className="page-container gestion-page page-enter">
+        <div className="form-container">
+          <Skeleton width={260} height={26} className="mb-3" />
+          <SkeletonText lines={2} />
+          <div className="mt-4">
+            <SkeletonRow columns={6} />
+            <SkeletonRow columns={6} />
+            <SkeletonRow columns={6} />
+          </div>
         </div>
       </div>
     );
@@ -172,7 +182,7 @@ const GestionUnificada: React.FC = () => {
   return (
     <div className="page-container gestion-page">
       {/* Header de la página */}
-      <div className="page-header">
+  <div className="page-header">
         <div>
           <h1 className="page-title">📦 Gestión de Envíos</h1>
           <p className="page-subtitle">
@@ -182,12 +192,12 @@ const GestionUnificada: React.FC = () => {
         <div className="page-actions">
           <button
             onClick={cargarEnvios}
-            className="btn btn-secondary"
+    className="btn btn-secondary pressable hover-lift ripple"
             disabled={loading}
           >
             🔄 Refrescar
           </button>
-          <Link to="/envios/nuevo" className="btn btn-primary">
+      <Link to="/envios/nuevo" className="btn btn-primary pressable hover-lift ripple">
             ➕ Nuevo Envío
           </Link>
         </div>
@@ -249,7 +259,7 @@ const GestionUnificada: React.FC = () => {
             <select
               value={tipoBusqueda}
               onChange={(e) => setTipoBusqueda(e.target.value as any)}
-              className="form-control"
+              className="form-control input-focus"
               title="Seleccionar tipo de búsqueda"
             >
               <option value="todos">Todos los campos</option>
@@ -266,7 +276,7 @@ const GestionUnificada: React.FC = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Escribe para buscar..."
-              className="search-input"
+              className="search-input input-focus"
             />
           </div>
 
@@ -275,7 +285,7 @@ const GestionUnificada: React.FC = () => {
             <select
               value={filtroEstado}
               onChange={(e) => setFiltroEstado(e.target.value)}
-              className="form-control"
+              className="form-control input-focus"
               title="Seleccionar estado"
             >
               {estadosDisponibles.map(estado => (
@@ -294,7 +304,7 @@ const GestionUnificada: React.FC = () => {
                 setFiltroEstado('');
                 setTipoBusqueda('todos');
               }}
-              className="btn btn-secondary w-full"
+              className="btn btn-secondary w-full pressable hover-lift ripple"
             >
               🗑️ Limpiar Filtros
             </button>
@@ -322,7 +332,7 @@ const GestionUnificada: React.FC = () => {
             )}
           </div>
         ) : (
-          <table className="table">
+          <table className="table table-hover">
             <thead>
               <tr>
                 <th>Número Guía</th>
@@ -367,21 +377,21 @@ const GestionUnificada: React.FC = () => {
                     <div className="action-buttons">
                       <Link
                         to={`/envios/${envio.id}`}
-                        className="btn btn-sm btn-primary"
+                        className="btn btn-sm btn-primary pressable hover-lift ripple"
                         title="Ver detalles"
                       >
                         👁️
                       </Link>
                       <Link
                         to={`/envios/${envio.id}/editar`}
-                        className="btn btn-sm btn-warning"
+                        className="btn btn-sm btn-warning pressable hover-lift ripple"
                         title="Editar"
                       >
                         ✏️
                       </Link>
                       <button
                         onClick={() => eliminarEnvio(envio.id)}
-                        className="btn btn-sm btn-danger"
+                        className="btn btn-sm btn-danger pressable hover-lift ripple"
                         title="Eliminar"
                       >
                         🗑️
@@ -415,4 +425,5 @@ const GestionUnificada: React.FC = () => {
   );
 };
 
-export default GestionUnificada;
+// ⚡ PERFORMANCE OPTIMIZATION: Memoizar componente para evitar re-renders innecesarios
+export default memo(GestionUnificada);

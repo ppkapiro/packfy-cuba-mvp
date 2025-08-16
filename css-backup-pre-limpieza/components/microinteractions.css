@@ -1,0 +1,26 @@
+/* Utilidades de microinteracciones adicionales */
+
+.pressable {
+  transition: transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+.pressable:active {
+  transform: scale(0.98);
+}
+
+.table-hover tbody tr {
+  transition: background-color var(--transition-fast);
+}
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.input-focus {
+  transition: border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+.input-focus:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.15);
+  outline: none;
+}

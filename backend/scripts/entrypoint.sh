@@ -32,13 +32,19 @@ if [ "$USE_HTTPS" = "true" ]; then
     python manage.py runserver 0.0.0.0:8000 &
     echo "✅ Servidor HTTP iniciado en puerto 8000"
 
-    # Verificar si los certificados existen para HTTPS
-    if [ -f "/app/certs/cert.crt" ] && [ -f "/app/certs/cert.key" ]; then
-        echo "🔒 Iniciando servidor HTTPS en puerto 8443..."
-        python manage.py runsslserver 0.0.0.0:8443 --certificate /app/certs/cert.crt --key /app/certs/cert.key &
-        echo "✅ Servidor HTTPS iniciado en puerto 8443"
+    # HTTPS opcional: si runsslserver no existe, mantener solo HTTP (el proxy usa HTTP interno)
+    if python -c "import importlib; import sys; sys.exit(0 if importlib.util.find_spec('sslserver') else 1)"; then
+        CERT_FILE="/app/certs/cert.crt"; KEY_FILE="/app/certs/cert.key"
+        [ -f "/app/certs/localhost.crt" ] && [ -f "/app/certs/localhost.key" ] && CERT_FILE="/app/certs/localhost.crt" && KEY_FILE="/app/certs/localhost.key"
+        if [ -f "$CERT_FILE" ] && [ -f "$KEY_FILE" ]; then
+            echo "🔒 Iniciando servidor HTTPS en puerto 8443..."
+            python manage.py runsslserver 0.0.0.0:8443 --certificate "$CERT_FILE" --key "$KEY_FILE" &
+            echo "✅ Servidor HTTPS iniciado en puerto 8443"
+        else
+            echo "⚠️  Certificados no encontrados, solo servidor HTTP disponible"
+        fi
     else
-        echo "⚠️  Certificados no encontrados, solo servidor HTTP disponible"
+        echo "ℹ️  sslserver no disponible, continúo solo con HTTP en 8000"
     fi
 
     # Esperar indefinidamente

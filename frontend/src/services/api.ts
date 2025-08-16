@@ -24,32 +24,26 @@ class PackfyApiClient {
   }
 
   private configure(): void {
-    const hostname = window.location.hostname;
-    const protocol = window.location.protocol;
-    const port = window.location.port;
-
-    console.log("🇨🇺 Packfy API configurándose...", {
-      hostname,
-      protocol,
-      port,
-    });
-
-    // Estrategia de configuración inteligente
-    if (hostname === "localhost" || hostname === "127.0.0.1") {
-      // Desarrollo local
-      this.baseURL = port === "5173" ? "/api" : "https://localhost:8000/api";
-    } else if (
-      hostname.match(/^192\.168\.|^10\.|^172\.(1[6-9]|2[0-9]|3[0-1])\./)
-    ) {
-      // Red local (móvil/LAN) - usar proxy para evitar Mixed Content
-      this.baseURL = "/api";
+    // En desarrollo, usar same-origin + proxy de Vite para evitar CORS/SSL
+    if ((import.meta as any).env?.DEV) {
+      const { protocol, host } = window.location; // incluye puerto
+      this.baseURL = `${protocol}//${host}/api`;
     } else {
-      // Producción o dominio externo
-      this.baseURL = `${protocol}//${hostname}/api`;
+      const envUrl =
+        (import.meta as any).env?.VITE_API_BASE_URL ||
+        (window as any).VITE_API_BASE_URL;
+      if (envUrl) {
+        this.baseURL =
+          envUrl.replace(/\/$/, "") + (envUrl.endsWith("/api") ? "" : "/api");
+      } else {
+        const { protocol, host } = window.location;
+        this.baseURL = `${protocol}//${host}/api`;
+      }
     }
-
     this.isConfigured = true;
-    console.log("✅ Packfy API configurada:", this.baseURL);
+    if (import.meta.env?.MODE !== "production") {
+      console.log("✅ Packfy API configurada:", this.baseURL);
+    }
   }
 
   getBaseURL(): string {
@@ -63,7 +57,8 @@ class PackfyApiClient {
     endpoint: string,
     method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE" = "GET",
     data?: any,
-    headers?: Record<string, string>
+    headers?: Record<string, string>,
+    _retried?: boolean
   ): Promise<ApiResponse<T>> {
     try {
       const token = localStorage.getItem("token");
@@ -104,6 +99,38 @@ class PackfyApiClient {
           responseData?.message ||
           `HTTP ${response.status}`;
         console.error("❌ API Error:", result.error);
+
+        // Auto-refresh en 401 una sola vez
+        if (response.status === 401 && !_retried) {
+          const refresh = localStorage.getItem("refreshToken");
+          if (refresh) {
+            console.warn("🔁 Intentando refresh de token...");
+            const refreshResp = await this.makeRequest<{ access: string }>(
+              "/auth/refresh/",
+              "POST",
+              { refresh },
+              undefined,
+              true
+            );
+            if (
+              refreshResp.status === 200 &&
+              (refreshResp.data as any)?.access
+            ) {
+              const newAccess = (refreshResp.data as any).access as string;
+              localStorage.setItem("token", newAccess);
+              // Reintentar petición original con nuevo token
+              return this.makeRequest<T>(endpoint, method, data, headers, true);
+            } else {
+              console.error("🔒 Refresh fallido, limpiando sesión local");
+              localStorage.removeItem("token");
+              // Señal global para que el AuthContext u otros listeners cierren sesión
+              try {
+                window.dispatchEvent(new CustomEvent("auth:invalid"));
+              } catch {}
+              // No borrar refresh aquí para permitir intentos manuales de login
+            }
+          }
+        }
       } else {
         console.log("✅ API Success:", method, endpoint);
       }
@@ -120,7 +147,17 @@ class PackfyApiClient {
 
   // Métodos de autenticación
   async login(email: string, password: string) {
-    return this.makeRequest("/auth/login/", "POST", { email, password });
+    const resp = await this.makeRequest("/auth/login/", "POST", {
+      email,
+      password,
+    });
+    // Si login exitoso, persistir tokens para auto-refresh
+    if (resp.status === 200 && resp.data) {
+      const d: any = resp.data;
+      if (d.access) localStorage.setItem("token", d.access);
+      if (d.refresh) localStorage.setItem("refreshToken", d.refresh);
+    }
+    return resp;
   }
 
   async logout() {
@@ -182,8 +219,17 @@ class PackfyApiClient {
     return this.makeRequest(`/envios/${id}/`, "PUT", envio);
   }
 
-  async updateEnvioEstado(id: number, estado: string) {
-    return this.makeRequest(`/envios/${id}/`, "PATCH", { estado });
+  async updateEnvioEstado(
+    id: number,
+    estado: string,
+    comentario?: string,
+    ubicacion?: string
+  ) {
+    // El backend expone una action específica: /envios/{id}/cambiar_estado/
+    const body: any = { estado };
+    if (comentario !== undefined) body.comentario = comentario;
+    if (ubicacion !== undefined) body.ubicacion = ubicacion;
+    return this.makeRequest(`/envios/${id}/cambiar_estado/`, "POST", body);
   }
 
   async deleteEnvio(id: number) {

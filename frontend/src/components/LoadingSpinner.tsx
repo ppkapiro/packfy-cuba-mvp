@@ -1,6 +1,5 @@
 // ⏳ Componente Loading Spinner - Moderno y elegante
 import { Loader } from 'lucide-react'
-import './LoadingSpinner.css'
 
 interface LoadingSpinnerProps {
   fullScreen?: boolean
@@ -8,20 +7,20 @@ interface LoadingSpinnerProps {
   message?: string
 }
 
-export default function LoadingSpinner({ 
-  fullScreen = false, 
-  size = 'md', 
-  message = 'Cargando...' 
+export default function LoadingSpinner({
+  fullScreen = false,
+  size = 'md',
+  message = 'Cargando...'
 }: LoadingSpinnerProps) {
   const sizeClasses = {
     sm: 'w-4 h-4',
-    md: 'w-8 h-8', 
+    md: 'w-8 h-8',
     lg: 'w-12 h-12'
   }
 
   const content = (
     <div className="loading-content">
-      <Loader 
+      <Loader
         className={`animate-spin text-blue-600 ${sizeClasses[size]}`}
       />
       {message && (

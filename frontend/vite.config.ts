@@ -111,12 +111,13 @@ export default defineConfig({
       port: 5173,
     },
 
-    // Proxy para HTTPS backend
+    // Proxy al backend dentro de Docker (HTTP)
     proxy: {
       "/api": {
-        target: "https://backend:8443",
+        // El backend de desarrollo corre en HTTP dentro del contenedor
+        target: "http://backend:8000",
         changeOrigin: true,
-        secure: false, // Para certificados autofirmados en desarrollo
+        secure: false, // No verificar TLS (no aplica en HTTP)
         timeout: 15000,
         rewrite: (path) => path,
       },

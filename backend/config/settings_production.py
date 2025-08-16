@@ -110,7 +110,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
-# Logging para producción
+# Logging para producción (estructurado + texto)
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -119,6 +119,17 @@ LOGGING = {
             "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
             "style": "{",
         },
+        "json": {
+            "()": "django.utils.log.ServerFormatter",
+            # Usamos un formato plano que puede ser parseado como JSON con mínimas transformaciones
+            "format": '{"time":"%(asctime)s","level":"%(levelname)s","logger":"%(name)s","message":"%(message)s","request_id":"%(request_id)s","path":"%(request_path)s","status":%(status_code)s}',
+        },
+    },
+    "filters": {
+        "request_context": {
+            "()": "django.utils.log.CallbackFilter",
+            "callback": lambda record: True,
+        }
     },
     "handlers": {
         "file": {
@@ -132,16 +143,31 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "verbose",
         },
+        "json_console": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "json",
+        },
     },
     "root": {
-        "handlers": ["file", "console"],
+        "handlers": ["json_console", "file"],
         "level": "INFO",
     },
     "loggers": {
-        "django": {
-            "handlers": ["file", "console"],
+        "django.request": {
+            "handlers": ["json_console"],
             "level": "INFO",
             "propagate": False,
         },
     },
 }
+
+# Cabeceras de seguridad avanzadas
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+REFERRER_POLICY = "strict-origin-when-cross-origin"
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin"
+SECURE_CROSS_ORIGIN_EMBEDDER_POLICY = "require-corp"
+SECURE_CROSS_ORIGIN_RESOURCE_POLICY = "same-origin"
+CONTENT_SECURITY_POLICY = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self';"

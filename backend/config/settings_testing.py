@@ -14,16 +14,19 @@ ENVIRONMENT = "testing"
 SECRET_KEY = "django-testing-key-v4-secure-but-not-production"
 ALLOWED_HOSTS = ["testserver", "localhost", "127.0.0.1"]
 
-# 🗄️ BASE DE DATOS - In-memory para velocidad
+# 🗄️ BASE DE DATOS - SQLite en archivo (persistente entre procesos para E2E)
+_TEST_DB_PATH = os.path.join(BASE_DIR, "test_e2e.sqlite3")
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": ":memory:",
+        "NAME": _TEST_DB_PATH,
         "OPTIONS": {
-            "timeout": 20,
+            "timeout": 60,
+            # Mejorar concurrencia en SQLite
+            "init_command": "PRAGMA journal_mode=WAL; PRAGMA synchronous=NORMAL; PRAGMA busy_timeout=60000;",
         },
         "TEST": {
-            "NAME": ":memory:",
+            "NAME": _TEST_DB_PATH,
         },
     }
 }

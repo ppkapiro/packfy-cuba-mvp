@@ -1,0 +1,20 @@
+🇨🇺 PACKFY CUBA - URLs Anti-Cache Móvil
+Generado: 08/14/2025 18:56:35
+
+URL Principal:
+https://192.168.12.178:5173?v=20250814185632&r=1695
+
+URL Alternativa:
+https://192.168.12.178:5173?nocache=true&t=20250814185632
+
+URL Forzada:
+https://192.168.12.178:5173?cache=false&reload=true&v=20250814185632
+
+URL de Emergencia:
+https://192.168.12.178:5173?emergency=20250814185632
+
+Instrucciones:
+1. Limpia cache del navegador móvil
+2. Usa modo incógnito
+3. Copia una URL exactamente
+4. Acepta certificado SSL

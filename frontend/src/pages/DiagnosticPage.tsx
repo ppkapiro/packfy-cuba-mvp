@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
-import './DiagnosticPage.css';
+// 🇨🇺 CSS ya se importa en main.tsx - sin imports locales
 
 const DiagnosticPage: React.FC = () => {
   const { user, token, isAuthenticated } = useAuth();
@@ -12,18 +12,25 @@ const DiagnosticPage: React.FC = () => {
     const testAPI = async () => {
       try {
         console.log('🔍 Diagnóstico: Iniciando pruebas...');
-        console.log('🔍 API Base URL:', api.defaults.baseURL);
+        try {
+          // Obtener baseURL desde nuestro cliente
+          const cfg = (api as any).getConfig ? (api as any).getConfig() : null;
+          console.log('🔍 API Base URL:', cfg?.baseURL || '(no disponible)');
+        } catch {}
         console.log('🔍 Token presente:', !!token);
         console.log('🔍 Usuario autenticado:', isAuthenticated);
-        
+
         // Probar conectividad básica
-        const healthCheck = await fetch('http://localhost:8000/api/', {
+        // Usar la baseURL del cliente para evitar URLs fijas
+        const base = ((api as any).getConfig?.() || {}).baseURL ||
+          `${window.location.protocol}//${window.location.hostname}/api`;
+        const healthCheck = await fetch(`${base}/`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
           }
         });
-        
+
         if (healthCheck.ok) {
           setBackendReachable(true);
           setApiStatus('✅ Backend alcanzable');
@@ -32,7 +39,7 @@ const DiagnosticPage: React.FC = () => {
           setBackendReachable(false);
           setApiStatus(`❌ Backend responde con error: ${healthCheck.status}`);
         }
-        
+
       } catch (error) {
         console.error('🔍 Error en diagnóstico:', error);
         setBackendReachable(false);
@@ -46,7 +53,7 @@ const DiagnosticPage: React.FC = () => {
   return (
     <div className="diagnostic-page">
       <h1>🔍 Página de Diagnóstico</h1>
-      
+
       <div className="diagnostic-section">
         <h2>Estado de Autenticación</h2>
         <p><strong>Autenticado:</strong> {isAuthenticated ? '✅ Sí' : '❌ No'}</p>
@@ -59,7 +66,7 @@ const DiagnosticPage: React.FC = () => {
 
       <div className="diagnostic-section">
         <h2>Estado del Backend</h2>
-        <p><strong>URL del API:</strong> {api.defaults.baseURL}</p>
+  <p><strong>URL del API:</strong> {((api as any).getConfig?.() || {}).baseURL || '(no disponible)'}</p>
         <p><strong>Estado:</strong> {apiStatus}</p>
         <p><strong>Alcanzable:</strong> {backendReachable === null ? '⏳ Probando...' : backendReachable ? '✅ Sí' : '❌ No'}</p>
       </div>
@@ -72,9 +79,8 @@ const DiagnosticPage: React.FC = () => {
       </div>
 
       <div className="diagnostic-credentials">
-        <h2>Credenciales de Prueba</h2>
-        <p><strong>Admin:</strong> admin@packfy.com / admin123</p>
-        <p><strong>Demo:</strong> demo@packfy.com / demo123</p>
+  <h2>Credenciales de Prueba</h2>
+  <p><strong>Admin:</strong> admin@packfy.cu / admin123</p>
       </div>
     </div>
   );

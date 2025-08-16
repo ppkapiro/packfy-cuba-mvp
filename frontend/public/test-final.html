@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🇨🇺 Packfy - Test Final</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #0066cc, #3385d6);
+            color: white;
+            text-align: center;
+        }
+        .success { color: #00ff00; font-size: 24px; margin: 20px 0; }
+        .box { background: rgba(255,255,255,0.1); padding: 20px; margin: 15px 0; border-radius: 10px; }
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #ffd700;
+            color: #333;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🇨🇺 Packfy Cuba</h1>
+    <div class="success">✅ CSS Optimizado Para Móvil</div>
+
+    <div class="box">
+        <h3>🔧 Correcciones Aplicadas:</h3>
+        <p>✅ @import externos eliminados</p>
+        <p>✅ Sourcemaps deshabilitados</p>
+        <p>✅ CSS simplificado</p>
+        <p>✅ Chunks optimizados</p>
+    </div>
+
+    <div class="box">
+        <h3>🧪 Test Final:</h3>
+        <a href="/" class="button">🚀 Ir a Packfy Cuba</a>
+        <a href="javascript:testAPI()" class="button">🔧 Test API</a>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function testAPI() {
+            const result = document.getElementById('result');
+            result.innerHTML = '<p>🔄 Probando API...</p>';
+
+            try {
+                const response = await fetch('/api/health/');
+                if (response.ok) {
+                    result.innerHTML = '<p style="color: #00ff00;">✅ API funcionando correctamente</p>';
+                } else {
+                    result.innerHTML = '<p style="color: #ff6600;">⚠️ API: HTTP ' + response.status + '</p>';
+                }
+            } catch (error) {
+                result.innerHTML = '<p style="color: #ff0000;">❌ Error: ' + error.message + '</p>';
+            }
+        }
+
+        console.log('🇨🇺 Test final cargado - CSS optimizado aplicado');
+    </script>
+</body>
+</html>

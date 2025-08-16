@@ -1,10 +1,10 @@
-# Configuración de producción para Packfy Cuba MVP v2.0.0
+# Configuración de producción para Packfy Cuba MVP v4.0 - Móvil Optimizado
 
-version: '3.8'
+version: "3.8"
 
 services:
   frontend:
-    build: 
+    build:
       context: ./frontend
       dockerfile: Dockerfile.prod
     ports:
@@ -13,14 +13,26 @@ services:
     environment:
       - NODE_ENV=production
       - VITE_API_URL=https://api.packfy.cu
+      - VITE_APP_VERSION=4.0
+      - VITE_INTERFACE_MODE=mobile-optimized
+      - VITE_FORM_STYLE=cuban-mobile
+      - VITE_FEATURE_MOBILE_NAV=enabled
+      - VITE_FEATURE_PWA_OPTIMIZED=enabled
+      - VITE_FEATURE_TOUCH_TARGETS=enabled
+      - VITE_FEATURE_SAFE_AREA=enabled
     volumes:
       - ./ssl:/etc/ssl/certs:ro
     depends_on:
       - backend
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.packfy-mobile.rule=Host(`packfy.cu`) || Host(`www.packfy.cu`)"
+      - "traefik.http.routers.packfy-mobile.tls.certresolver=letsencrypt"
+      - "traefik.http.services.packfy-mobile.loadbalancer.server.port=80"
 
   backend:
-    build: 
+    build:
       context: ./backend
       dockerfile: Dockerfile.prod
     ports:
@@ -32,6 +44,10 @@ services:
       - DEBUG=False
       - ALLOWED_HOSTS=api.packfy.cu,www.packfy.cu,packfy.cu
       - CORS_ALLOWED_ORIGINS=https://packfy.cu,https://www.packfy.cu
+      - INTERFACE_VERSION=4.0
+      - FORM_STYLE=cuban-mobile
+      - FEATURE_MOBILE_OPTIMIZED=enabled
+      - FEATURE_PWA_ENHANCED=enabled
     depends_on:
       - database
       - redis

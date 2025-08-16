@@ -187,11 +187,14 @@ python manage.py createsuperuser
 
 ### Backend
 
-- **Django 5.2** - Framework web Python de alto nivel
+- **Django 4.2 LTS** - Framework web Python de alto nivel
 - **Django REST Framework** - API REST robusta
 - **JWT Authentication** - Autenticación segura con tokens
 - **PostgreSQL** - Base de datos relacional potente
 - **CORS** - Configurado para desarrollo y producción
+- **Métricas Prometheus** - `/api/metrics/` exporta métricas
+- **Rate limiting** - Endpoints públicos con límite por IP (env vars)
+- **Paginación segura** - `page_size` con tope 100 y respuesta enriquecida
 
 ### DevOps & Herramientas
 
@@ -357,6 +360,26 @@ packfy-cuba-mvp/
 - ✅ **Docker** para consistency entre entornos
 - ✅ **Scripts automatizados** para tareas comunes
 - ✅ **Logs estructurados** para debugging
+
+### Formato de Número de Guía (Tracking)
+
+Cada envío ahora utiliza un identificador robusto generado automáticamente con el formato:
+
+```
+PKFXXXXXXXXXX
+```
+
+Donde `PKF` es el prefijo fijo y `XXXXXXXXXX` son 10 caracteres hexadecimales _en mayúsculas_ derivados de un UUID v4 (segmento inicial). Características:
+
+- Alto espacio de combinación (≈16^10 ≈ 1.1e12) → probabilidad de colisión extremadamente baja.
+- Generación sin consultas adicionales (no depende del último ID) → evita condiciones de carrera en alta concurrencia.
+- Indexado (campo con `unique=True` + `db_index=True`) para búsquedas y rastreo rápido.
+
+Ejemplo real: `PKF3A9C1F4B2D`
+
+Backward compatibility: Si existían números secuenciales previos, pueden convivir; el patrón antiguo sigue siendo válido para consultas de rastreo siempre que permanezcan en la base de datos.
+
+Nota: No usar este valor para inferir volumen o secuencia (no es incremental). Para estadísticas, utilizar campos temporales (`fecha_creacion`).
 
 ---
 
@@ -551,7 +574,7 @@ Si este proyecto te ha sido útil, considera:
 
 ### Backend
 
-- **Django 5.2** - Framework web Python de alto nivel
+- **Django 4.2 LTS** - Framework web Python de alto nivel
 - **Django REST Framework** - Toolkit para APIs REST
 - **PostgreSQL 16** - Base de datos relacional robusta
 - **JWT** - Autenticación basada en tokens
@@ -619,6 +642,50 @@ VITE_API_BASE_URL=http://localhost:8000
 ```
 
 El archivo se crea automáticamente con `dev.ps1`.
+
+### Endpoints de Salud y Diagnóstico
+
+| Endpoint       | Descripción                         |
+| -------------- | ----------------------------------- |
+| `/health/`     | Estado rápido (root)                |
+| `/api/health/` | Alias API (misma respuesta + alias) |
+
+Respuesta ejemplo:
+
+```json
+{
+  "status": "ok",
+  "app": "packfy-cuba",
+
+## 📊 Endpoints y Comportamientos Clave
+
+- Salud: `GET /health/` y `GET /api/health/`
+- Métricas: `GET /api/metrics/` (Prometheus format)
+- Estadísticas: `GET /api/envios/estadisticas/`
+   - Respuesta: `{ total, por_estado, porEstado, pendientes, entregados_hoy, entregadosHoy, recientes }`
+- Rastrear envío (público): `GET /api/envios/rastrear?numero_guia=PKF...` (cache 30s)
+
+## ⚙️ Variables de Entorno Relevantes
+
+- `VITE_API_BASE_URL` (frontend) → URL base de la API.
+- `DJANGO_SECRET_KEY`, `DJANGO_SECRET_KEY_PROD` → claves secretas.
+- `RATE_LIMIT_WINDOW` (segundos, defecto 60)
+- `RATE_LIMIT_MAX` (requests por ventana, defecto 100)
+- `REDIS_URL` (habilita rate limit en Redis y cache en producción)
+
+## 🔄 Paginación (DRF)
+
+- Clase por defecto: `config.pagination.SafePageNumberPagination`
+- Parámetros: `page` y `page_size` (máx. 100)
+- Respuesta incluye: `count`, `page`, `page_size`, `total_pages`, `results`
+  "version": "4.0"
+}
+```
+
+### Versiones Recomendadas
+
+- Python 3.11 o 3.12 (soporte completo Django 4.2 LTS)
+- Evitar 3.13 hasta confirmación de compatibilidad de dependencias
 
 ## 👤 Usuarios de Prueba
 

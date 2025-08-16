@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>🇨🇺 Packfy Cuba - Debug Móvil</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #001122; color: white; }
+        .success { color: #00ff00; }
+        .error { color: #ff0000; }
+        .info { color: #0099ff; }
+        .container { max-width: 400px; margin: 0 auto; }
+        .test-item { margin: 10px 0; padding: 10px; border: 1px solid #333; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🇨🇺 Packfy Cuba - Debug Móvil</h1>
+        <p class="success">✅ Página de debug cargada exitosamente</p>
+
+        <div class="test-item">
+            <h3>📱 Información del dispositivo:</h3>
+            <p id="userAgent" class="info"></p>
+            <p id="screenInfo" class="info"></p>
+            <p id="connectionInfo" class="info"></p>
+        </div>
+
+        <div class="test-item">
+            <h3>🌐 Test de conectividad:</h3>
+            <button onclick="testBackend()" style="padding: 10px; margin: 5px;">Test Backend</button>
+            <p id="backendResult"></p>
+        </div>
+
+        <div class="test-item">
+            <h3>📍 URLs disponibles:</h3>
+            <p><a href="/" style="color: #00ff00;">Aplicación principal</a></p>
+            <p><a href="/?debug=true" style="color: #0099ff;">Aplicación con debug</a></p>
+        </div>
+
+        <div class="test-item">
+            <h3>🔧 Información técnica:</h3>
+            <p>Timestamp: <span id="timestamp" class="info"></span></p>
+            <p>URL actual: <span id="currentUrl" class="info"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // Mostrar información del dispositivo
+        document.getElementById('userAgent').textContent = 'User Agent: ' + navigator.userAgent;
+        document.getElementById('screenInfo').textContent = 'Pantalla: ' + screen.width + 'x' + screen.height;
+        document.getElementById('currentUrl').textContent = window.location.href;
+        document.getElementById('timestamp').textContent = new Date().toISOString();
+
+        // Información de conexión
+        if (navigator.connection) {
+            document.getElementById('connectionInfo').textContent = 'Conexión: ' + navigator.connection.effectiveType;
+        } else {
+            document.getElementById('connectionInfo').textContent = 'Info de conexión no disponible';
+        }
+
+        // Test del backend
+        function testBackend() {
+            const result = document.getElementById('backendResult');
+            result.textContent = 'Probando backend...';
+            result.className = 'info';
+
+            fetch('/api/')
+                .then(response => {
+                    result.textContent = 'Backend responde: HTTP ' + response.status;
+                    result.className = response.status === 401 ? 'success' : 'error';
+                })
+                .catch(error => {
+                    result.textContent = 'Error: ' + error.message;
+                    result.className = 'error';
+                });
+        }
+
+        console.log('🇨🇺 Packfy Cuba Debug - Página cargada');
+        console.log('Dispositivo:', navigator.userAgent);
+        console.log('URL:', window.location.href);
+    </script>
+</body>
+</html>

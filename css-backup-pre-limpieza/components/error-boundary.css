@@ -1,0 +1,171 @@
+/* 🚨 ERROR BOUNDARY STYLES - Packfy Cuba v4.1 */
+
+.error-boundary-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8fafc 0%, rgba(0, 102, 204, 0.03) 100%);
+  padding: 2rem;
+}
+
+.error-boundary-content {
+  max-width: 600px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.95);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 3rem 2rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: errorBoundarySlideIn 0.5s ease-out;
+}
+
+@keyframes errorBoundarySlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  filter: drop-shadow(0 4px 8px rgba(255, 193, 7, 0.3));
+}
+
+.error-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.error-message {
+  font-size: 1.1rem;
+  color: #4a5568;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.error-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.error-actions .btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.error-actions .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.error-actions .btn:active {
+  transform: translateY(0);
+}
+
+.error-actions .btn-primary {
+  background: linear-gradient(135deg, #0066cc 0%, #3385d6 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
+}
+
+.error-actions .btn-primary:hover {
+  background: linear-gradient(135deg, #0056b3 0%, #2975c6 100%);
+  box-shadow: 0 8px 25px rgba(0, 102, 204, 0.4);
+}
+
+.error-actions .btn-secondary {
+  background: linear-gradient(135deg, #e2e8f0 0%, #f7fafc 100%);
+  color: #4a5568;
+  border: 1px solid #cbd5e0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.error-actions .btn-secondary:hover {
+  background: linear-gradient(135deg, #cbd5e0 0%, #e2e8f0 100%);
+  color: #2d3748;
+}
+
+.error-details {
+  margin-top: 2rem;
+  text-align: left;
+  background: #f7fafc;
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+}
+
+.error-details summary {
+  font-weight: 600;
+  color: #4a5568;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.error-details summary:hover {
+  background: #edf2f7;
+}
+
+.error-stack {
+  background: #1a202c;
+  color: #e2e8f0;
+  padding: 1rem;
+  border-radius: 4px;
+  font-family: "Consolas", "Monaco", monospace;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  overflow-x: auto;
+  margin-top: 1rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .error-boundary-container {
+    padding: 1rem;
+  }
+
+  .error-boundary-content {
+    padding: 2rem 1.5rem;
+  }
+
+  .error-title {
+    font-size: 1.5rem;
+  }
+
+  .error-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .error-actions .btn {
+    width: 100%;
+    max-width: 300px;
+  }
+}

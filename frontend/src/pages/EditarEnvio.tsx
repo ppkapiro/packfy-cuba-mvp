@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Skeleton, { SkeletonText, SkeletonRow } from '../components/Skeleton';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 
@@ -199,10 +200,11 @@ const EditarEnvio: React.FC = () => {
   if (loadingData) {
     return (
       <div className="page-container">
-        <div className="d-flex justify-center align-center loading-container">
-          <div className="text-center">
-            <div className="loading-spinner mb-4"></div>
-            <p className="text-muted">Cargando datos del envío...</p>
+        <div className="form-container">
+          <Skeleton width={220} height={24} style={{ marginBottom: 12 }} />
+          <SkeletonText lines={3} />
+          <div className="mt-4">
+            <SkeletonRow columns={3} />
           </div>
         </div>
       </div>
@@ -241,7 +243,7 @@ const EditarEnvio: React.FC = () => {
         <div className="page-actions">
           <button
             onClick={() => navigate('/gestion')}
-            className="btn btn-secondary"
+            className="btn btn-secondary pressable hover-lift ripple"
           >
             🔙 Volver a Gestión
           </button>

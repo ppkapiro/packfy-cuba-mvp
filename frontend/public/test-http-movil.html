@@ -3,198 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✅ Packfy Cuba - Test Móvil HTTP</title>
+    <title>🇨🇺 Packfy Cuba - Test HTTP Móvil</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #001122 0%, #003366 100%);
             color: white;
+            text-align: center;
             min-height: 100vh;
-            padding: 20px;
+            margin: 0;
         }
-        
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.1);
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-        }
-        
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .logo h1 {
-            font-size: 2.5em;
-            color: #FFD700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            margin-bottom: 10px;
-        }
-        
-        .status {
-            background: #27AE60;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            text-align: center;
-            font-weight: bold;
-        }
-        
-        .test-info {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 20px;
-            border-radius: 15px;
-            margin: 20px 0;
-        }
-        
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background: #FFD700;
-            color: #1e3c72;
+        .container { max-width: 600px; margin: 0 auto; }
+        .success { color: #00ff00; font-size: 28px; margin: 20px 0; }
+        .warning { color: #ff6600; font-size: 20px; margin: 15px 0; }
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 15px;
+            background: linear-gradient(135deg, #0066cc, #3385d6);
+            color: white;
             text-decoration: none;
-            text-align: center;
-            border-radius: 10px;
-            font-weight: bold;
-            margin: 15px 0;
+            border-radius: 8px;
+            font-size: 18px;
+            border: 2px solid #0066cc;
             transition: all 0.3s ease;
         }
-        
-        .btn:hover {
-            background: #FFA500;
+        .button:hover {
+            background: linear-gradient(135deg, #3385d6, #0066cc);
             transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,102,204,0.3);
         }
-        
-        .connection-info {
-            background: rgba(0, 0, 0, 0.3);
+        .info {
+            background: rgba(255,255,255,0.1);
             padding: 15px;
-            border-radius: 10px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #00ff00;
+        }
+        .test-result {
+            background: rgba(0,255,0,0.1);
+            border: 2px solid #00ff00;
+            padding: 20px;
             margin: 20px 0;
-            font-family: monospace;
-            font-size: 14px;
+            border-radius: 10px;
         }
-        
-        .flag {
-            display: inline-block;
-            margin: 0 10px;
-            font-size: 2em;
-        }
-        
-        .api-result {
-            margin-top: 20px;
-        }
+        .protocol { font-size: 24px; color: #ff6600; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo">
-            <h1>🇨🇺 PACKFY</h1>
-            <p>Paquetería Cuba MVP</p>
-            <span class="flag">🇨🇺</span>
+        <h1>🇨🇺 Packfy Cuba</h1>
+        <div class="protocol">📡 PROTOCOLO: HTTP (Sin SSL)</div>
+        <div class="success">✅ Test HTTP Móvil</div>
+
+        <div class="warning">
+            🚨 IMPORTANTE: Esta es una prueba temporal sin HTTPS
         </div>
-        
-        <div class="status">
-            ✅ CONEXIÓN HTTP ESTABLECIDA
+
+        <div class="info">
+            <h3>📱 Información del Dispositivo:</h3>
+            <p><strong>User-Agent:</strong> <span id="device-info"></span></p>
+            <p><strong>Pantalla:</strong> <span id="screen-info"></span></p>
+            <p><strong>Hora:</strong> <span id="time-info"></span></p>
+            <p><strong>URL:</strong> <span id="url-info"></span></p>
         </div>
-        
-        <div class="test-info">
-            <h3>📱 Test Móvil - Modo HTTP</h3>
-            <p>Esta es la versión HTTP temporal para verificar conectividad móvil.</p>
+
+        <div class="info">
+            <h3>🌐 Configuración de Conexión:</h3>
+            <p><strong>Servidor:</strong> 192.168.12.178:5174</p>
+            <p><strong>Protocolo:</strong> HTTP (Puerto 5174)</p>
+            <p><strong>Backend:</strong> http://192.168.12.178:8001</p>
+            <p><strong>SSL:</strong> ❌ DESHABILITADO</p>
         </div>
-        
-        <div class="connection-info">
-            <strong>URLs de acceso:</strong><br>
-            • Frontend: http://192.168.12.178:5174/<br>
-            • Backend: http://192.168.12.178:8000/<br>
-            • Modo: HTTP (sin certificados)
+
+        <div class="test-result">
+            <h3>🧪 RESULTADO DEL TEST:</h3>
+            <p>Si puedes ver esta página, significa que:</p>
+            <p>✅ La conexión HTTP funciona correctamente</p>
+            <p>✅ El problema era el certificado SSL</p>
+            <p>✅ Tu móvil puede conectarse sin HTTPS</p>
         </div>
-        
-        <a href="http://192.168.12.178:5174/" class="btn">
-            🚀 Ir a la Aplicación Principal
-        </a>
-        
-        <a href="#" onclick="testAPI()" class="btn">
+
+        <a href="javascript:testAPI()" class="button">
             🔧 Test API Backend
         </a>
-        
-        <div id="api-result" class="api-result"></div>
+
+        <a href="javascript:testLogin()" class="button">
+            🔑 Test Login HTTP
+        </a>
+
+        <div id="api-result" style="margin-top: 20px;"></div>
+
+        <div style="margin-top: 40px; font-size: 14px; color: #999;">
+            <p>💡 Este test confirma si el problema HTTP 500 era causado por SSL</p>
+            <p>🔒 En producción se usará un certificado SSL válido</p>
+        </div>
     </div>
 
     <script>
-        console.log('🇨🇺 Packfy Cuba - Test Móvil HTTP');
-        
-        // Información del dispositivo
-        const deviceInfo = {
-            userAgent: navigator.userAgent,
-            screenWidth: screen.width,
-            screenHeight: screen.height,
-            viewport: `${window.innerWidth}x${window.innerHeight}`,
-            protocol: location.protocol,
-            host: location.host
-        };
-        
-        console.log('📱 Device Info:', deviceInfo);
-        
+        // Mostrar información del dispositivo
+        document.getElementById('device-info').textContent = navigator.userAgent;
+        document.getElementById('screen-info').textContent = screen.width + 'x' + screen.height;
+        document.getElementById('time-info').textContent = new Date().toLocaleString();
+        document.getElementById('url-info').textContent = window.location.href;
+
+        // Log inicial
+        console.log('🇨🇺 Test HTTP móvil cargado exitosamente');
+        console.log('🌐 Protocolo:', window.location.protocol);
+        console.log('📱 Dispositivo:', navigator.userAgent);
+
+        // Test API Backend
         async function testAPI() {
             const resultDiv = document.getElementById('api-result');
-            resultDiv.innerHTML = '<p>🔄 Probando conexión al backend...</p>';
-            
+            resultDiv.innerHTML = '<p>🔄 Probando conexión con API...</p>';
+
             try {
-                const response = await fetch('http://192.168.12.178:8000/api/', {
+                const response = await fetch('/api/health/', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
                     }
                 });
-                
+
                 if (response.ok) {
-                    resultDiv.innerHTML = `
-                        <div style="background: #27AE60; padding: 15px; border-radius: 10px;">
-                            ✅ Backend conectado exitosamente<br>
-                            Status: ${response.status}<br>
-                            URL: ${response.url}
-                        </div>
-                    `;
+                    resultDiv.innerHTML = '<div style="color: #00ff00;">✅ API Backend responde correctamente (HTTP ' + response.status + ')</div>';
                 } else {
-                    resultDiv.innerHTML = `
-                        <div style="background: #E74C3C; padding: 15px; border-radius: 10px;">
-                            ⚠️ Backend responde pero con error<br>
-                            Status: ${response.status}<br>
-                            URL: ${response.url}
-                        </div>
-                    `;
+                    resultDiv.innerHTML = '<div style="color: #ff6600;">⚠️ API responde con estado: HTTP ' + response.status + '</div>';
                 }
             } catch (error) {
-                resultDiv.innerHTML = `
-                    <div style="background: #E74C3C; padding: 15px; border-radius: 10px;">
-                        ❌ Error de conexión al backend<br>
-                        Error: ${error.message}
-                    </div>
-                `;
+                resultDiv.innerHTML = '<div style="color: #ff0000;">❌ Error conectando a API: ' + error.message + '</div>';
             }
         }
-        
-        // Auto-test de conectividad básica
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('✅ Página cargada correctamente en móvil');
-            console.log('📱 Resolución:', window.innerWidth + 'x' + window.innerHeight);
-            
-            // Test automático del backend después de 2 segundos
-            setTimeout(testAPI, 2000);
-        });
+
+        // Test Login HTTP
+        async function testLogin() {
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.innerHTML = '<p>🔑 Probando endpoint de login...</p>';
+
+            try {
+                const response = await fetch('/api/auth/login/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: 'test',
+                        password: 'test'
+                    })
+                });
+
+                const status = response.status;
+                if (status === 401 || status === 400) {
+                    resultDiv.innerHTML = '<div style="color: #00ff00;">✅ Endpoint de login accesible (HTTP ' + status + ' - credenciales incorrectas es normal)</div>';
+                } else if (status === 500) {
+                    resultDiv.innerHTML = '<div style="color: #ff0000;">❌ HTTP 500 detectado - El problema persiste sin SSL</div>';
+                } else {
+                    resultDiv.innerHTML = '<div style="color: #ff6600;">⚠️ Respuesta inesperada: HTTP ' + status + '</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = '<div style="color: #ff0000;">❌ Error en test login: ' + error.message + '</div>';
+            }
+        }
     </script>
 </body>
 </html>

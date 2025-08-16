@@ -1,0 +1,85 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.7, pytest-8.4.1, pluggy-1.6.0 -- C:\Users\pepec\Projects\Packfy\paqueteria-cuba-mvp\backend\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+django: version: 4.2.23, settings: config.settings_test (from env)
+rootdir: C:\Users\pepec\Projects\Packfy\paqueteria-cuba-mvp\backend
+configfile: pytest.ini
+plugins: cov-6.2.1, django-4.11.1
+collecting ... collected 4 items
+
+tests/test_envios_api.py::TestEnvioAPI::test_create_envio_valid_data PASSED [ 25%]
+tests/test_envios_api.py::TestEnvioAPI::test_list_envios_authenticated PASSED [ 50%]
+tests/test_envios_api.py::TestEnvioAPI::test_list_envios_unauthenticated PASSED [ 75%]
+tests/test_envios_api.py::TestEnvioAPI::test_user_cannot_access_other_company_envios PASSED [100%]
+
+=============================== tests coverage ================================
+_______________ coverage: platform win32, python 3.12.7-final-0 _______________
+
+Name                                                Stmts   Miss  Cover   Missing
+---------------------------------------------------------------------------------
+actualizar_remitentes.py                               38     38     0%   5-126
+agregar_envios_cortos.py                               44     44     0%   5-210
+config\__init__.py                                      0      0   100%
+config\asgi.py                                          4      4     0%   10-16
+config\logging_context.py                              17      1    94%   33
+config\metrics.py                                      86     37    57%   120-121, 125-155, 173-187
+config\middleware.py                                   15      0   100%
+config\pagination.py                                    9      0   100%
+config\urls.py                                         25      2    92%   143-146
+config\wsgi.py                                          4      4     0%   10-16
+crear_datos_prueba_envios.py                            0      0   100%
+crear_envios_corregido.py                              49     49     0%   5-141
+crear_envios_prueba.py                                 48     48     0%   5-138
+empresas\__init__.py                                    0      0   100%
+empresas\admin.py                                       9      0   100%
+empresas\management\__init__.py                         0      0   100%
+empresas\management\commands\__init__.py                0      0   100%
+empresas\management\commands\clean_database.py         29     29     0%   1-55
+empresas\management\commands\init_tenants.py           28     28     0%   1-68
+empresas\management\commands\list_tenants.py           13     13     0%   1-19
+empresas\middleware.py                                  6      6     0%   1-15
+empresas\models.py                                     17      0   100%
+empresas\serializers.py                                 7      0   100%
+empresas\tenant_info.py                                10      2    80%   10, 17
+empresas\views.py                                       7      0   100%
+envios\__init__.py                                      0      0   100%
+envios\admin.py                                        39     13    67%   12, 42-45, 48-54, 65
+envios\management\__init__.py                           0      0   100%
+envios\management\commands\__init__.py                  0      0   100%
+envios\management\commands\crear_datos_prueba.py       36     36     0%   6-120
+envios\management\commands\refresh_envio_stats.py      21     21     0%   1-53
+envios\models.py                                       74     16    78%   115-116, 122-139
+envios\notifications.py                                39     29    26%   19-70
+envios\serializers.py                                  69     14    80%   94, 97-104, 108, 112, 118-122, 127-128
+envios\tests.py                                        35     35     0%   1-90
+envios\views.py                                       178    116    35%   53, 65, 72-78, 118-123, 136, 143-173, 180-193, 206-252, 259-305, 317-383, 390-436, 455-461
+envios\views_optimized.py                               0      0   100%
+microservices\__init__.py                               0      0   100%
+microservices\analytics_service.py                      0      0   100%
+microservices\auth_service.py                           0      0   100%
+microservices\international_service.py                  0      0   100%
+microservices\sync_service.py                           0      0   100%
+script_datos_prueba.py                                  0      0   100%
+usuarios\__init__.py                                    0      0   100%
+usuarios\admin.py                                      11      0   100%
+usuarios\auth_security.py                             112     74    34%   57-66, 72-88, 92-97, 106-121, 126-131, 136-149, 156-159, 168-171, 183-194, 199-217
+usuarios\auth_views.py                                163    119    27%   56-164, 174-179, 183-184, 188-193, 197, 201-209, 213-220, 229-244, 254-259, 269-309, 321-352, 367-421
+usuarios\auth_views_clean.py                            0      0   100%
+usuarios\management\__init__.py                         0      0   100%
+usuarios\management\commands\__init__.py                0      0   100%
+usuarios\management\commands\init_superuser.py         10     10     0%   1-24
+usuarios\management\commands\proteger_usuarios.py     110    110     0%   5-200
+usuarios\middleware.py                                 41     41     0%   5-78
+usuarios\models.py                                     51     11    78%   18, 23, 25, 40-49
+usuarios\permissions.py                                21     13    38%   11-19, 31, 35-50
+usuarios\security_middleware.py                       117    117     0%   3-325
+usuarios\serializers.py                                22     12    45%   21-26, 32-37
+usuarios\serializers_clean.py                           0      0   100%
+usuarios\simple_login.py                                0      0   100%
+usuarios\simple_login_view.py                           0      0   100%
+usuarios\views.py                                      25     12    52%   21-27, 35-39, 46-47
+---------------------------------------------------------------------------------
+TOTAL                                                1639   1104    33%
+Coverage HTML written to dir logs\htmlcov
+Coverage XML written to file logs\coverage.xml
+============================== 4 passed in 4.15s ==============================

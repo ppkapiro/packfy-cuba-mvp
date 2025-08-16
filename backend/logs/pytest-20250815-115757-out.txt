@@ -1,0 +1,19 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.7, pytest-8.4.1, pluggy-1.6.0 -- C:\Users\pepec\Projects\Packfy\paqueteria-cuba-mvp\backend\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+django: version: 4.2.23, settings: config.settings_test (from env)
+rootdir: C:\Users\pepec\Projects\Packfy\paqueteria-cuba-mvp\backend
+configfile: pytest.ini
+plugins: cov-6.2.1, django-4.11.1
+collecting ... collected 8 items
+
+tests/test_metrics_rate_limit.py::test_metrics_endpoint PASSED           [ 12%]
+tests/test_metrics_rate_limit.py::test_rate_limit_applies PASSED         [ 25%]
+tests/test_envios_estadisticas.py::test_estadisticas_endpoint PASSED     [ 37%]
+tests/test_cache_rastrear.py::test_rastrear_cache PASSED                 [ 50%]
+tests/test_pagination_limits.py::test_pagination_max_page_size PASSED    [ 62%]
+tests/test_pagination_limits.py::test_pagination_fields_present PASSED   [ 75%]
+tests/test_logging_request_id.py::test_request_id_and_logging PASSED     [ 87%]
+tests/test_smoke.py::test_smoke PASSED                                   [100%]
+
+============================== 8 passed in 2.25s ==============================

@@ -18,7 +18,8 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
+from django.http import HttpResponse, JsonResponse
+from django.urls import include, path, re_path
 from django.views.generic import RedirectView
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
@@ -69,6 +70,31 @@ urlpatterns = [
         RedirectView.as_view(url="/api/swagger/", permanent=False),
         name="index",
     ),
+    path(
+        "health/",
+        lambda r: JsonResponse(
+            {
+                "status": "ok",
+                "app": "packfy-cuba",
+                "version": settings.APPLICATION_VERSION,
+            }
+        ),
+    ),
+    path(
+        "api/health/",
+        lambda r: JsonResponse(
+            {
+                "status": "ok",
+                "app": "packfy-cuba",
+                "version": settings.APPLICATION_VERSION,
+                "alias": True,
+            }
+        ),
+    ),
+    path(
+        "api/metrics/",
+        lambda r: _metrics_response(),
+    ),
     path("admin/", admin.site.urls),
     # 🔒 API de Autenticación Segura
     path(
@@ -86,6 +112,10 @@ urlpatterns = [
     path("api/auth/change-password/", change_password, name="change_password"),
     # 🚀 API endpoints principales
     path("api/", include(router.urls)),
+    # Compat: evitar 301 para /api/envios/rastrear sin slash
+    re_path(
+        r"^api/envios/rastrear$", EnvioViewSet.as_view({"get": "rastrear"})
+    ),
     # 🤖 API de Inteligencia Artificial - Temporalmente deshabilitado
     # path("api/ai/", include("envios.ai_urls")),
     # 📊 Endpoint para información del sistema
@@ -116,3 +146,18 @@ if settings.DEBUG:
     urlpatterns += static(
         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
     )
+
+
+def _metrics_response():  # pragma: no cover - endpoint simple
+    try:
+        from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
+    except Exception:  # Si no instalado
+        return JsonResponse(
+            {
+                "status": "error",
+                "message": "prometheus_client no disponible",
+            },
+            status=500,
+        )
+    output = generate_latest()  # Tipo bytes
+    return HttpResponse(output, content_type=CONTENT_TYPE_LATEST)

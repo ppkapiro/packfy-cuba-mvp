@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🇨🇺 Login Arreglado - Test Final</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        min-height: 100vh;
+      }
+      .container {
+        max-width: 400px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 30px;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+      }
+      .success {
+        color: #4caf50;
+        font-weight: bold;
+        text-align: center;
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      input[type="email"],
+      input[type="password"],
+      button {
+        width: 100%;
+        padding: 15px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        box-sizing: border-box;
+      }
+      input[type="email"],
+      input[type="password"] {
+        background: rgba(255, 255, 255, 0.9);
+        color: #333;
+      }
+      button {
+        background: #4caf50;
+        color: white;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.3s;
+        margin-top: 10px;
+      }
+      button:hover {
+        background: #45a049;
+      }
+      .result {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        min-height: 100px;
+        font-family: monospace;
+        font-size: 14px;
+        word-break: break-word;
+      }
+      .title {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .flag {
+        font-size: 2em;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="title">
+        <div class="flag">🇨🇺</div>
+        <h1>Packfy Cuba</h1>
+        <div class="success">✅ HTTP 500 ARREGLADO</div>
+      </div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" value="admin@packfy.cu" required />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña:</label>
+          <input type="password" id="password" value="admin123" required />
+        </div>
+
+        <button type="submit">🔑 Iniciar Sesión</button>
+      </form>
+
+      <div class="result" id="result">
+        Presiona "Iniciar Sesión" para probar...
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+          const resultDiv = document.getElementById("result");
+
+          resultDiv.innerHTML = "🔄 Probando login...";
+
+          try {
+            const response = await fetch("/api/auth/login/", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: email,
+                password: password,
+              }),
+            });
+
+            const status = response.status;
+            const data = await response.json();
+
+            if (status === 200) {
+              resultDiv.innerHTML = `
+                        <div style="color: #4CAF50; font-weight: bold; margin-bottom: 10px;">
+                            ✅ LOGIN EXITOSO!
+                        </div>
+                        <div style="color: #90EE90;">
+                            Usuario: ${data.user.first_name} ${
+                data.user.last_name
+              }<br>
+                            Email: ${data.user.email}<br>
+                            Administrador: ${
+                              data.user.es_administrador_empresa ? "Sí" : "No"
+                            }<br>
+                            Token generado: ✅<br>
+                            Hora: ${new Date().toLocaleTimeString()}
+                        </div>
+                    `;
+            } else {
+              resultDiv.innerHTML = `
+                        <div style="color: #ff6b6b; font-weight: bold;">
+                            ❌ Error: ${status}
+                        </div>
+                        <div style="color: #ffcccc;">
+                            ${JSON.stringify(data, null, 2)}
+                        </div>
+                    `;
+            }
+          } catch (error) {
+            resultDiv.innerHTML = `
+                    <div style="color: #ff6b6b; font-weight: bold;">
+                        ❌ Error de red:
+                    </div>
+                    <div style="color: #ffcccc;">
+                        ${error.message}
+                    </div>
+                `;
+          }
+        });
+
+      // Auto-test al cargar en móvil
+      if (window.innerWidth <= 768) {
+        setTimeout(() => {
+          document
+            .getElementById("loginForm")
+            .dispatchEvent(new Event("submit"));
+        }, 1000);
+      }
+    </script>
+  </body>
+</html>

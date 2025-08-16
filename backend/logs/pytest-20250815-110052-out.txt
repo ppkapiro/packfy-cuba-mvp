@@ -1,0 +1,734 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.7, pytest-8.4.1, pluggy-1.6.0 -- C:\Users\pepec\Projects\Packfy\paqueteria-cuba-mvp\backend\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+django: version: 4.2.23, settings: config.settings_test (from env)
+rootdir: C:\Users\pepec\Projects\Packfy\paqueteria-cuba-mvp\backend
+configfile: pytest.ini
+plugins: cov-6.2.1, django-4.11.1
+collecting ... collected 12 items
+
+tests/test_cache_rastrear.py::test_rastrear_cache ERROR                  [  8%]
+tests/test_envios_api.py::TestEnvioAPI::test_create_envio_valid_data ERROR [ 16%]
+tests/test_envios_api.py::TestEnvioAPI::test_list_envios_authenticated ERROR [ 25%]
+tests/test_envios_api.py::TestEnvioAPI::test_list_envios_unauthenticated ERROR [ 33%]
+tests/test_envios_api.py::TestEnvioAPI::test_user_cannot_access_other_company_envios ERROR [ 41%]
+tests/test_envios_estadisticas.py::test_estadisticas_endpoint ERROR      [ 50%]
+tests/test_logging_request_id.py::test_request_id_and_logging ERROR      [ 58%]
+tests/test_metrics_rate_limit.py::test_metrics_endpoint ERROR            [ 66%]
+tests/test_metrics_rate_limit.py::test_rate_limit_applies ERROR          [ 75%]
+tests/test_pagination_limits.py::test_pagination_max_page_size ERROR     [ 83%]
+tests/test_pagination_limits.py::test_pagination_fields_present ERROR    [ 91%]
+tests/test_smoke.py::test_smoke PASSED                                   [100%]
+
+=================================== ERRORS ====================================
+____________________ ERROR at setup of test_rastrear_cache ____________________
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: near "MATERIALIZED": syntax error
+
+The above exception was the direct cause of the following exception:
+.venv\Lib\site-packages\pytest_django\plugin.py:552: in _django_db_marker
+    request.getfixturevalue("_django_db_helper")
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:356: in handle
+    post_migrate_state = executor.migrate(
+.venv\Lib\site-packages\django\db\migrations\executor.py:135: in migrate
+    state = self._migrate_all_forwards(
+.venv\Lib\site-packages\django\db\migrations\executor.py:167: in _migrate_all_forwards
+    state = self.apply_migration(
+.venv\Lib\site-packages\django\db\migrations\executor.py:252: in apply_migration
+    state = migration.apply(state, schema_editor)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\migrations\migration.py:132: in apply
+    operation.database_forwards(
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:106: in database_forwards
+    self._run_sql(schema_editor, self.sql)
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:133: in _run_sql
+    schema_editor.execute(statement, params=None)
+.venv\Lib\site-packages\django\db\backends\base\schema.py:201: in execute
+    cursor.execute(sql, params)
+.venv\Lib\site-packages\django\db\backends\utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv\Lib\site-packages\django\db\backends\utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+---------------------------- Captured stdout setup ----------------------------
+Operations to perform:
+  Synchronize unmigrated apps: corsheaders, messages, rest_framework, rest_framework_simplejwt, staticfiles
+  Apply all migrations: admin, auth, contenttypes, empresas, envios, sessions, token_blacklist, usuarios
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0001_initial... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying usuarios.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying empresas.0001_initial... OK
+  Applying envios.0001_initial... OK
+  Applying envios.0002_initial... OK
+  Applying envios.0002_envio_indexes_uuidguide... OK
+  Applying envios.0003_envio_stats_matview...
+---------------------------- Captured stderr setup ----------------------------
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+_________ ERROR at setup of TestEnvioAPI.test_create_envio_valid_data _________
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: near "MATERIALIZED": syntax error
+
+The above exception was the direct cause of the following exception:
+.venv\Lib\site-packages\pytest_django\plugin.py:584: in _django_setup_unittest
+    request.getfixturevalue("django_db_setup")
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:356: in handle
+    post_migrate_state = executor.migrate(
+.venv\Lib\site-packages\django\db\migrations\executor.py:135: in migrate
+    state = self._migrate_all_forwards(
+.venv\Lib\site-packages\django\db\migrations\executor.py:167: in _migrate_all_forwards
+    state = self.apply_migration(
+.venv\Lib\site-packages\django\db\migrations\executor.py:252: in apply_migration
+    state = migration.apply(state, schema_editor)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\migrations\migration.py:132: in apply
+    operation.database_forwards(
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:106: in database_forwards
+    self._run_sql(schema_editor, self.sql)
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:133: in _run_sql
+    schema_editor.execute(statement, params=None)
+.venv\Lib\site-packages\django\db\backends\base\schema.py:201: in execute
+    cursor.execute(sql, params)
+.venv\Lib\site-packages\django\db\backends\utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv\Lib\site-packages\django\db\backends\utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+________ ERROR at setup of TestEnvioAPI.test_list_envios_authenticated ________
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: near "MATERIALIZED": syntax error
+
+The above exception was the direct cause of the following exception:
+.venv\Lib\site-packages\pytest_django\plugin.py:584: in _django_setup_unittest
+    request.getfixturevalue("django_db_setup")
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:356: in handle
+    post_migrate_state = executor.migrate(
+.venv\Lib\site-packages\django\db\migrations\executor.py:135: in migrate
+    state = self._migrate_all_forwards(
+.venv\Lib\site-packages\django\db\migrations\executor.py:167: in _migrate_all_forwards
+    state = self.apply_migration(
+.venv\Lib\site-packages\django\db\migrations\executor.py:252: in apply_migration
+    state = migration.apply(state, schema_editor)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\migrations\migration.py:132: in apply
+    operation.database_forwards(
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:106: in database_forwards
+    self._run_sql(schema_editor, self.sql)
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:133: in _run_sql
+    schema_editor.execute(statement, params=None)
+.venv\Lib\site-packages\django\db\backends\base\schema.py:201: in execute
+    cursor.execute(sql, params)
+.venv\Lib\site-packages\django\db\backends\utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv\Lib\site-packages\django\db\backends\utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+_______ ERROR at setup of TestEnvioAPI.test_list_envios_unauthenticated _______
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: near "MATERIALIZED": syntax error
+
+The above exception was the direct cause of the following exception:
+.venv\Lib\site-packages\pytest_django\plugin.py:584: in _django_setup_unittest
+    request.getfixturevalue("django_db_setup")
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:356: in handle
+    post_migrate_state = executor.migrate(
+.venv\Lib\site-packages\django\db\migrations\executor.py:135: in migrate
+    state = self._migrate_all_forwards(
+.venv\Lib\site-packages\django\db\migrations\executor.py:167: in _migrate_all_forwards
+    state = self.apply_migration(
+.venv\Lib\site-packages\django\db\migrations\executor.py:252: in apply_migration
+    state = migration.apply(state, schema_editor)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\migrations\migration.py:132: in apply
+    operation.database_forwards(
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:106: in database_forwards
+    self._run_sql(schema_editor, self.sql)
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:133: in _run_sql
+    schema_editor.execute(statement, params=None)
+.venv\Lib\site-packages\django\db\backends\base\schema.py:201: in execute
+    cursor.execute(sql, params)
+.venv\Lib\site-packages\django\db\backends\utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv\Lib\site-packages\django\db\backends\utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+_ ERROR at setup of TestEnvioAPI.test_user_cannot_access_other_company_envios _
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: near "MATERIALIZED": syntax error
+
+The above exception was the direct cause of the following exception:
+.venv\Lib\site-packages\pytest_django\plugin.py:584: in _django_setup_unittest
+    request.getfixturevalue("django_db_setup")
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:356: in handle
+    post_migrate_state = executor.migrate(
+.venv\Lib\site-packages\django\db\migrations\executor.py:135: in migrate
+    state = self._migrate_all_forwards(
+.venv\Lib\site-packages\django\db\migrations\executor.py:167: in _migrate_all_forwards
+    state = self.apply_migration(
+.venv\Lib\site-packages\django\db\migrations\executor.py:252: in apply_migration
+    state = migration.apply(state, schema_editor)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\migrations\migration.py:132: in apply
+    operation.database_forwards(
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:106: in database_forwards
+    self._run_sql(schema_editor, self.sql)
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:133: in _run_sql
+    schema_editor.execute(statement, params=None)
+.venv\Lib\site-packages\django\db\backends\base\schema.py:201: in execute
+    cursor.execute(sql, params)
+.venv\Lib\site-packages\django\db\backends\utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv\Lib\site-packages\django\db\backends\utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+________________ ERROR at setup of test_estadisticas_endpoint _________________
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: near "MATERIALIZED": syntax error
+
+The above exception was the direct cause of the following exception:
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:356: in handle
+    post_migrate_state = executor.migrate(
+.venv\Lib\site-packages\django\db\migrations\executor.py:135: in migrate
+    state = self._migrate_all_forwards(
+.venv\Lib\site-packages\django\db\migrations\executor.py:167: in _migrate_all_forwards
+    state = self.apply_migration(
+.venv\Lib\site-packages\django\db\migrations\executor.py:252: in apply_migration
+    state = migration.apply(state, schema_editor)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\migrations\migration.py:132: in apply
+    operation.database_forwards(
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:106: in database_forwards
+    self._run_sql(schema_editor, self.sql)
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:133: in _run_sql
+    schema_editor.execute(statement, params=None)
+.venv\Lib\site-packages\django\db\backends\base\schema.py:201: in execute
+    cursor.execute(sql, params)
+.venv\Lib\site-packages\django\db\backends\utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv\Lib\site-packages\django\db\backends\utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+________________ ERROR at setup of test_request_id_and_logging ________________
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: near "MATERIALIZED": syntax error
+
+The above exception was the direct cause of the following exception:
+.venv\Lib\site-packages\pytest_django\plugin.py:552: in _django_db_marker
+    request.getfixturevalue("_django_db_helper")
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:356: in handle
+    post_migrate_state = executor.migrate(
+.venv\Lib\site-packages\django\db\migrations\executor.py:135: in migrate
+    state = self._migrate_all_forwards(
+.venv\Lib\site-packages\django\db\migrations\executor.py:167: in _migrate_all_forwards
+    state = self.apply_migration(
+.venv\Lib\site-packages\django\db\migrations\executor.py:252: in apply_migration
+    state = migration.apply(state, schema_editor)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\migrations\migration.py:132: in apply
+    operation.database_forwards(
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:106: in database_forwards
+    self._run_sql(schema_editor, self.sql)
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:133: in _run_sql
+    schema_editor.execute(statement, params=None)
+.venv\Lib\site-packages\django\db\backends\base\schema.py:201: in execute
+    cursor.execute(sql, params)
+.venv\Lib\site-packages\django\db\backends\utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv\Lib\site-packages\django\db\backends\utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+___________________ ERROR at setup of test_metrics_endpoint ___________________
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: near "MATERIALIZED": syntax error
+
+The above exception was the direct cause of the following exception:
+.venv\Lib\site-packages\pytest_django\plugin.py:552: in _django_db_marker
+    request.getfixturevalue("_django_db_helper")
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:356: in handle
+    post_migrate_state = executor.migrate(
+.venv\Lib\site-packages\django\db\migrations\executor.py:135: in migrate
+    state = self._migrate_all_forwards(
+.venv\Lib\site-packages\django\db\migrations\executor.py:167: in _migrate_all_forwards
+    state = self.apply_migration(
+.venv\Lib\site-packages\django\db\migrations\executor.py:252: in apply_migration
+    state = migration.apply(state, schema_editor)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\migrations\migration.py:132: in apply
+    operation.database_forwards(
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:106: in database_forwards
+    self._run_sql(schema_editor, self.sql)
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:133: in _run_sql
+    schema_editor.execute(statement, params=None)
+.venv\Lib\site-packages\django\db\backends\base\schema.py:201: in execute
+    cursor.execute(sql, params)
+.venv\Lib\site-packages\django\db\backends\utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv\Lib\site-packages\django\db\backends\utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+__________________ ERROR at setup of test_rate_limit_applies __________________
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: near "MATERIALIZED": syntax error
+
+The above exception was the direct cause of the following exception:
+.venv\Lib\site-packages\pytest_django\plugin.py:552: in _django_db_marker
+    request.getfixturevalue("_django_db_helper")
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:356: in handle
+    post_migrate_state = executor.migrate(
+.venv\Lib\site-packages\django\db\migrations\executor.py:135: in migrate
+    state = self._migrate_all_forwards(
+.venv\Lib\site-packages\django\db\migrations\executor.py:167: in _migrate_all_forwards
+    state = self.apply_migration(
+.venv\Lib\site-packages\django\db\migrations\executor.py:252: in apply_migration
+    state = migration.apply(state, schema_editor)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\migrations\migration.py:132: in apply
+    operation.database_forwards(
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:106: in database_forwards
+    self._run_sql(schema_editor, self.sql)
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:133: in _run_sql
+    schema_editor.execute(statement, params=None)
+.venv\Lib\site-packages\django\db\backends\base\schema.py:201: in execute
+    cursor.execute(sql, params)
+.venv\Lib\site-packages\django\db\backends\utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv\Lib\site-packages\django\db\backends\utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+_______________ ERROR at setup of test_pagination_max_page_size _______________
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: near "MATERIALIZED": syntax error
+
+The above exception was the direct cause of the following exception:
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:356: in handle
+    post_migrate_state = executor.migrate(
+.venv\Lib\site-packages\django\db\migrations\executor.py:135: in migrate
+    state = self._migrate_all_forwards(
+.venv\Lib\site-packages\django\db\migrations\executor.py:167: in _migrate_all_forwards
+    state = self.apply_migration(
+.venv\Lib\site-packages\django\db\migrations\executor.py:252: in apply_migration
+    state = migration.apply(state, schema_editor)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\migrations\migration.py:132: in apply
+    operation.database_forwards(
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:106: in database_forwards
+    self._run_sql(schema_editor, self.sql)
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:133: in _run_sql
+    schema_editor.execute(statement, params=None)
+.venv\Lib\site-packages\django\db\backends\base\schema.py:201: in execute
+    cursor.execute(sql, params)
+.venv\Lib\site-packages\django\db\backends\utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv\Lib\site-packages\django\db\backends\utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+______________ ERROR at setup of test_pagination_fields_present _______________
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: near "MATERIALIZED": syntax error
+
+The above exception was the direct cause of the following exception:
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:356: in handle
+    post_migrate_state = executor.migrate(
+.venv\Lib\site-packages\django\db\migrations\executor.py:135: in migrate
+    state = self._migrate_all_forwards(
+.venv\Lib\site-packages\django\db\migrations\executor.py:167: in _migrate_all_forwards
+    state = self.apply_migration(
+.venv\Lib\site-packages\django\db\migrations\executor.py:252: in apply_migration
+    state = migration.apply(state, schema_editor)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\migrations\migration.py:132: in apply
+    operation.database_forwards(
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:106: in database_forwards
+    self._run_sql(schema_editor, self.sql)
+.venv\Lib\site-packages\django\db\migrations\operations\special.py:133: in _run_sql
+    schema_editor.execute(statement, params=None)
+.venv\Lib\site-packages\django\db\backends\base\schema.py:201: in execute
+    cursor.execute(sql, params)
+.venv\Lib\site-packages\django\db\backends\utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv\Lib\site-packages\django\db\backends\utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv\Lib\site-packages\django\db\backends\utils.py:87: in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\backends\sqlite3\base.py:324: in execute
+    return super().execute(query)
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+=========================== short test summary info ===========================
+ERROR tests/test_cache_rastrear.py::test_rastrear_cache - django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+ERROR tests/test_envios_api.py::TestEnvioAPI::test_create_envio_valid_data - django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+ERROR tests/test_envios_api.py::TestEnvioAPI::test_list_envios_authenticated - django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+ERROR tests/test_envios_api.py::TestEnvioAPI::test_list_envios_unauthenticated - django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+ERROR tests/test_envios_api.py::TestEnvioAPI::test_user_cannot_access_other_company_envios - django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+ERROR tests/test_envios_estadisticas.py::test_estadisticas_endpoint - django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+ERROR tests/test_logging_request_id.py::test_request_id_and_logging - django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+ERROR tests/test_metrics_rate_limit.py::test_metrics_endpoint - django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+ERROR tests/test_metrics_rate_limit.py::test_rate_limit_applies - django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+ERROR tests/test_pagination_limits.py::test_pagination_max_page_size - django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+ERROR tests/test_pagination_limits.py::test_pagination_fields_present - django.db.utils.OperationalError: near "MATERIALIZED": syntax error
+======================== 1 passed, 11 errors in 2.50s =========================

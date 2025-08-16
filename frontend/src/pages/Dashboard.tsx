@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent, useMemo, memo, useCallback } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -6,10 +6,11 @@ import axios from 'axios';
 import { enviosAPI } from '../services/api';
 import Pagination from '../components/Pagination';
 import DashboardStats from '../components/DashboardStats';
+import Skeleton, { SkeletonRow, SkeletonText } from '../components/Skeleton';
 import ErrorBoundary from '../components/ErrorBoundary';
 import ErrorFallback from '../components/ErrorFallback';
 import { Envio } from '../types';
-// 🇨🇺 Estilos cargados globalmente desde main.tsx
+// 🇨🇺 PACKFY CUBA v4.1 - Dashboard optimizado con React.memo + useMemo
 
 // Función auxiliar para formatear fechas de forma segura
 const formatearFechaSafe = (fecha: string | null | undefined): string => {
@@ -107,7 +108,8 @@ const Dashboard: React.FC = () => {
     cargarEnvios();
   }, [filtroEstado, fechaInicio, fechaFin, currentPage, pageSize, location]);
 
-  const cargarEnvios = async () => {
+  // ⚡ OPTIMIZADO: useCallback para evitar re-creación en cada render
+  const cargarEnvios = useCallback(async () => {
     setLoading(true);
     setError(''); // Limpiar errores anteriores
       try {
@@ -203,9 +205,10 @@ const Dashboard: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
-    // Función para intentar limpiar la caché si hay problemas
-  const handleClearCacheAndRefresh = () => {
+  }, [currentPage, pageSize, filtroEstado]); // ⚡ Dependencias del useCallback
+
+  // ⚡ OPTIMIZADO: useCallback para función de limpiar caché
+  const handleClearCacheAndRefresh = useCallback(() => {
     if ('caches' in window) {
       caches.keys().then((keyList) => {
         return Promise.all(
@@ -224,11 +227,21 @@ const Dashboard: React.FC = () => {
       const win = window as Window;
       win.location.reload();
     }
-  };
+  }, []); // ⚡ Sin dependencias porque es una función de utilidad
+
+  // ⚡ OPTIMIZADO: useMemo para estadísticas del dashboard
+  const dashboardStats = useMemo(() => {
+    return {
+      totalEnvios: envios.length,
+      pendientes: envios.filter(e => e.estado_actual === 'PENDIENTE').length,
+      enTransito: envios.filter(e => e.estado_actual === 'EN_TRANSITO').length,
+      entregados: envios.filter(e => e.estado_actual === 'ENTREGADO').length,
+    };
+  }, [envios]);
 
   return (
     <ErrorBoundary fallback={<ErrorFallback />}>
-      <div className="dashboard-page">
+  <div className="dashboard-page page-enter">
         {successMessage && (
           <div className="alert alert-success">
             {successMessage}
@@ -266,9 +279,15 @@ const Dashboard: React.FC = () => {
 
         {/* Sección de estadísticas - Con manejo de errores */}
         <div className="stats-container">
-          <React.Suspense fallback={<div className="dashboard-loading">Cargando estadísticas...</div>}>            <ErrorBoundary fallback={
+          <React.Suspense fallback={
+            <div className="dashboard-loading">
+              <Skeleton width={200} height={24} style={{ marginBottom: 12 }} />
+              <SkeletonRow columns={3} />
+            </div>
+          }>
+            <ErrorBoundary fallback={
               <div className="dashboard-error">
-                No se pudieron cargar las estadísticas.
+                <SkeletonText lines={3} />
                 <button
                   onClick={() => {
                     const win = window as Window;
@@ -292,12 +311,12 @@ const Dashboard: React.FC = () => {
                 console.log("Recargando dashboard manualmente");
                 cargarEnvios();
               }}
-              className="btn-refresh"
+              className="btn-refresh pressable"
               title="Recargar lista de envíos"
             >
               🔄
             </button>
-            <Link to="/envios/nuevo" className="btn">Nuevo Envío</Link>
+            <Link to="/envios/nuevo" className="btn pressable">Nuevo Envío</Link>
           </div>
         </div>
 
@@ -305,16 +324,16 @@ const Dashboard: React.FC = () => {
         <div className="quick-actions">
           <h3>🚀 Accesos Rápidos</h3>
           <div className="quick-actions-grid">
-            <Link to="/envios" className="quick-action-btn quick-action-main">
+            <Link to="/envios" className="quick-action-btn quick-action-main pressable">
               📋 Gestión de Envíos
             </Link>
-            <Link to="/envios/modo" className="quick-action-btn quick-action-selector">
+            <Link to="/envios/modo" className="quick-action-btn quick-action-selector pressable">
               🎯 Seleccionar Modo
             </Link>
-            <Link to="/envios/simple" className="quick-action-btn quick-action-simple">
+            <Link to="/envios/simple" className="quick-action-btn quick-action-simple pressable">
               📦 Modo Simple (Gratis)
             </Link>
-            <Link to="/envios/premium" className="quick-action-btn quick-action-premium">
+            <Link to="/envios/premium" className="quick-action-btn quick-action-premium pressable">
               ✨ Modo Premium
             </Link>
           </div>
@@ -327,7 +346,7 @@ const Dashboard: React.FC = () => {
               name="filtroEstado"
               value={filtroEstado}
               onChange={(e: ChangeEvent<HTMLSelectElement>) => setFiltroEstado(e.target.value)}
-              className="form-control"
+              className="form-control input-focus"
               aria-label="Filtrar por estado de envío"
               title="Seleccionar estado de envío"
             >
@@ -349,7 +368,7 @@ const Dashboard: React.FC = () => {
               type="date"
               value={fechaInicio}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setFechaInicio(e.target.value)}
-              className="form-control"
+              className="form-control input-focus"
               aria-label="Fecha inicial para filtrar envíos"
               title="Seleccionar fecha inicial"
             />
@@ -363,7 +382,7 @@ const Dashboard: React.FC = () => {
               type="date"
               value={fechaFin}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setFechaFin(e.target.value)}
-              className="form-control"
+              className="form-control input-focus"
               aria-label="Fecha final para filtrar envíos"
               title="Seleccionar fecha final"
             />
@@ -387,12 +406,14 @@ const Dashboard: React.FC = () => {
 
         {loading ? (
           <div className="dashboard-loading">
-            <div className="loading-spinner dashboard-spinner"></div>
-            <span>Cargando envíos...</span>
+            <Skeleton width={240} height={20} style={{ marginBottom: 16 }} />
+            <SkeletonRow columns={7} />
+            <SkeletonRow columns={7} />
+            <SkeletonRow columns={7} />
           </div>
         ) : (
           <>
-            <table className="envios-table">
+            <table className="envios-table table-hover">
               <thead>
                 <tr>
                   <th>Guía</th>
@@ -476,4 +497,5 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+// ⚡ PERFORMANCE OPTIMIZATION: Memoizar Dashboard para evitar re-renders innecesarios
+export default memo(Dashboard);

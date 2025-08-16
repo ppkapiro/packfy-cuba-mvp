@@ -14,19 +14,13 @@ import EditarEnvio from './pages/EditarEnvio';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import NetworkStatusBanner from './components/NetworkStatusBanner';
 import ModeSelector from './components/ModeSelector';
+import ProtectedRoute from './components/ProtectedRoute';
+import GlobalErrorBoundary from './components/GlobalErrorBoundary';
+// 🇨🇺 CSS ya se importa en main.tsx - sin duplicados
 
-// 🇨🇺 PACKFY CUBA - SISTEMA UNIFICADO v3.3 (estilos cargados desde main.tsx)
+// 🇨🇺 PACKFY CUBA - SISTEMA UNIFICADO v4.1 con Error Handling Avanzado
 
-// Componente de rutas protegidas
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const token = localStorage.getItem('token');
-
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return <>{children}</>;
-}
+// ProtectedRoute se importa desde components/ProtectedRoute y usa AuthContext
 
 // Wrapper para páginas públicas con header
 function PublicPageWrapper({ children }: { children: React.ReactNode }) {
@@ -39,21 +33,22 @@ function PublicPageWrapper({ children }: { children: React.ReactNode }) {
 }
 
 function App() {
-  console.log('🇨🇺 Packfy Cuba v3.0 - Sistema Unificado iniciando...');
+  console.log('🇨🇺 Packfy Cuba v4.1 - Sistema Unificado con Error Handling iniciando...');
 
   return (
-    <AuthProvider>
-      <div className="app-container">
-        {/* Banner de estado de conexión */}
-        <NetworkStatusBanner />
+    <GlobalErrorBoundary>
+      <AuthProvider>
+        <div className="app-container">
+          {/* Banner de estado de conexión */}
+          <NetworkStatusBanner />
 
-        <BrowserRouter>
-          <div className="app-content">
-            <Routes>
-              {/* Rutas públicas */}
-              <Route path="/login" element={<PublicPageWrapper><LoginPage /></PublicPageWrapper>} />
-              <Route path="/diagnostico" element={<PublicPageWrapper><DiagnosticPage /></PublicPageWrapper>} />
-              <Route path="/rastrear" element={<PublicPageWrapper><PublicTrackingPage /></PublicPageWrapper>} />
+          <BrowserRouter>
+            <div className="app-content">
+              <Routes>
+                {/* Rutas públicas */}
+                <Route path="/login" element={<PublicPageWrapper><LoginPage /></PublicPageWrapper>} />
+                <Route path="/diagnostico" element={<PublicPageWrapper><DiagnosticPage /></PublicPageWrapper>} />
+                <Route path="/rastrear" element={<PublicPageWrapper><PublicTrackingPage /></PublicPageWrapper>} />
 
               {/* Rutas protegidas con navegación clásica funcional */}
               <Route
@@ -81,6 +76,7 @@ function App() {
         <PWAInstallPrompt />
       </div>
     </AuthProvider>
+    </GlobalErrorBoundary>
   );
 }
 

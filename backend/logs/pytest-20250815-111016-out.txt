@@ -1,0 +1,285 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.7, pytest-8.4.1, pluggy-1.6.0 -- C:\Users\pepec\Projects\Packfy\paqueteria-cuba-mvp\backend\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+django: version: 4.2.23, settings: config.settings_test (from env)
+rootdir: C:\Users\pepec\Projects\Packfy\paqueteria-cuba-mvp\backend
+configfile: pytest.ini
+plugins: cov-6.2.1, django-4.11.1
+collecting ... collected 12 items
+
+tests/test_cache_rastrear.py::test_rastrear_cache ERROR                  [  8%]
+tests/test_envios_api.py::TestEnvioAPI::test_create_envio_valid_data ERROR [ 16%]
+tests/test_envios_api.py::TestEnvioAPI::test_list_envios_authenticated ERROR [ 25%]
+tests/test_envios_api.py::TestEnvioAPI::test_list_envios_unauthenticated ERROR [ 33%]
+tests/test_envios_api.py::TestEnvioAPI::test_user_cannot_access_other_company_envios ERROR [ 41%]
+tests/test_envios_estadisticas.py::test_estadisticas_endpoint ERROR      [ 50%]
+tests/test_logging_request_id.py::test_request_id_and_logging ERROR      [ 58%]
+tests/test_metrics_rate_limit.py::test_metrics_endpoint ERROR            [ 66%]
+tests/test_metrics_rate_limit.py::test_rate_limit_applies ERROR          [ 75%]
+tests/test_pagination_limits.py::test_pagination_max_page_size ERROR     [ 83%]
+tests/test_pagination_limits.py::test_pagination_fields_present ERROR    [ 91%]
+tests/test_smoke.py::test_smoke PASSED                                   [100%]
+
+=================================== ERRORS ====================================
+____________________ ERROR at setup of test_rastrear_cache ____________________
+.venv\Lib\site-packages\pytest_django\plugin.py:552: in _django_db_marker
+    request.getfixturevalue("_django_db_helper")
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:129: in handle
+    raise CommandError(
+E   django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+E   To fix them run 'python manage.py makemigrations --merge'
+---------------------------- Captured stderr setup ----------------------------
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+_________ ERROR at setup of TestEnvioAPI.test_create_envio_valid_data _________
+.venv\Lib\site-packages\pytest_django\plugin.py:584: in _django_setup_unittest
+    request.getfixturevalue("django_db_setup")
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:129: in handle
+    raise CommandError(
+E   django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+E   To fix them run 'python manage.py makemigrations --merge'
+________ ERROR at setup of TestEnvioAPI.test_list_envios_authenticated ________
+.venv\Lib\site-packages\pytest_django\plugin.py:584: in _django_setup_unittest
+    request.getfixturevalue("django_db_setup")
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:129: in handle
+    raise CommandError(
+E   django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+E   To fix them run 'python manage.py makemigrations --merge'
+_______ ERROR at setup of TestEnvioAPI.test_list_envios_unauthenticated _______
+.venv\Lib\site-packages\pytest_django\plugin.py:584: in _django_setup_unittest
+    request.getfixturevalue("django_db_setup")
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:129: in handle
+    raise CommandError(
+E   django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+E   To fix them run 'python manage.py makemigrations --merge'
+_ ERROR at setup of TestEnvioAPI.test_user_cannot_access_other_company_envios _
+.venv\Lib\site-packages\pytest_django\plugin.py:584: in _django_setup_unittest
+    request.getfixturevalue("django_db_setup")
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:129: in handle
+    raise CommandError(
+E   django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+E   To fix them run 'python manage.py makemigrations --merge'
+________________ ERROR at setup of test_estadisticas_endpoint _________________
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:129: in handle
+    raise CommandError(
+E   django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+E   To fix them run 'python manage.py makemigrations --merge'
+________________ ERROR at setup of test_request_id_and_logging ________________
+.venv\Lib\site-packages\pytest_django\plugin.py:552: in _django_db_marker
+    request.getfixturevalue("_django_db_helper")
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:129: in handle
+    raise CommandError(
+E   django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+E   To fix them run 'python manage.py makemigrations --merge'
+___________________ ERROR at setup of test_metrics_endpoint ___________________
+.venv\Lib\site-packages\pytest_django\plugin.py:552: in _django_db_marker
+    request.getfixturevalue("_django_db_helper")
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:129: in handle
+    raise CommandError(
+E   django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+E   To fix them run 'python manage.py makemigrations --merge'
+__________________ ERROR at setup of test_rate_limit_applies __________________
+.venv\Lib\site-packages\pytest_django\plugin.py:552: in _django_db_marker
+    request.getfixturevalue("_django_db_helper")
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:129: in handle
+    raise CommandError(
+E   django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+E   To fix them run 'python manage.py makemigrations --merge'
+_______________ ERROR at setup of test_pagination_max_page_size _______________
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:129: in handle
+    raise CommandError(
+E   django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+E   To fix them run 'python manage.py makemigrations --merge'
+______________ ERROR at setup of test_pagination_fields_present _______________
+.venv\Lib\site-packages\pytest_django\fixtures.py:198: in django_db_setup
+    db_cfg = setup_databases(
+.venv\Lib\site-packages\django\test\utils.py:221: in setup_databases
+    connection.creation.create_test_db(
+.venv\Lib\site-packages\django\db\backends\base\creation.py:78: in create_test_db
+    call_command(
+.venv\Lib\site-packages\django\core\management\__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:458: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\base.py:106: in wrapper
+    res = handle_func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\core\management\commands\migrate.py:129: in handle
+    raise CommandError(
+E   django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+E   To fix them run 'python manage.py makemigrations --merge'
+=========================== short test summary info ===========================
+ERROR tests/test_cache_rastrear.py::test_rastrear_cache - django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+To fix them run 'python manage.py makemigrations --merge'
+ERROR tests/test_envios_api.py::TestEnvioAPI::test_create_envio_valid_data - django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+To fix them run 'python manage.py makemigrations --merge'
+ERROR tests/test_envios_api.py::TestEnvioAPI::test_list_envios_authenticated - django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+To fix them run 'python manage.py makemigrations --merge'
+ERROR tests/test_envios_api.py::TestEnvioAPI::test_list_envios_unauthenticated - django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+To fix them run 'python manage.py makemigrations --merge'
+ERROR tests/test_envios_api.py::TestEnvioAPI::test_user_cannot_access_other_company_envios - django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+To fix them run 'python manage.py makemigrations --merge'
+ERROR tests/test_envios_estadisticas.py::test_estadisticas_endpoint - django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+To fix them run 'python manage.py makemigrations --merge'
+ERROR tests/test_logging_request_id.py::test_request_id_and_logging - django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+To fix them run 'python manage.py makemigrations --merge'
+ERROR tests/test_metrics_rate_limit.py::test_metrics_endpoint - django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+To fix them run 'python manage.py makemigrations --merge'
+ERROR tests/test_metrics_rate_limit.py::test_rate_limit_applies - django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+To fix them run 'python manage.py makemigrations --merge'
+ERROR tests/test_pagination_limits.py::test_pagination_max_page_size - django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+To fix them run 'python manage.py makemigrations --merge'
+ERROR tests/test_pagination_limits.py::test_pagination_fields_present - django.core.management.base.CommandError: Conflicting migrations detected; multiple leaf nodes in the migration graph: (0002_add_codigo_activa, 0002_empresa_activa_empresa_codigo in empresas; 0005_alter_envio_peso, 0005_envio_peso_optional in envios).
+To fix them run 'python manage.py makemigrations --merge'
+======================== 1 passed, 11 errors in 1.47s =========================

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { enviosAPI } from '../services/api';
+import Skeleton, { SkeletonText, SkeletonRow } from '../components/Skeleton';
 
 // 🇨🇺 VER ENVÍO UNIFICADO - Sin CSS personalizado, con CSS Master
 
@@ -163,11 +164,12 @@ const ShipmentDetail: React.FC = () => {
   // Estados de carga y error
   if (loading) {
     return (
-      <div className="page-container">
-        <div className="d-flex justify-center align-center loading-container">
-          <div className="text-center">
-            <div className="loading-spinner mb-4"></div>
-            <p className="text-muted">Cargando datos del envío...</p>
+      <div className="page-container page-enter">
+        <div className="form-container">
+          <Skeleton width={280} height={28} className="mb-3" />
+          <SkeletonText lines={3} />
+          <div className="mt-4">
+            <SkeletonRow columns={4} />
           </div>
         </div>
       </div>
@@ -215,7 +217,7 @@ const ShipmentDetail: React.FC = () => {
   return (
     <div className="page-container">
       {/* Header */}
-      <div className="page-header">
+  <div className="page-header">
         <div>
           <h1 className="page-title">📦 Envío #{envio.numero_guia}</h1>
           <p className="page-subtitle">
@@ -225,13 +227,13 @@ const ShipmentDetail: React.FC = () => {
         <div className="page-actions">
           <button
             onClick={() => navigate('/gestion')}
-            className="btn btn-secondary"
+    className="btn btn-secondary pressable hover-lift ripple"
           >
             🔙 Volver a Gestión
           </button>
           <button
             onClick={() => navigate(`/envios/editar/${envio.id}`)}
-            className="btn btn-primary"
+    className="btn btn-primary pressable hover-lift ripple"
           >
             ✏️ Editar Envío
           </button>
@@ -385,7 +387,7 @@ const ShipmentDetail: React.FC = () => {
               <select
                 value={nuevoEstado}
                 onChange={(e) => setNuevoEstado(e.target.value)}
-                className="form-control"
+                className="form-control input-focus"
                 aria-label="Seleccionar nuevo estado"
               >
                 <option value="">Seleccionar estado...</option>
@@ -403,7 +405,7 @@ const ShipmentDetail: React.FC = () => {
             <textarea
               value={notasEstado}
               onChange={(e) => setNotasEstado(e.target.value)}
-              className="form-control"
+              className="form-control input-focus"
               rows={3}
               placeholder="Agregar comentarios sobre el cambio de estado..."
               aria-label="Notas del cambio de estado"
@@ -412,7 +414,7 @@ const ShipmentDetail: React.FC = () => {
 
           <button
             onClick={cambiarEstado}
-            className="btn btn-warning"
+            className="btn btn-warning pressable hover-lift ripple"
             disabled={!nuevoEstado || actualizandoEstado}
           >
             {actualizandoEstado ? '⏳ Actualizando...' : '🔄 Cambiar Estado'}
@@ -454,13 +456,13 @@ const ShipmentDetail: React.FC = () => {
         <div className="d-flex gap-3 justify-center">
           <button
             onClick={() => window.print()}
-            className="btn btn-info"
+            className="btn btn-info pressable hover-lift ripple"
           >
             🖨️ Imprimir Detalles
           </button>
           <button
             onClick={() => navigate(`/rastrear/${envio.numero_guia}`)}
-            className="btn btn-secondary"
+            className="btn btn-secondary pressable hover-lift ripple"
           >
             🔍 Ver Seguimiento Público
           </button>

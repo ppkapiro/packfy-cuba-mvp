@@ -9,6 +9,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate
 from django.core.cache import cache
 from django.utils import timezone
+from rest_framework import exceptions as drf_exceptions
 from rest_framework import permissions, status
 from rest_framework.decorators import (
     api_view,
@@ -54,10 +55,22 @@ class SecureTokenObtainPairView(TokenObtainPairView):
         # Log del intento de login
         ip = self._get_client_ip(request)
         user_agent = request.META.get("HTTP_USER_AGENT", "")
-        # Como el modelo Usuario usa email como USERNAME_FIELD, buscamos email
-        email = request.data.get("email", "unknown")
 
-        logger.info(f"Login attempt for username: {email} from IP: {ip}")
+        # ✅ ARREGLO: Aceptar tanto email como username
+        email = request.data.get("email") or request.data.get(
+            "username", "unknown"
+        )
+        password = request.data.get("password")
+
+        # Copiar data para no mutar request.data
+        try:
+            payload = request.data.copy()
+        except Exception:
+            payload = dict(request.data or {})
+        if payload.get("username") and not payload.get("email"):
+            payload["email"] = payload["username"]
+
+        logger.info(f"Login attempt for email: {email} from IP: {ip}")
 
         # Verificar si la IP está bloqueada
         if self._is_ip_blocked(ip):
@@ -71,50 +84,81 @@ class SecureTokenObtainPairView(TokenObtainPairView):
             )
 
         # Validación de campos requeridos
-        if not email or not request.data.get("password"):
+        if not email or not password:
             self._log_failed_attempt(ip, email, "missing_credentials")
             return Response(
                 {
                     "error": "Invalid credentials",
-                    "detail": "Email and password are required",
+                    "detail": "Email/username and password are required",
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         try:
-            # Autenticación
-            response = super().post(request, *args, **kwargs)
+            # Autenticación usando el serializer directamente (sin mutar request)
+            serializer = self.get_serializer(data=payload)
+            serializer.is_valid(raise_exception=True)
+            data = dict(serializer.validated_data)
 
-            if response.status_code == 200:
-                # Login exitoso - buscar usuario por email ya que es el USERNAME_FIELD
-                user = Usuario.objects.get(email=email)
+            # Login exitoso - buscar usuario por email ya que es el USERNAME_FIELD
+            try:
+                user = Usuario.objects.get(email=payload.get("email", ""))
+            except Usuario.DoesNotExist:
+                user = None
+            if user:
                 self._log_successful_login(user, ip, user_agent)
-
-                # Crear tokens seguros
-                tokens = AuthenticationService.create_tokens_for_user(
-                    user, request
-                )
-
-                # Agregar información adicional
-                response.data.update(
-                    {
-                        "user": UsuarioSerializer(user).data,
-                        "login_time": timezone.now().isoformat(),
-                        "device_registered": True,
-                    }
-                )
-
-                # Limpiar intentos fallidos
-                self._clear_failed_attempts(ip)
-
+                # Crear tokens seguros (opcional, mantenemos los del serializer)
+                # AuthenticationService.create_tokens_for_user(user, request)
+                extra = {
+                    "user": UsuarioSerializer(user).data,
+                    "login_time": timezone.now().isoformat(),
+                    "device_registered": True,
+                }
             else:
-                # Login fallido
+                extra = {
+                    "login_time": timezone.now().isoformat(),
+                    "device_registered": True,
+                }
+
+            # Limpiar intentos fallidos
+            self._clear_failed_attempts(ip)
+
+            data.update(extra)
+            return Response(data, status=status.HTTP_200_OK)
+
+        except (InvalidToken, TokenError) as e:
+            # Credenciales inválidas o token error → 401
+            logger.warning(f"Login failed for {email} from IP {ip}: {str(e)}")
+            self._log_failed_attempt(ip, email, "invalid_credentials")
+            self._track_failed_attempt(ip)
+            return Response(
+                {
+                    "error": "Invalid credentials",
+                    "detail": "Email/username or password incorrect",
+                },
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+        except drf_exceptions.ValidationError as e:
+            # Errores de validación (credenciales inválidas) → 401/400
+            self._log_failed_attempt(ip, email, "invalid_credentials")
+            self._track_failed_attempt(ip)
+            return Response(
+                {"error": "Invalid credentials"},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+        except Exception as e:
+            # Si viene de validación de serializer (p.ej., 400 Bad Request), respóndalo adecuadamente
+            msg = str(e)
+            if (
+                "No active account found" in msg
+                or "no tiene una cuenta activa" in msg.lower()
+            ):
                 self._log_failed_attempt(ip, email, "invalid_credentials")
                 self._track_failed_attempt(ip)
-
-            return response
-
-        except Exception as e:
+                return Response(
+                    {"error": "Invalid credentials"},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
             logger.error(f"Login error for {email}: {str(e)}")
             self._log_failed_attempt(ip, email, "system_error")
             return Response(

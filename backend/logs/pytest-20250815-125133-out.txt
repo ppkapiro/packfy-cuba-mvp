@@ -1,0 +1,15 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.7, pytest-8.4.1, pluggy-1.6.0 -- C:\Users\pepec\Projects\Packfy\paqueteria-cuba-mvp\backend\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+django: version: 4.2.23, settings: config.settings_test (from env)
+rootdir: C:\Users\pepec\Projects\Packfy\paqueteria-cuba-mvp\backend
+configfile: pytest.ini
+plugins: cov-6.2.1, django-4.11.1
+collecting ... collected 4 items
+
+tests/test_envios_api.py::TestEnvioAPI::test_create_envio_valid_data PASSED [ 25%]
+tests/test_envios_api.py::TestEnvioAPI::test_list_envios_authenticated PASSED [ 50%]
+tests/test_envios_api.py::TestEnvioAPI::test_list_envios_unauthenticated PASSED [ 75%]
+tests/test_envios_api.py::TestEnvioAPI::test_user_cannot_access_other_company_envios PASSED [100%]
+
+============================== 4 passed in 2.03s ==============================

@@ -41,11 +41,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       const response = await authAPI.refresh(refreshToken);
-      const { access } = response.data;
-      
+      const { access } = (response.data as { access: string });
+
       localStorage.setItem('token', access);
       setToken(access);
-      
+
       console.log('Token renovado correctamente');
       return true;
     } catch (error) {
@@ -87,21 +87,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const checkToken = async () => {
       // Verificar si hay un token en localStorage al cargar la página
       const storedToken = localStorage.getItem('token');
-      
+
       if (storedToken) {
         // Establecer el token en el estado
         setToken(storedToken);
-        
+
         try {
           // Intentar decodificar el token para verificar su validez
           const tokenParts = storedToken.split('.');
           if (tokenParts.length !== 3) {
             throw new Error('Formato de token inválido');
           }
-          
+
           const tokenData = JSON.parse(atob(tokenParts[1]));
           const expirationTime = tokenData.exp * 1000; // Convertir a milisegundos
-          
+
           // Si el token está a punto de expirar o ya expiró, intentar renovarlo
           if (Date.now() >= expirationTime || expirationTime - Date.now() < 300000) { // Expirado o menor a 5 minutos
             console.log('AuthContext: Token expirado o próximo a expirar, intentando renovarlo');
@@ -113,7 +113,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               return;
             }
           }
-          
+
           // Obtener la información del usuario
           await fetchUserData();
         } catch (error) {
@@ -125,8 +125,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading(false);
       }
     };
-    
+
     checkToken();
+  }, []);
+
+  // Escuchar señal global de sesión inválida (emitida por api.ts)
+  useEffect(() => {
+    const handler = () => {
+      console.warn('AuthContext: Sesión inválida detectada, cerrando sesión');
+      logout();
+      try {
+        // Redireccionar al login si estamos en ruta protegida
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login';
+        }
+      } catch {}
+    };
+    window.addEventListener('auth:invalid' as any, handler);
+    return () => window.removeEventListener('auth:invalid' as any, handler);
   }, []);
 
   // Función para iniciar sesión
@@ -134,35 +150,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       setIsLoading(true);
       console.log('Iniciando login con:', { email });
-      
+
       const response = await authAPI.login(email, password);
       console.log('Respuesta de login:', response);
-      
+
       // Verificar si la respuesta es exitosa
       if (response.error) {
         throw new Error(response.error);
       }
-      
+
       const { access, refresh } = response.data as { access: string; refresh: string };
-      
+
       // Limpiar tokens anteriores para evitar problemas
       localStorage.removeItem('token');
       localStorage.removeItem('refreshToken');
-      
+
       // Guardar tokens nuevos
       localStorage.setItem('token', access);
       localStorage.setItem('refreshToken', refresh);
-        
+
       // Actualizar estado
       setToken(access);
       console.log('Token guardado en localStorage');
-      
+
       console.log('Token guardado, obteniendo datos del usuario...');
         // Obtener datos del usuario
       try {
         await fetchUserData();
         console.log('Datos del usuario obtenidos correctamente');
-        
+
         // Añadir una señal de que la autenticación fue exitosa para ayudar en caso de problemas de navegación
         sessionStorage.setItem('_auth_success', 'true');
         sessionStorage.setItem('_auth_timestamp', new Date().toISOString());

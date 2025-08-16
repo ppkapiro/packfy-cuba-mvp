@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🇨🇺 Packfy Cuba - Test Móvil</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #001122;
+            color: white;
+            text-align: center;
+        }
+        .success { color: #00ff00; font-size: 24px; margin: 20px 0; }
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            background: #0066cc;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 18px;
+        }
+        .info { background: #333; padding: 15px; margin: 10px 0; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <h1>🇨🇺 Packfy Cuba</h1>
+    <div class="success">✅ Test Móvil Exitoso</div>
+
+    <div class="info">
+        <h3>📱 Tu dispositivo:</h3>
+        <p id="device-info"></p>
+        <p id="time-info"></p>
+    </div>
+
+    <div class="info">
+        <h3>🌐 Conexión:</h3>
+        <p>Servidor: 192.168.12.178:5173</p>
+        <p>Protocolo: HTTPS</p>
+        <p>Estado: CONECTADO</p>
+    </div>
+
+    <a href="/?nocache=true&mobile=true&t=20250814190422" class="button">
+        🚀 Ir a Packfy Cuba
+    </a>
+
+    <div style="margin-top: 30px;">
+        <p>Si el botón de arriba da HTTP 500,</p>
+        <p>el problema está en la aplicación React.</p>
+    </div>
+
+    <script>
+        document.getElementById('device-info').textContent = navigator.userAgent;
+        document.getElementById('time-info').textContent = 'Hora: ' + new Date().toLocaleString();
+
+        // Log para debugging
+        console.log('🇨🇺 Test móvil cargado exitosamente');
+        console.log('Dispositivo:', navigator.userAgent);
+        console.log('Pantalla:', screen.width + 'x' + screen.height);
+        console.log('URL:', window.location.href);
+    </script>
+</body>
+</html>

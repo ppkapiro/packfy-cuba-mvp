@@ -1,3 +1,6 @@
+import logging
+
+from django.core.cache import cache
 from django.db import transaction
 from rest_framework import filters, permissions, status, viewsets
 from rest_framework.decorators import action, permission_classes
@@ -74,6 +77,15 @@ class EnvioViewSet(viewsets.ModelViewSet):
             ip = request.META.get("REMOTE_ADDR")
         return ip
 
+    def get_queryset(self):
+        qs = Envio.objects.all()
+        user = getattr(self.request, "user", None)
+        if user and user.is_authenticated:
+            empresa = getattr(user, "empresa", None)
+            if empresa:
+                qs = qs.filter(empresa=empresa)
+        return qs
+
     def perform_create(self, serializer):
         """
         Al crear un envío, registramos el usuario que lo creó y
@@ -82,7 +94,10 @@ class EnvioViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             # Guardar el envío con el usuario actual como creador
             envio = serializer.save(
-                creado_por=self.request.user, actualizado_por=self.request.user
+                creado_por=self.request.user,
+                actualizado_por=self.request.user,
+                usuario=self.request.user,
+                empresa=getattr(self.request.user, "empresa", None),
             )
 
             # Crear el primer registro en el historial
@@ -95,6 +110,24 @@ class EnvioViewSet(viewsets.ModelViewSet):
 
             # Enviar notificación de creación
             enviar_notificacion_estado(envio)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            # Log de depuración: mostrar errores del serializer
+            logger = logging.getLogger(__name__)
+            try:
+                logger.debug({"envio_create_errors": serializer.errors})
+            except Exception:
+                pass
+            return Response(
+                serializer.errors, status=status.HTTP_400_BAD_REQUEST
+            )
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
 
     def perform_update(self, serializer):
         """
@@ -167,17 +200,12 @@ class EnvioViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"], permission_classes=[AllowAny])
     def rastrear(self, request):
         """
-        Endpoint público para rastrear un envío por su número de guía
-        Se implementa rate limiting para prevenir abusos
+        Endpoint público para rastrear un envío por su número de guía.
         """
-        # Verificar si hay demasiadas peticiones desde la misma IP
-        ip = self.get_client_ip(request)
+        # Nota: Para rate limiting real se recomienda Redis u otro backend de caché distribuido.
+        _ = self.get_client_ip(request)
 
-        # En una implementación real usaríamos un sistema de caché como Redis
-        # para limitar las peticiones por IP
-
-        numero_guia = request.query_params.get("numero_guia", None)
-
+        numero_guia = request.query_params.get("numero_guia")
         if not numero_guia:
             return Response(
                 {"error": "Se requiere el parámetro numero_guia"},
@@ -185,29 +213,15 @@ class EnvioViewSet(viewsets.ModelViewSet):
             )
 
         # Sanitizar la entrada para evitar posibles inyecciones
-        numero_guia = numero_guia.strip()[:50]  # Limitar longitud
+        numero_guia = numero_guia.strip()[:50]
+
+        cache_key = f"rastrear:{numero_guia}"
+        cached = cache.get(cache_key)
+        if cached:
+            return Response(cached)
 
         try:
             envio = Envio.objects.get(numero_guia=numero_guia)
-            # Usar un serializer simplificado que solo incluye la información pública
-            data = {
-                "numero_guia": envio.numero_guia,
-                "estado": envio.estado_actual,
-                "estado_display": envio.get_estado_actual_display(),
-                "remitente_nombre": envio.remitente_nombre,
-                "destinatario_nombre": envio.destinatario_nombre,
-                "fecha_actualizacion": envio.ultima_actualizacion,
-                "historial": [
-                    {
-                        "estado": h.estado,
-                        "fecha": h.fecha,
-                        "comentario": h.comentario,
-                        "ubicacion": h.ubicacion,
-                    }
-                    for h in envio.historial.all().order_by("-fecha")
-                ],
-            }
-            return Response(data)
         except Envio.DoesNotExist:
             return Response(
                 {
@@ -215,6 +229,27 @@ class EnvioViewSet(viewsets.ModelViewSet):
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
+
+        # Usar un serializer simplificado que solo incluye la información pública
+        data = {
+            "numero_guia": envio.numero_guia,
+            "estado": envio.estado_actual,
+            "estado_display": envio.get_estado_actual_display(),
+            "remitente_nombre": envio.remitente_nombre,
+            "destinatario_nombre": envio.destinatario_nombre,
+            "fecha_actualizacion": envio.ultima_actualizacion,
+            "historial": [
+                {
+                    "estado": h.estado,
+                    "fecha": h.fecha,
+                    "comentario": h.comentario,
+                    "ubicacion": h.ubicacion,
+                }
+                for h in envio.historial.all().order_by("-fecha")
+            ],
+        }
+        cache.set(cache_key, data, timeout=30)  # Cache 30s
+        return Response(data)
 
     @action(detail=False, methods=["get"], permission_classes=[AllowAny])
     def buscar_por_remitente(self, request):
@@ -271,6 +306,81 @@ class EnvioViewSet(viewsets.ModelViewSet):
                 {"error": f"Error en la búsqueda: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
+    @action(
+        detail=False,
+        methods=["get"],
+        permission_classes=[AllowAny],
+    )
+    def estadisticas(self, request):
+        """Estadísticas agregadas simples por estado (cache 60s)."""
+        from datetime import timedelta
+
+        from django.db import connection
+        from django.db.models import Count
+        from django.utils import timezone
+
+        cache_key = "envios:estadisticas:v1"
+        cached = cache.get(cache_key)
+        if cached:
+            return Response(cached)
+
+        data = None
+        try:
+            with connection.cursor() as cur:
+                cur.execute(
+                    "SELECT estado_actual, total FROM envio_estado_stats"
+                )
+                rows = cur.fetchall()
+                total_envios = sum(r[1] for r in rows)
+                data = {
+                    "total": total_envios,
+                    "por_estado": {r[0]: r[1] for r in rows},
+                    "origen": "matview",
+                }
+        except Exception:
+            # Fallback directo si la vista no existe
+            qs = (
+                Envio.objects.values("estado_actual")
+                .annotate(total=Count("id"))
+                .order_by("estado_actual")
+            )
+            total_envios = sum(r["total"] for r in qs)
+            data = {
+                "total": total_envios,
+                "por_estado": {r["estado_actual"]: r["total"] for r in qs},
+                "origen": "query",
+            }
+
+        # Métricas adicionales (no presentes en la matview):
+        today_start = timezone.now().replace(
+            hour=0, minute=0, second=0, microsecond=0
+        )
+        seven_days_ago = timezone.now() - timedelta(days=7)
+        pendientes = Envio.objects.exclude(
+            estado_actual__in=["ENTREGADO", "CANCELADO", "DEVUELTO"]
+        ).count()
+        entregados_hoy = Envio.objects.filter(
+            estado_actual="ENTREGADO", ultima_actualizacion__gte=today_start
+        ).count()
+        recientes = Envio.objects.filter(
+            fecha_creacion__gte=seven_days_ago
+        ).count()
+
+        # Añadir claves snake y camel para compatibilidad con frontend
+        por_estado = data.get("por_estado", {}) if data else {}
+        data = data or {"total": 0, "por_estado": {}, "origen": "query"}
+        data.update(
+            {
+                "pendientes": pendientes,
+                "entregados_hoy": entregados_hoy,
+                "recientes": recientes,
+                "porEstado": por_estado,
+                "entregadosHoy": entregados_hoy,
+            }
+        )
+        cache.set(cache_key, data, 60)
+        return Response(data)
 
     @action(detail=False, methods=["get"], permission_classes=[AllowAny])
     def buscar_por_destinatario(self, request):

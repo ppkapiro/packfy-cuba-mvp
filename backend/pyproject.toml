@@ -1,0 +1,20 @@
+# Ruff configuración mínima
+[tool.ruff]
+line-length = 100
+indent-width = 4
+src = ["config", "envios", "usuarios", "empresas", "utils", "tests"]
+preview = true
+
+[tool.ruff.lint]
+select = [
+  "E", # pycodestyle errors
+  "F", # pyflakes
+  "I", # isort
+]
+ignore = [
+  "E203", # whitespace before ':' (compat con black)
+  "E501", # long lines (controlado por line-length)
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["config", "envios", "usuarios", "empresas", "utils"]

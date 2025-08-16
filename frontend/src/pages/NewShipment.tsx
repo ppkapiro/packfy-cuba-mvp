@@ -126,11 +126,11 @@ const NewShipment = () => {
           <h1 className="page-title">📦 Nuevo Envío</h1>
           <p className="page-subtitle">Registra un nuevo paquete en el sistema</p>
         </div>
-        <div className="page-actions">
+    <div className="page-actions">
           <button
             type="button"
             onClick={() => navigate('/dashboard')}
-            className="btn btn-secondary"
+      className="btn btn-secondary pressable hover-lift ripple"
           >
             🔙 Volver al Dashboard
           </button>
@@ -197,7 +197,7 @@ const NewShipment = () => {
                 step="0.01"
                 id="valor_declarado"
                 {...register('valor_declarado', { required: true, min: 0 })}
-                className={`form-control ${errors.valor_declarado ? 'is-invalid' : ''}`}
+                className={`form-control input-focus ${errors.valor_declarado ? 'is-invalid' : ''}`}
               />
               {errors.valor_declarado && <span className="error-message">Valor inválido</span>}
             </div>
@@ -209,7 +209,7 @@ const NewShipment = () => {
                 step="0.01"
                 id="peso"
                 {...register('peso', { required: true, min: 0.01 })}
-                className={`form-control ${errors.peso ? 'is-invalid' : ''}`}
+                className={`form-control input-focus ${errors.peso ? 'is-invalid' : ''}`}
               />
               {errors.peso && <span className="error-message">Valor inválido</span>}
             </div>
@@ -220,7 +220,7 @@ const NewShipment = () => {
             <textarea
               id="descripcion"
               {...register('descripcion', { required: true })}
-              className={`form-control ${errors.descripcion ? 'is-invalid' : ''}`}
+              className={`form-control input-focus ${errors.descripcion ? 'is-invalid' : ''}`}
               rows={3}
             />
             {errors.descripcion && <span className="error-message">Este campo es requerido</span>}
@@ -234,7 +234,7 @@ const NewShipment = () => {
                 step="0.01"
                 id="alto"
                 {...register('alto', { required: true, min: 0.01 })}
-                className={`form-control ${errors.alto ? 'is-invalid' : ''}`}
+                className={`form-control input-focus ${errors.alto ? 'is-invalid' : ''}`}
               />
               {errors.alto && <span className="error-message">Valor inválido</span>}
             </div>
@@ -246,7 +246,7 @@ const NewShipment = () => {
                 step="0.01"
                 id="ancho"
                 {...register('ancho', { required: true, min: 0.01 })}
-                className={`form-control ${errors.ancho ? 'is-invalid' : ''}`}
+                className={`form-control input-focus ${errors.ancho ? 'is-invalid' : ''}`}
               />
               {errors.ancho && <span className="error-message">Valor inválido</span>}
             </div>
@@ -258,7 +258,7 @@ const NewShipment = () => {
                 step="0.01"
                 id="largo"
                 {...register('largo', { required: true, min: 0.01 })}
-                className={`form-control ${errors.largo ? 'is-invalid' : ''}`}
+                className={`form-control input-focus ${errors.largo ? 'is-invalid' : ''}`}
               />
               {errors.largo && <span className="error-message">Valor inválido</span>}
             </div>
@@ -276,7 +276,7 @@ const NewShipment = () => {
                 type="text"
                 id="remitente_nombre"
                 {...register('remitente_nombre', { required: true })}
-                className={`form-control ${errors.remitente_nombre ? 'is-invalid' : ''}`}
+                className={`form-control input-focus ${errors.remitente_nombre ? 'is-invalid' : ''}`}
               />
               {errors.remitente_nombre && <span className="error-message">Este campo es requerido</span>}
             </div>
@@ -287,7 +287,7 @@ const NewShipment = () => {
                 type="tel"
                 id="remitente_telefono"
                 {...register('remitente_telefono', { required: true })}
-                className={`form-control ${errors.remitente_telefono ? 'is-invalid' : ''}`}
+                className={`form-control input-focus ${errors.remitente_telefono ? 'is-invalid' : ''}`}
               />
               {errors.remitente_telefono && <span className="error-message">Este campo es requerido</span>}
             </div>
@@ -299,7 +299,7 @@ const NewShipment = () => {
               <textarea
                 id="remitente_direccion"
                 {...register('remitente_direccion', { required: true })}
-                className={`form-control ${errors.remitente_direccion ? 'is-invalid' : ''}`}
+                className={`form-control input-focus ${errors.remitente_direccion ? 'is-invalid' : ''}`}
                 rows={2}
               />
               {errors.remitente_direccion && <span className="error-message">Este campo es requerido</span>}
@@ -311,7 +311,7 @@ const NewShipment = () => {
                 type="email"
                 id="remitente_email"
                 {...register('remitente_email', { required: true })}
-                className={`form-control ${errors.remitente_email ? 'is-invalid' : ''}`}
+                className={`form-control input-focus ${errors.remitente_email ? 'is-invalid' : ''}`}
               />
               {errors.remitente_email && <span className="error-message">Este campo es requerido</span>}
             </div>
@@ -329,7 +329,7 @@ const NewShipment = () => {
                 type="text"
                 id="destinatario_nombre"
                 {...register('destinatario_nombre', { required: true })}
-                className={`form-control ${errors.destinatario_nombre ? 'is-invalid' : ''}`}
+                className={`form-control input-focus ${errors.destinatario_nombre ? 'is-invalid' : ''}`}
               />
               {errors.destinatario_nombre && <span className="error-message">Este campo es requerido</span>}
             </div>
@@ -340,7 +340,7 @@ const NewShipment = () => {
                 type="tel"
                 id="destinatario_telefono"
                 {...register('destinatario_telefono', { required: true })}
-                className={`form-control ${errors.destinatario_telefono ? 'is-invalid' : ''}`}
+                className={`form-control input-focus ${errors.destinatario_telefono ? 'is-invalid' : ''}`}
               />
               {errors.destinatario_telefono && <span className="error-message">Este campo es requerido</span>}
             </div>
@@ -352,7 +352,7 @@ const NewShipment = () => {
               <textarea
                 id="destinatario_direccion"
                 {...register('destinatario_direccion', { required: true })}
-                className={`form-control ${errors.destinatario_direccion ? 'is-invalid' : ''}`}
+                className={`form-control input-focus ${errors.destinatario_direccion ? 'is-invalid' : ''}`}
                 rows={2}
               />
               {errors.destinatario_direccion && <span className="error-message">Este campo es requerido</span>}
@@ -364,7 +364,7 @@ const NewShipment = () => {
                 type="email"
                 id="destinatario_email"
                 {...register('destinatario_email', { required: true })}
-                className={`form-control ${errors.destinatario_email ? 'is-invalid' : ''}`}
+                className={`form-control input-focus ${errors.destinatario_email ? 'is-invalid' : ''}`}
               />
               {errors.destinatario_email && <span className="error-message">Este campo es requerido</span>}
             </div>
@@ -382,7 +382,7 @@ const NewShipment = () => {
                 type="date"
                 id="fecha_entrega_estimada"
                 {...register('fecha_entrega_estimada')}
-                className="form-control"
+                className="form-control input-focus"
                 min={new Date().toISOString().split('T')[0]}
               />
             </div>
@@ -392,7 +392,7 @@ const NewShipment = () => {
               <textarea
                 id="notas"
                 {...register('notas')}
-                className="form-control"
+                className="form-control input-focus"
                 rows={2}
                 placeholder="Instrucciones especiales, comentarios, etc."
               />
@@ -405,7 +405,7 @@ const NewShipment = () => {
           <button
             type="submit"
             disabled={loading}
-            className="btn btn-primary btn-lg"
+            className="btn btn-primary btn-lg pressable hover-lift ripple"
           >
             {loading ? '⏳ Creando...' : '📦 Crear Envío'}
           </button>
@@ -413,7 +413,7 @@ const NewShipment = () => {
           <button
             type="button"
             onClick={() => navigate('/dashboard')}
-            className="btn btn-secondary btn-lg"
+            className="btn btn-secondary btn-lg pressable hover-lift ripple"
           >
             ❌ Cancelar
           </button>

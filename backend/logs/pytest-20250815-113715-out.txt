@@ -1,0 +1,106 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.7, pytest-8.4.1, pluggy-1.6.0 -- C:\Users\pepec\Projects\Packfy\paqueteria-cuba-mvp\backend\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+django: version: 4.2.23, settings: config.settings_test (from env)
+rootdir: C:\Users\pepec\Projects\Packfy\paqueteria-cuba-mvp\backend
+configfile: pytest.ini
+plugins: cov-6.2.1, django-4.11.1
+collecting ... collected 12 items
+
+tests/test_cache_rastrear.py::test_rastrear_cache PASSED                 [  8%]
+tests/test_envios_api.py::TestEnvioAPI::test_create_envio_valid_data FAILED [ 16%]
+tests/test_envios_api.py::TestEnvioAPI::test_list_envios_authenticated FAILED [ 25%]
+tests/test_envios_api.py::TestEnvioAPI::test_list_envios_unauthenticated FAILED [ 33%]
+tests/test_envios_api.py::TestEnvioAPI::test_user_cannot_access_other_company_envios FAILED [ 41%]
+tests/test_envios_estadisticas.py::test_estadisticas_endpoint FAILED     [ 50%]
+tests/test_logging_request_id.py::test_request_id_and_logging PASSED     [ 58%]
+tests/test_metrics_rate_limit.py::test_metrics_endpoint PASSED           [ 66%]
+tests/test_metrics_rate_limit.py::test_rate_limit_applies PASSED         [ 75%]
+tests/test_pagination_limits.py::test_pagination_max_page_size FAILED    [ 83%]
+tests/test_pagination_limits.py::test_pagination_fields_present FAILED   [ 91%]
+tests/test_smoke.py::test_smoke PASSED                                   [100%]
+
+================================== FAILURES ===================================
+__________________ TestEnvioAPI.test_create_envio_valid_data __________________
+tests\test_envios_api.py:47: in setUp
+    self.envio = Envio.objects.create(
+.venv\Lib\site-packages\django\db\models\manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\models\query.py:656: in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\models\base.py:567: in __init__
+    raise TypeError(
+E   TypeError: Envio() got unexpected keyword arguments: 'usuario', 'empresa'
+_________________ TestEnvioAPI.test_list_envios_authenticated _________________
+tests\test_envios_api.py:47: in setUp
+    self.envio = Envio.objects.create(
+.venv\Lib\site-packages\django\db\models\manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\models\query.py:656: in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\models\base.py:567: in __init__
+    raise TypeError(
+E   TypeError: Envio() got unexpected keyword arguments: 'usuario', 'empresa'
+________________ TestEnvioAPI.test_list_envios_unauthenticated ________________
+tests\test_envios_api.py:47: in setUp
+    self.envio = Envio.objects.create(
+.venv\Lib\site-packages\django\db\models\manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\models\query.py:656: in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\models\base.py:567: in __init__
+    raise TypeError(
+E   TypeError: Envio() got unexpected keyword arguments: 'usuario', 'empresa'
+__________ TestEnvioAPI.test_user_cannot_access_other_company_envios __________
+tests\test_envios_api.py:47: in setUp
+    self.envio = Envio.objects.create(
+.venv\Lib\site-packages\django\db\models\manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\models\query.py:656: in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\django\db\models\base.py:567: in __init__
+    raise TypeError(
+E   TypeError: Envio() got unexpected keyword arguments: 'usuario', 'empresa'
+_________________________ test_estadisticas_endpoint __________________________
+tests\test_envios_estadisticas.py:41: in test_estadisticas_endpoint
+    assert r.status_code == 200
+E   assert 404 == 200
+E    +  where 404 = <HttpResponseNotFound status_code=404, "text/html; charset=utf-8">.status_code
+------------------------------ Captured log call ------------------------------
+WARNING  django.request:log.py:246 Not Found: /api/envios/estadisticas/
+________________________ test_pagination_max_page_size ________________________
+tests\test_pagination_limits.py:12: in test_pagination_max_page_size
+    assert r.status_code == 200
+E   assert 404 == 200
+E    +  where 404 = <HttpResponseNotFound status_code=404, "text/html; charset=utf-8">.status_code
+------------------------------ Captured log call ------------------------------
+INFO     config.logging_context:logging_context.py:37 request
+WARNING  django.request:log.py:246 Not Found: /api/envios/
+_______________________ test_pagination_fields_present ________________________
+tests\test_pagination_limits.py:21: in test_pagination_fields_present
+    assert r.status_code == 200
+E   assert 404 == 200
+E    +  where 404 = <HttpResponseNotFound status_code=404, "text/html; charset=utf-8">.status_code
+------------------------------ Captured log call ------------------------------
+INFO     config.logging_context:logging_context.py:37 request
+WARNING  django.request:log.py:246 Not Found: /api/envios/
+=========================== short test summary info ===========================
+FAILED tests/test_envios_api.py::TestEnvioAPI::test_create_envio_valid_data - TypeError: Envio() got unexpected keyword arguments: 'usuario', 'empresa'
+FAILED tests/test_envios_api.py::TestEnvioAPI::test_list_envios_authenticated - TypeError: Envio() got unexpected keyword arguments: 'usuario', 'empresa'
+FAILED tests/test_envios_api.py::TestEnvioAPI::test_list_envios_unauthenticated - TypeError: Envio() got unexpected keyword arguments: 'usuario', 'empresa'
+FAILED tests/test_envios_api.py::TestEnvioAPI::test_user_cannot_access_other_company_envios - TypeError: Envio() got unexpected keyword arguments: 'usuario', 'empresa'
+FAILED tests/test_envios_estadisticas.py::test_estadisticas_endpoint - assert 404 == 200
+ +  where 404 = <HttpResponseNotFound status_code=404, "text/html; charset=utf-8">.status_code
+FAILED tests/test_pagination_limits.py::test_pagination_max_page_size - assert 404 == 200
+ +  where 404 = <HttpResponseNotFound status_code=404, "text/html; charset=utf-8">.status_code
+FAILED tests/test_pagination_limits.py::test_pagination_fields_present - assert 404 == 200
+ +  where 404 = <HttpResponseNotFound status_code=404, "text/html; charset=utf-8">.status_code
+========================= 7 failed, 5 passed in 3.82s =========================

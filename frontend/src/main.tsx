@@ -1,8 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
-import './styles/master-unified.css'
-import './styles/main.css'
+import { ThemeProvider } from './contexts/ThemeContext'
+// 🇨🇺 CSS OPTIMIZADO - ARCHIVO ÚNICO PARA MEJOR RENDIMIENTO
+import './styles/packfy-master-v6.css' // ✅ ARCHIVO MASTER ÚNICO Y OPTIMIZADO
 
 // 📱 Service Worker PWA optimizado para móvil
 if ('serviceWorker' in navigator) {
@@ -81,6 +82,8 @@ document.addEventListener('gesturestart', function (e) {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
   </React.StrictMode>,
 )

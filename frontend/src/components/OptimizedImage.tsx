@@ -2,7 +2,6 @@
 // Compresión automática y lazy loading de imágenes
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import '../styles/components/images.css'
 
 interface OptimizedImageProps {
   src: string

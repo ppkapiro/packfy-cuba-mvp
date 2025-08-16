@@ -1,6 +1,6 @@
-// 🛡️ Componente de Ruta Protegida - Modernizado
+// 🛡️ Componente de Ruta Protegida - Modernizado (AuthContext)
 import { Navigate } from 'react-router-dom'
-import { useAuthStore } from '../stores/authStore'
+import { useAuth } from '../contexts/AuthContext'
 import LoadingSpinner from './LoadingSpinner'
 
 interface ProtectedRouteProps {
@@ -8,7 +8,7 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isAuthenticated, isLoading, token } = useAuthStore()
+  const { isAuthenticated, isLoading, token } = useAuth()
 
   // Mostrar loading mientras se verifica la autenticación
   if (isLoading) {
