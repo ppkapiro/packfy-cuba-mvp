@@ -6,6 +6,11 @@ __pycache__/
 *.pyd
 .Python
 env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
 pip-log.txt
 pip-delete-this-directory.txt
 .tox
@@ -43,6 +48,14 @@ Thumbs.db
 .env.development.local
 .env.test.local
 .env.production.local
+.env.https
+
+# Certificates
+*.pem
+*.crt
+*.key
+*.p12
+certs/
 
 # Build outputs
 dist/

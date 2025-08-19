@@ -4,11 +4,11 @@ Sistema moderno de gestión de envíos para Cuba con **Progressive Web App (PWA)
 
 ## 🎉 **PROYECTO COMPLETADO - V2.0.0**
 
-✅ **PWA 100% Funcional en Móvil**  
-✅ **Backend API Completo**  
-✅ **Frontend React Responsive**  
-✅ **Autenticación JWT**  
-✅ **Base de Datos Configurada**  
+✅ **PWA 100% Funcional en Móvil**
+✅ **Backend API Completo**
+✅ **Frontend React Responsive**
+✅ **Autenticación JWT**
+✅ **Base de Datos Configurada**
 ✅ **Docker Compose Listo**
 
 ---
@@ -16,15 +16,18 @@ Sistema moderno de gestión de envíos para Cuba con **Progressive Web App (PWA)
 ## 🚀 **Inicio Rápido**
 
 ### **1. Iniciar el proyecto**
+
 ```powershell
 docker-compose up -d
 ```
 
 ### **2. Acceder a la aplicación**
+
 - **Web:** http://localhost:5173
 - **Móvil:** http://[TU-IP]:5173
 
 ### **3. Credenciales de prueba**
+
 ```
 Email: test@test.com
 Password: 123456
@@ -35,8 +38,8 @@ Password: 123456
 ## 📱 **Características PWA**
 
 - 🎯 **Gestión completa de envíos** (crear, editar, cancelar, seguimiento)
-- 👥 **Sistema de autenticación JWT** robusto  
-- 🏢 **Gestión multi-empresa** con middleware de tenant
+- 👥 **Sistema de autenticación JWT** robusto
+- 🏢 **Gestión de empresas** simplificada
 - 📧 **Sistema de notificaciones** automáticas
 - 📱 **PWA instalable** en móviles
 - 🔄 **Service Worker** optimizado
@@ -47,13 +50,15 @@ Password: 123456
 ## 🛠 **Tecnologías**
 
 ### Frontend
+
 - **React 18** - Framework de UI moderno
-- **TypeScript** - Tipado estático para JavaScript  
+- **TypeScript** - Tipado estático para JavaScript
 - **Vite** - Build tool ultrarrápido
 - **PWA** - Progressive Web App con Service Worker
 - **Responsive Design** - Adaptable a todos los dispositivos
 
-### Backend  
+### Backend
+
 - **Django 5.2** - Framework web Python de alto nivel
 - **Django REST Framework** - API REST robusta
 - **JWT Authentication** - Autenticación segura con tokens
@@ -61,8 +66,9 @@ Password: 123456
 - **CORS** - Configurado para desarrollo y producción
 
 ### DevOps & Herramientas
+
 - **Docker** - Containerización completa
-- **Docker Compose** - Orquestación de servicios  
+- **Docker Compose** - Orquestación de servicios
 - **Git** - Control de versiones
 - **PowerShell Scripts** - Automatización de desarrollo
 
@@ -71,6 +77,7 @@ Password: 123456
 ## 📋 **Instalación y Configuración**
 
 ### Prerequisitos
+
 - Docker Desktop instalado y en ejecución
 - Git para clonar el repositorio
 - PowerShell (Windows) o Terminal (Linux/Mac)
@@ -78,17 +85,20 @@ Password: 123456
 ### Pasos de instalación
 
 1. **Clonar el repositorio**
+
    ```bash
    git clone https://github.com/ppkapiro/packfy-cuba-mvp.git
    cd packfy-cuba-mvp
    ```
 
 2. **Iniciar con Docker** (recomendado)
+
    ```powershell
    docker-compose up -d
    ```
 
 3. **Verificar que todo funcione**
+
    ```bash
    docker-compose ps
    ```
@@ -103,7 +113,7 @@ Password: 123456
 ## 🔑 **Usuarios de Prueba**
 
 ```text
-Email: test@test.com  
+Email: test@test.com
 Password: 123456
 
 Admin: admin@packfy.com
@@ -117,11 +127,13 @@ Password: admin123
 ### Para probar en móvil (misma red WiFi):
 
 1. **Obtener IP de tu computadora**
+
    ```powershell
    ipconfig
    ```
 
 2. **Acceder desde móvil**
+
    - Reemplaza `[TU-IP]` con tu IP local
    - Ejemplo: `http://192.168.1.100:5173`
 
@@ -134,11 +146,12 @@ Password: admin123
 ## 🚀 **Comandos Útiles**
 
 ### Desarrollo
+
 ```powershell
 # Iniciar todos los servicios
 docker-compose up -d
 
-# Ver logs en tiempo real  
+# Ver logs en tiempo real
 docker-compose logs -f
 
 # Parar todos los servicios
@@ -152,6 +165,7 @@ docker-compose down
 ```
 
 ### Base de Datos
+
 ```powershell
 # Acceder a la base de datos
 docker-compose exec database psql -U packfy_user -d packfy_db
@@ -172,7 +186,7 @@ packfy-cuba-mvp/
 ├── 📁 backend/              # Django API
 │   ├── config/             # Configuración principal
 │   ├── usuarios/           # App de usuarios
-│   ├── empresas/           # App de empresas  
+│   ├── empresas/           # App de empresas
 │   ├── envios/             # App de envíos
 │   └── scripts/            # Scripts de inicialización
 ├── 📁 frontend/            # React PWA
@@ -193,13 +207,15 @@ packfy-cuba-mvp/
 ## � **Características Destacadas**
 
 ### PWA (Progressive Web App)
+
 - ✅ **Instalable** en dispositivos móviles
 - ✅ **Funciona offline** (básico)
 - ✅ **Service Worker** optimizado
 - ✅ **Responsive** en todos los tamaños de pantalla
 - ✅ **Icons** adaptativos para diferentes dispositivos
 
-### Backend Robusto  
+### Backend Robusto
+
 - ✅ **API REST** completa con documentación automática
 - ✅ **Autenticación JWT** con refresh tokens
 - ✅ **Multi-tenancy** para diferentes empresas
@@ -207,8 +223,9 @@ packfy-cuba-mvp/
 - ✅ **Health checks** para monitoreo
 
 ### Desarrollo Optimizado
+
 - ✅ **Hot reload** en desarrollo
-- ✅ **TypeScript** para mejor mantenibilidad  
+- ✅ **TypeScript** para mejor mantenibilidad
 - ✅ **Docker** para consistency entre entornos
 - ✅ **Scripts automatizados** para tareas comunes
 - ✅ **Logs estructurados** para debugging
@@ -220,17 +237,20 @@ packfy-cuba-mvp/
 ### Variables de Entorno
 
 #### Frontend (`.env`)
+
 ```env
 VITE_API_BASE_URL=http://localhost:8000
 ```
 
 #### Backend (settings.py)
+
 ```python
 DEBUG = True  # Solo para desarrollo
 ALLOWED_HOSTS = ['*']  # Configurar para producción
 ```
 
 ### Personalización
+
 - **Logo y branding**: `frontend/public/`
 - **Colores y tema**: `frontend/src/styles/`
 - **Configuración API**: `frontend/src/services/api.ts`
@@ -240,6 +260,7 @@ ALLOWED_HOSTS = ['*']  # Configurar para producción
 ## 🧪 **Testing**
 
 ### Tests Automáticos
+
 ```powershell
 # Backend tests
 docker-compose exec backend python manage.py test
@@ -249,6 +270,7 @@ docker-compose exec frontend npm test
 ```
 
 ### Testing Manual
+
 - **Web**: <http://localhost:5173>
 - **API Docs**: <http://localhost:8000/api/swagger/>
 - **Admin**: <http://localhost:8000/admin/>
@@ -260,6 +282,7 @@ docker-compose exec frontend npm test
 ### Problemas Comunes
 
 #### "No se puede conectar al servidor"
+
 ```powershell
 # Verificar que los contenedores estén corriendo
 docker-compose ps
@@ -268,7 +291,8 @@ docker-compose ps
 docker-compose logs backend
 ```
 
-#### "Página en blanco en el frontend"  
+#### "Página en blanco en el frontend"
+
 ```powershell
 # Reconstruir el frontend
 docker-compose restart frontend
@@ -278,6 +302,7 @@ docker-compose logs frontend
 ```
 
 #### "Error de base de datos"
+
 ```powershell
 # Recrear la base de datos
 docker-compose down
@@ -286,6 +311,7 @@ docker-compose up -d
 ```
 
 ### Scripts de Diagnóstico
+
 ```powershell
 # Test completo del sistema
 .\verificar-pwa.ps1
@@ -299,18 +325,21 @@ docker-compose up -d
 ## 📈 **Roadmap y Próximas Funcionalidades**
 
 ### 🎯 Corto Plazo
+
 - [ ] Notificaciones push en PWA
 - [ ] Modo offline avanzado
 - [ ] Tests unitarios completos
 - [ ] Optimización de performance
 
-### 🚀 Mediano Plazo  
+### 🚀 Mediano Plazo
+
 - [ ] Geolocalización y mapas
 - [ ] Códigos QR para tracking
 - [ ] Panel de analytics
 - [ ] API pública para integraciones
 
 ### 🌟 Largo Plazo
+
 - [ ] App móvil nativa
 - [ ] Inteligencia artificial para predicciones
 - [ ] Marketplace de paqueterías
@@ -324,11 +353,12 @@ docker-compose up -d
 
 1. **Fork** el repositorio
 2. **Crear** una rama para tu feature: `git checkout -b feature/nueva-funcionalidad`
-3. **Commit** tus cambios: `git commit -m 'Añadir nueva funcionalidad'`  
+3. **Commit** tus cambios: `git commit -m 'Añadir nueva funcionalidad'`
 4. **Push** a la rama: `git push origin feature/nueva-funcionalidad`
 5. **Abrir** un Pull Request
 
 ### Reportar Bugs
+
 - Usar GitHub Issues
 - Incluir pasos para reproducir
 - Adjuntar logs relevantes
@@ -347,11 +377,13 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 **Desarrollado con ❤️ para la comunidad cubana**
 
 ### Contacto
+
 - **GitHub**: [@ppkapiro](https://github.com/ppkapiro)
 - **Issues**: [GitHub Issues](https://github.com/ppkapiro/packfy-cuba-mvp/issues)
 - **Documentación**: [Wiki del proyecto](https://github.com/ppkapiro/packfy-cuba-mvp/wiki)
 
 ### Reconocimientos
+
 - Comunidad Django y React
 - Contributors de código abierto
 - Beta testers y feedback temprano
@@ -361,12 +393,14 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 ## 🎉 **¡Gracias por usar Packfy!**
 
 Si este proyecto te ha sido útil, considera:
+
 - ⭐ **Dar una estrella** al repositorio
-- 🐛 **Reportar bugs** que encuentres  
+- 🐛 **Reportar bugs** que encuentres
 - 💡 **Sugerir mejoras** vía Issues
 - 🤝 **Contribuir** con código o documentación
 
 **¡Juntos podemos mejorar la logística en Cuba! 🇨🇺**
+
 - 📊 **Dashboard interactivo** con métricas y estadísticas en tiempo real
 - 🔄 **API REST completa** con documentación automática
 - 🛡️ **Middleware de seguridad** y validación de datos
@@ -377,6 +411,7 @@ Si este proyecto te ha sido útil, considera:
 ## 🛠️ Tecnologías Utilizadas
 
 ### Frontend
+
 - **React 18** - Framework de UI moderno
 - **TypeScript** - Tipado estático para mayor robustez
 - **Vite** - Build tool y dev server ultrarrápido
@@ -387,6 +422,7 @@ Si este proyecto te ha sido útil, considera:
 - **Axios** - Cliente HTTP con interceptores
 
 ### Backend
+
 - **Django 5.2** - Framework web Python de alto nivel
 - **Django REST Framework** - Toolkit para APIs REST
 - **PostgreSQL 16** - Base de datos relacional robusta
@@ -395,6 +431,7 @@ Si este proyecto te ha sido útil, considera:
 - **Rate Limiting** - Protección contra abuso de API
 
 ### DevOps & Herramientas
+
 - **Docker** - Containerización de aplicaciones
 - **Docker Compose** - Orquestación de servicios
 - **PowerShell** - Scripts de automatización
@@ -403,6 +440,7 @@ Si este proyecto te ha sido útil, considera:
 ## ⚡ Inicio Rápido
 
 ### Prerequisitos
+
 - Docker Desktop instalado y en ejecución
 - PowerShell (Windows) o Bash (Linux/Mac)
 - Git
@@ -410,17 +448,20 @@ Si este proyecto te ha sido útil, considera:
 ### Instalación
 
 1. **Clonar el repositorio**:
+
    ```bash
    git clone <repository-url>
    cd paqueteria-cuba-mvp
    ```
 
 2. **Ejecutar el script de desarrollo** (recomendado):
+
    ```powershell
    .\dev.ps1
    ```
 
    O manualmente:
+
    ```bash
    docker-compose up --build
    ```
@@ -433,16 +474,18 @@ Si este proyecto te ha sido útil, considera:
 ## 🔧 Configuración Técnica
 
 ### Puertos del Sistema
-| Servicio | Puerto | URL |
-|----------|--------|-----|
-| Frontend (React) | 5173 | http://localhost:5173 |
-| Backend API (Django) | 8000 | http://localhost:8000 |
-| PostgreSQL | 5433 | localhost:5433 |
-| Admin Django | 8000 | http://localhost:8000/admin |
+
+| Servicio             | Puerto | URL                         |
+| -------------------- | ------ | --------------------------- |
+| Frontend (React)     | 5173   | http://localhost:5173       |
+| Backend API (Django) | 8000   | http://localhost:8000       |
+| PostgreSQL           | 5433   | localhost:5433              |
+| Admin Django         | 8000   | http://localhost:8000/admin |
 
 ### Variables de Entorno
 
 **Frontend (.env)**:
+
 ```env
 VITE_API_BASE_URL=http://localhost:8000
 ```
@@ -453,10 +496,10 @@ El archivo se crea automáticamente con `dev.ps1`.
 
 El sistema incluye usuarios de demostración ya creados:
 
-| Usuario | Email | Contraseña | Rol |
-|---------|-------|------------|-----|
-| **Administrador** | admin@packfy.com | admin123 | Super Admin |
-| **Usuario Demo** | demo@packfy.com | demo123 | Usuario Regular |
+| Usuario           | Email            | Contraseña | Rol             |
+| ----------------- | ---------------- | ---------- | --------------- |
+| **Administrador** | admin@packfy.com | admin123   | Super Admin     |
+| **Usuario Demo**  | demo@packfy.com  | demo123    | Usuario Regular |
 
 ## 🏗️ Estructura del Proyecto
 
@@ -474,7 +517,7 @@ El sistema incluye usuarios de demostración ya creados:
 │
 ├── 🔧 backend/           # Django REST Framework
 │   ├── config/          # Configuración principal del proyecto
-│   ├── empresas/        # Gestión de empresas (multi-tenant)
+│   ├── empresas/        # Gestión de empresas
 │   ├── envios/          # Gestión de envíos y seguimiento
 │   ├── usuarios/        # Sistema de usuarios y autenticación
 │   ├── scripts/         # Scripts de automatización
@@ -488,10 +531,13 @@ El sistema incluye usuarios de demostración ya creados:
 ## 🛠️ Scripts de Desarrollo
 
 ### Script Principal
+
 ```powershell
 .\dev.ps1
 ```
+
 **Funciones**:
+
 - Verifica y inicia Docker Desktop si es necesario
 - Construye y levanta todos los servicios
 - Configura automáticamente el entorno
@@ -499,7 +545,8 @@ El sistema incluye usuarios de demostración ya creados:
 - Ejecuta migraciones de base de datos
 
 ### Comandos Docker Útiles
-```bash
+
+````bash
 # Ver estado de todos los contenedores
 docker-compose ps
 
@@ -546,32 +593,19 @@ docker-compose down -v
 4. **Consultar estadísticas** en el panel principal
 5. **Permitir rastreo público** a los clientes
 
-## 🏢 Sistema Multi-tenant
-
-El sistema soporta múltiples empresas con:
-
-✅ **Aislamiento de Datos**: Cada empresa tiene su propio esquema  
-✅ **Personalización**: Configuraciones independientes por empresa  
-✅ **Seguridad**: Datos completamente separados entre empresas  
-
-**Tenants por defecto**:
-- **public**: Tenant principal (Packfy Cuba)
-- **ejemplo**: Empresa de ejemplo (Envíos Express)
-
-## 🔍 Solución de Problemas
-
-### Problema: Página en Blanco
+## 🔍 Solución de Problemas### Problema: Página en Blanco
 Si experimentas una página en blanco después de crear un envío:
 
 1. **Limpiar caché del navegador**:
    ```javascript
    // En la consola del navegador (F12)
-   localStorage.clear(); 
-   sessionStorage.clear(); 
+   localStorage.clear();
+   sessionStorage.clear();
    location.reload();
-   ```
+````
 
 2. **Reiniciar el frontend**:
+
    ```bash
    docker-compose restart frontend
    ```
@@ -582,6 +616,7 @@ Si experimentas una página en blanco después de crear un envío:
    ```
 
 ### Verificación del Sistema
+
 ```bash
 # Verificar que todos los servicios estén saludables
 docker-compose ps
@@ -595,6 +630,7 @@ docker-compose logs -f backend
 ```
 
 ### Problemas Comunes
+
 - **Docker no inicia**: Verificar que Docker Desktop esté ejecutándose
 - **Puerto ocupado**: Cambiar puertos en `compose.yml` si es necesario
 - **Errores de permisos**: Ejecutar PowerShell como administrador
@@ -602,6 +638,7 @@ docker-compose logs -f backend
 ## 💻 Desarrollo Local
 
 ### Backend (sin Docker)
+
 ```bash
 cd backend
 python -m venv venv
@@ -617,6 +654,7 @@ python manage.py runserver
 ```
 
 ### Frontend (sin Docker)
+
 ```bash
 cd frontend
 npm install
@@ -641,9 +679,9 @@ npm run dev
 
 ---
 
-**Última actualización**: Diciembre 2024  
-**Versión**: 1.0  
-**Estado**: ✅ Producción Lista  
+**Última actualización**: Diciembre 2024
+**Versión**: 1.0
+**Estado**: ✅ Producción Lista
 **Soporte**: Sistema completamente funcional y documentado
 
 ```bash
