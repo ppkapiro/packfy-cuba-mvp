@@ -12,10 +12,16 @@ class Empresa(models.Model):
     Cada empresa opera de forma completamente independiente.
     """
 
+    # Mantenemos el ID auto-generado por simplicidad en la migración
+    # En futuras versiones se puede migrar a UUID
+
     # Identificadores únicos
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     slug = models.SlugField(
-        max_length=100, unique=True, help_text="Identificador único para URLs"
+        max_length=100,
+        unique=True,
+        help_text="Identificador único para URLs",
+        null=True,
+        blank=True,  # Permitir null temporalmente para migración
     )
 
     # Información básica
