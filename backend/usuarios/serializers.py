@@ -19,6 +19,81 @@ class PerfilEmpresaSerializer(serializers.Serializer):
     activo = serializers.BooleanField()
 
 
+class UsuarioMeSerializer(serializers.ModelSerializer):
+    """
+    Serializer especial para el endpoint /me/ que incluye perfiles de usuario
+    """
+
+    perfiles_usuario = serializers.SerializerMethodField()
+    empresas = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Usuario
+        fields = [
+            "id",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "telefono",
+            "cargo",
+            "foto_perfil",
+            "es_administrador_empresa",
+            "is_active",
+            "is_staff",
+            "is_superuser",
+            "date_joined",
+            "perfiles_usuario",
+            "empresas",
+        ]
+
+    def get_perfiles_usuario(self, obj):
+        """Obtener todos los perfiles de usuario activos"""
+        from empresas.models import PerfilUsuario
+
+        perfiles = PerfilUsuario.objects.filter(
+            usuario=obj, activo=True
+        ).select_related("empresa")
+
+        return [
+            {
+                "empresa": {
+                    "id": perfil.empresa.id,
+                    "nombre": perfil.empresa.nombre,
+                    "slug": perfil.empresa.slug,
+                },
+                "rol": perfil.rol,
+                "activo": perfil.activo,
+            }
+            for perfil in perfiles
+        ]
+
+    def get_empresas(self, obj):
+        """Obtener todas las empresas del usuario con su rol (compatibilidad)"""
+        from empresas.models import PerfilUsuario
+
+        perfiles = PerfilUsuario.objects.filter(
+            usuario=obj, activo=True, empresa__activo=True
+        ).select_related("empresa")
+        return [
+            {
+                "id": perfil.empresa.id,
+                "nombre": perfil.empresa.nombre,
+                "slug": perfil.empresa.slug,
+                "rol": perfil.rol,
+            }
+            for perfil in perfiles
+        ]
+
+
+class PerfilEmpresaSerializer(serializers.Serializer):
+    """Serializer para el perfil del usuario en una empresa"""
+
+    empresa = EmpresaBasicaSerializer()
+    rol = serializers.CharField()
+    activo = serializers.BooleanField()
+
+
 class UsuarioSerializer(serializers.ModelSerializer):
     """
     Serializer para el modelo de Usuario
@@ -41,6 +116,8 @@ class UsuarioSerializer(serializers.ModelSerializer):
             "foto_perfil",
             "es_administrador_empresa",
             "is_active",
+            "is_staff",
+            "is_superuser",
             "date_joined",
             "fecha_creacion",
             "ultima_actualizacion",

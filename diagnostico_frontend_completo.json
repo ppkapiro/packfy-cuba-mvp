@@ -1,0 +1,16 @@
+{
+  "timestamp": "2025-08-20T09:00:12.006027",
+  "backend_api": true,
+  "frontend_pages": {
+    "/": true,
+    "/login": true,
+    "/dashboard": true,
+    "/envios": true,
+    "/usuarios": true
+  },
+  "docker_containers": true,
+  "frontend_build": true,
+  "tenant_context": true,
+  "issues": [],
+  "recommendations": []
+}

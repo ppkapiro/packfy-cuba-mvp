@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from .models import Usuario
 from .permissions import EsAdministrador, EsCreadorOAdministrador
-from .serializers import UsuarioSerializer
+from .serializers import UsuarioMeSerializer, UsuarioSerializer
 
 
 class UsuarioViewSet(viewsets.ModelViewSet):
@@ -16,6 +16,12 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
+
+    def get_serializer_class(self):
+        """Usar serializer especial para el endpoint /me/"""
+        if self.action == "me":
+            return UsuarioMeSerializer
+        return UsuarioSerializer
 
     def get_permissions(self):
         """

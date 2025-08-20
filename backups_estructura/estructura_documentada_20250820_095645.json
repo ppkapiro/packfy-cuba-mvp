@@ -1,0 +1,24 @@
+{
+  "timestamp": "20250820_095645",
+  "fecha": "2025-08-20T09:56:46.888012",
+  "version": "1.0",
+  "descripcion": "Estructura blindada para desarrollo",
+  "credenciales": {
+    "superadmin": {
+      "email": "superadmin@packfy.com",
+      "password": "super123!",
+      "acceso": "Frontend + Admin Panel"
+    },
+    "dueno": {
+      "email": "dueno@packfy.com",
+      "password": "dueno123!",
+      "acceso": "Frontend + Admin Panel"
+    },
+    "operadores": {
+      "miami": "miami@packfy.com / miami123!",
+      "cuba": "cuba@packfy.com / cuba123!"
+    },
+    "remitentes": "remitente1@packfy.com / remitente123!",
+    "destinatarios": "destinatario1@cuba.cu / destinatario123!"
+  }
+}
