@@ -44,7 +44,7 @@ export default defineConfig({
     // Proxy para desarrollo local
     proxy: {
       "/api": {
-        target: "http://packfy-backend:8000",
+        target: "http://backend:8000",
         changeOrigin: true,
         secure: false,
         timeout: 30000,

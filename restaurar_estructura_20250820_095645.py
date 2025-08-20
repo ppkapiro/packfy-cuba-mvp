@@ -12,9 +12,12 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 django.setup()
 
+from protector_bd import requiere_autorizacion, ProtectorBaseDatos
+
 from usuarios.models import Usuario
 from empresas.models import Empresa, PerfilUsuario
 
+@requiere_autorizacion("RESTAURAR ESTRUCTURA DE BD")
 def restaurar_estructura():
     print("🔄 RESTAURANDO ESTRUCTURA BLINDADA...")
 
@@ -156,6 +159,16 @@ def restaurar_estructura():
     print(f"Usuarios: {Usuario.objects.count()}")
     print(f"Empresas: {Empresa.objects.count()}")
     print(f"Perfiles: {PerfilUsuario.objects.count()}")
+
+
+# 🛡️ VERIFICACIÓN DE PROTECCIÓN
+if __name__ == "__main__":
+    protector = ProtectorBaseDatos()
+    if not protector.esta_protegida():
+        print("⚠️  ADVERTENCIA: Base de datos no protegida")
+        respuesta = input("¿Activar protección antes de continuar? (si/no): ")
+        if respuesta.lower() in ['si', 'sí', 's']:
+            protector.activar_proteccion()
 
 if __name__ == "__main__":
     restaurar_estructura()

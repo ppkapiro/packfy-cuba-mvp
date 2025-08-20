@@ -49,6 +49,12 @@ class PackfyApiClient {
       this.baseURL = `${protocol}//${hostname}/api`;
     }
 
+    // Configurar tenant por defecto para desarrollo
+    if (!this.tenantSlug) {
+      this.tenantSlug = "packfy-express";
+      console.log("🏢 Tenant por defecto configurado: packfy-express");
+    }
+
     this.isConfigured = true;
     console.log("✅ Packfy API configurada:", this.baseURL);
   }

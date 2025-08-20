@@ -1,0 +1,13 @@
+# 🛡️ BASE DE DATOS PROTEGIDA
+# Creado: 2025-08-20T13:21:01.338038
+#
+# Esta base de datos está protegida contra cambios no autorizados.
+# Para realizar cambios, debe usar el ProtectorBaseDatos.
+#
+# USUARIOS ACTUALES: 10 usuarios exactos según restaurar_estructura_20250820_095645.py
+# ESTADO: PRODUCCIÓN ESTABLE
+#
+# ⚠️ NO ELIMINAR ESTE ARCHIVO SIN AUTORIZACIÓN
+PROTECTION_ACTIVE=true
+CREATED_AT=2025-08-20T13:21:01.338038
+USUARIOS_ESPERADOS=10

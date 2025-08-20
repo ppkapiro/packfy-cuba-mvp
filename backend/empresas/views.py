@@ -9,14 +9,32 @@ from .serializers import EmpresaSerializer
 
 class EmpresaViewSet(viewsets.ModelViewSet):
     """
-    API endpoint para empresas con soporte multi-tenant.
+    API endpoint para empresas con soporte multi-tenant y restricciones por rol.
     """
 
     queryset = (
         Empresa.objects.all()
     )  # Queryset base (será filtrado por get_queryset)
     serializer_class = EmpresaSerializer
-    permission_classes = [TenantPermission]
+
+    def get_permissions(self):
+        """
+        Personalización de permisos por acción:
+        - Lectura (list, retrieve, mi_empresa, mis_perfiles): Todos los usuarios
+        - Modificación (update, partial_update): Solo dueño
+        - Creación/eliminación: Solo dueño
+        """
+        if self.action in ["list", "retrieve", "mi_empresa", "mis_perfiles"]:
+            # Lectura: Todos los usuarios autenticados con tenant
+            permission_classes = [TenantPermission]
+        elif self.action in ["create", "destroy", "update", "partial_update"]:
+            # Escritura: Solo dueño
+            from .permissions import EmpresaOwnerPermission
+
+            permission_classes = [TenantPermission, EmpresaOwnerPermission]
+        else:
+            permission_classes = [TenantPermission]
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         """
@@ -59,9 +77,19 @@ class EmpresaViewSet(viewsets.ModelViewSet):
 
         data = [
             {
+                "id": perfil.id,
                 "rol": perfil.rol,
-                "fecha_ingreso": perfil.fecha_ingreso,
-                "configuracion": perfil.configuracion,
+                "rol_display": perfil.get_rol_display(),
+                "activo": perfil.activo,
+                "fecha_vinculacion": perfil.fecha_vinculacion,
+                "ultima_actividad": perfil.ultima_actividad,
+                "telefono": perfil.telefono,
+                "direccion": perfil.direccion,
+                "empresa": {
+                    "id": perfil.empresa.id,
+                    "nombre": perfil.empresa.nombre,
+                    "slug": perfil.empresa.slug,
+                },
             }
             for perfil in perfiles
         ]

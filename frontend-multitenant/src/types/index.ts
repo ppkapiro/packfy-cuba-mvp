@@ -2,6 +2,38 @@
 export type FC<Props = Record<string, never>> = React.FunctionComponent<Props>;
 export type ChangeEvent<T = Element> = React.ChangeEvent<T>;
 
+// Tipos para Multitenancy
+export interface Empresa {
+  id: number;
+  name: string;
+  slug: string;
+  domain_url: string;
+  schema_name: string;
+  description?: string;
+  logo?: string;
+  email: string;
+  phone?: string;
+  address?: string;
+  created_at: string;
+  updated_at: string;
+  rol?: string; // Agregado para el rol del usuario en la empresa
+  perfiles?: PerfilUsuario[]; // Agregado para los perfiles del usuario en la empresa
+}
+
+export interface PerfilUsuario {
+  id: number;
+  usuario: string;
+  rol:
+    | "dueno"
+    | "operador_miami"
+    | "operador_cuba"
+    | "remitente"
+    | "destinatario";
+  empresa: number;
+  fecha_ingreso?: string;
+  configuracion?: Record<string, any>;
+}
+
 // Tipos para la API de Envíos
 
 export interface Envio {
@@ -10,23 +42,23 @@ export interface Envio {
   descripcion: string;
   peso: number;
   valor_declarado: number;
-  
+
   remitente_nombre: string;
   remitente_direccion: string;
   remitente_telefono: string;
   remitente_email: string | null;
-  
+
   destinatario_nombre: string;
   destinatario_direccion: string;
   destinatario_telefono: string;
   destinatario_email: string | null;
-  
+
   estado_actual: string;
   estado_display?: string;
   fecha_creacion: string;
   fecha_estimada_entrega: string | null;
   ultima_actualizacion: string;
-  
+
   notas: string | null;
   historial?: HistorialEstado[];
   creado_por?: Usuario | null;
@@ -53,17 +85,17 @@ export interface EnvioFormData {
   ancho: number;
   largo: number;
   valor_declarado: number;
-  
+
   remitente_nombre: string;
   remitente_direccion: string;
   remitente_telefono: string;
   remitente_email?: string;
-  
+
   destinatario_nombre: string;
   destinatario_direccion: string;
   destinatario_telefono: string;
   destinatario_email?: string;
-  
+
   fecha_entrega_estimada?: string;
   notas?: string;
 }

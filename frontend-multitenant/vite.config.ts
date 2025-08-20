@@ -18,7 +18,7 @@ export default defineConfig({
 
   server: {
     port: 5173,
-    host: "localhost",
+    host: "0.0.0.0", // Permitir acceso externo
 
     // HTTPS opcional con certificados locales
     // Descomentado para permitir acceso HTTP directo
@@ -44,7 +44,7 @@ export default defineConfig({
     // Proxy para desarrollo local
     proxy: {
       "/api": {
-        target: "http://packfy-backend:8000",
+        target: "http://localhost:8000",
         changeOrigin: true,
         secure: false,
         timeout: 30000,

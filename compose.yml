@@ -31,8 +31,7 @@ services:
       dockerfile: Dockerfile
     container_name: packfy-backend
     depends_on:
-      database:
-        condition: service_healthy
+      - database
     environment:
       - DEBUG=1
       - SECRET_KEY=django-insecure-dev-key-only
@@ -55,7 +54,7 @@ services:
   # 🌐 Frontend React Multi-tenant
   frontend:
     build:
-      context: ./frontend-multitenant
+      context: ./frontend
       dockerfile: Dockerfile
     container_name: packfy-frontend
     depends_on:
@@ -65,27 +64,11 @@ services:
       - VITE_API_BASE_URL=http://192.168.12.178:8000
       - VITE_APP_TITLE=Packfy MVP Multi-tenant
     volumes:
-      - ./frontend-multitenant:/app
+      - ./frontend:/app
       - /app/node_modules
     ports:
       - "5173:5173"
     restart: unless-stopped
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "curl",
-          "-f",
-          "http://localhost:5173",
-          "||",
-          "curl",
-          "-k",
-          "-f",
-          "https://localhost:5173",
-        ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
 
 volumes:
   postgres_data:

@@ -9,6 +9,7 @@ import ShipmentDetail from './pages/ShipmentDetail';
 import TrackingPageFixed from './pages/TrackingPageFixed';
 import PublicTrackingPage from './pages/PublicTrackingPage';
 import DiagnosticPage from './pages/DiagnosticPage';
+import TestApiPage from './pages/TestApiPage';
 import EnvioModePage from './pages/EnvioModePage';
 import SimpleAdvancedPage from './pages/SimpleAdvancedPage';
 import ModernAdvancedPage from './pages/ModernAdvancedPage';
@@ -47,6 +48,7 @@ function App() {
                 {/* Rutas públicas */}
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/diagnostico" element={<DiagnosticPage />} />
+                <Route path="/test-api" element={<TestApiPage />} />
                 <Route path="/rastrear" element={<PublicTrackingPage />} />
 
                 {/* Rutas protegidas */}

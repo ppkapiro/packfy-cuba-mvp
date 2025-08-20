@@ -10,6 +10,8 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
+from protector_bd import requiere_autorizacion, ProtectorBaseDatos
+
 from django.contrib.auth.hashers import make_password
 from django.utils import timezone
 from empresas.models import Empresa, PerfilUsuario
@@ -17,6 +19,7 @@ from envios.models import Envio, HistorialEstado
 from usuarios.models import Usuario
 
 
+@requiere_autorizacion("CREAR USUARIOS")
 def crear_usuarios_prueba():
     """Crear usuarios de prueba con diferentes roles"""
     print("👥 Creando usuarios de prueba...")
@@ -257,6 +260,16 @@ def main():
 
         traceback.print_exc()
 
+
+
+# 🛡️ VERIFICACIÓN DE PROTECCIÓN
+if __name__ == "__main__":
+    protector = ProtectorBaseDatos()
+    if not protector.esta_protegida():
+        print("⚠️  ADVERTENCIA: Base de datos no protegida")
+        respuesta = input("¿Activar protección antes de continuar? (si/no): ")
+        if respuesta.lower() in ['si', 'sí', 's']:
+            protector.activar_proteccion()
 
 if __name__ == "__main__":
     main()

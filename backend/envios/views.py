@@ -40,37 +40,75 @@ class EnvioViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """
-        Filtra envíos por empresa actual (multi-tenant)
+        Filtra envíos por empresa actual (multi-tenant) y por rol del usuario:
+        - Dueño: Ve todos los envíos de la empresa
+        - Operadores: Ven todos los envíos de la empresa
+        - Remitentes: Solo ven envíos que han enviado
+        - Destinatarios: Solo ven envíos dirigidos a ellos
         """
-        # Si no hay empresa en el contexto (ej: endpoints públicos), devolver queryset vacío
+        # Si no hay empresa en el contexto, devolver queryset vacío
         if not hasattr(self.request, "tenant") or not self.request.tenant:
             return Envio.objects.none()
 
-        # Filtrar por empresa del tenant actual
-        return Envio.objects.filter(empresa=self.request.tenant)
+        # Queryset base filtrado por empresa
+        queryset = Envio.objects.filter(empresa=self.request.tenant)
+
+        # Si no hay perfil de usuario, usar queryset base
+        if (
+            not hasattr(self.request, "perfil_usuario")
+            or not self.request.perfil_usuario
+        ):
+            return queryset
+
+        perfil = self.request.perfil_usuario
+
+        # Filtrado según el rol del usuario
+        if perfil.es_dueno or perfil.puede_gestionar_envios:
+            # Dueño y operadores ven todos los envíos de la empresa
+            return queryset
+        elif perfil.rol == "remitente":
+            # Remitentes solo ven envíos que han enviado
+            return queryset.filter(remitente_telefono=perfil.telefono)
+        elif perfil.rol == "destinatario":
+            # Destinatarios solo ven envíos dirigidos a ellos
+            return queryset.filter(destinatario_telefono=perfil.telefono)
+        else:
+            # Por defecto, todos los envíos (para roles no específicos)
+            return queryset
 
     def get_permissions(self):
         """
-        Personalización de permisos multi-tenant:
-        - El endpoint de rastreo es público (sin filtro de empresa)
-        - Otros endpoints requieren permisos de empresa y rol
+        Personalización de permisos multi-tenant con restricciones por rol:
+        - Endpoints públicos: Rastreo sin autenticación
+        - Lectura (list, retrieve): Según rol del usuario
+        - Escritura (create, update, delete): Solo operadores y dueño
+        - Cambio de estado: Solo operadores y dueño
         """
         if self.action in [
             "rastrear",
             "buscar_por_remitente",
             "buscar_por_destinatario",
         ]:
+            # Endpoints públicos sin autenticación
             permission_classes = [AllowAny]
-        elif self.action in ["list", "retrieve"]:
+        elif self.action in ["list", "retrieve", "buscar_por_guia"]:
+            # Lectura: Todos los usuarios autenticados con tenant
             permission_classes = [TenantPermission]
-        elif self.action in [
-            "create",
-            "update",
-            "partial_update",
-            "destroy",
-            "cambiar_estado",
-        ]:
-            permission_classes = [TenantPermission]
+        elif self.action in ["create"]:
+            # Crear envíos: Solo operadores de Miami y dueño
+            from empresas.permissions import EmpresaOperatorPermission
+
+            permission_classes = [TenantPermission, EmpresaOperatorPermission]
+        elif self.action in ["update", "partial_update", "cambiar_estado"]:
+            # Actualizar/cambiar estado: Solo operadores y dueño
+            from empresas.permissions import EmpresaOperatorPermission
+
+            permission_classes = [TenantPermission, EmpresaOperatorPermission]
+        elif self.action == "destroy":
+            # Eliminar: Solo dueño
+            from empresas.permissions import EmpresaOwnerPermission
+
+            permission_classes = [TenantPermission, EmpresaOwnerPermission]
         else:
             permission_classes = [TenantPermission]
         return [permission() for permission in permission_classes]
@@ -355,11 +393,20 @@ class HistorialEstadoViewSet(viewsets.ReadOnlyModelViewSet):
         HistorialEstado.objects.all()
     )  # Queryset base (será filtrado por get_queryset)
     serializer_class = HistorialEstadoSerializer
-    permission_classes = [TenantPermission]
+
+    def get_permissions(self):
+        """
+        Permisos para historial de estados:
+        - Solo lectura para todos los usuarios autenticados
+        - Mismas restricciones que los envíos (filtrado por rol en queryset)
+        """
+        return [TenantPermission()]
 
     def get_queryset(self):
         """
-        Filtra el historial por empresa y permite filtrar por envío específico
+        Filtra el historial por empresa y rol del usuario:
+        - Aplica las mismas restricciones que EnvioViewSet
+        - Remitentes/destinatarios solo ven historial de sus envíos
         """
         # Si no hay empresa en el contexto, devolver queryset vacío
         if not hasattr(self.request, "tenant") or not self.request.tenant:
@@ -369,6 +416,27 @@ class HistorialEstadoViewSet(viewsets.ReadOnlyModelViewSet):
         queryset = HistorialEstado.objects.filter(
             envio__empresa=self.request.tenant
         )
+
+        # Aplicar filtrado por rol del usuario (igual que en EnvioViewSet)
+        if (
+            hasattr(self.request, "perfil_usuario")
+            and self.request.perfil_usuario
+        ):
+            perfil = self.request.perfil_usuario
+
+            if perfil.es_dueno or perfil.puede_gestionar_envios:
+                # Dueño y operadores ven todo el historial
+                pass
+            elif perfil.rol == "remitente":
+                # Remitentes solo ven historial de envíos que han enviado
+                queryset = queryset.filter(
+                    envio__remitente_telefono=perfil.telefono
+                )
+            elif perfil.rol == "destinatario":
+                # Destinatarios solo ven historial de envíos dirigidos a ellos
+                queryset = queryset.filter(
+                    envio__destinatario_telefono=perfil.telefono
+                )
 
         # Permitir filtrar por envío específico
         envio_id = self.request.query_params.get("envio", None)

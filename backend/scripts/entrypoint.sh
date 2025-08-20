@@ -6,17 +6,26 @@ echo "Entrypoint inicio"
 echo "Ejecutando migraciones..."
 python manage.py migrate --noinput -v2
 
-# Crear datos demo (incluye usuarios de prueba)
-echo "Creando datos de demostración..."
+# Crear estructura exacta con 10 usuarios (en lugar de datos demo)
+echo "Creando estructura exacta con 10 usuarios..."
 python manage.py shell -c "
 import sys
 sys.path.append('/app/scripts')
+
 try:
-    from create_demo_data import create_demo_data
-    create_demo_data()
-    print('✅ Datos de demostración creados correctamente')
+    # Verificar si ya existen usuarios
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+    if User.objects.count() == 0:
+        print('📄 Ejecutando script de 10 usuarios exactos...')
+        from crear_10_usuarios import restaurar_10_usuarios
+        restaurar_10_usuarios()
+    else:
+        print(f'ℹ️ Ya existen {User.objects.count()} usuarios, saltando inicialización')
 except Exception as e:
-    print(f'❌ Error creando datos demo: {e}')
+    print(f'❌ Error ejecutando restauración: {e}')
+    import traceback
+    traceback.print_exc()
 "
 
 echo "Migraciones completadas."

@@ -1,20 +1,7 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import apiClient from '../services/api';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { Empresa, PerfilUsuario } from '../types';
 import { useAuth } from './AuthContext';
-
-// Tipos para el sistema multi-tenant
-interface Empresa {
-  id: number;
-  nombre: string;
-  slug: string;
-  rol?: string;  // Agregado para el rol del usuario en la empresa
-}
-
-interface PerfilUsuario {
-  rol: 'dueno' | 'operador_miami' | 'operador_cuba' | 'remitente' | 'destinatario';
-  fecha_ingreso?: string;
-  configuracion?: Record<string, any>;
-}
+import apiClient from '../services/api';
 
 interface TenantContextData {
   // Estado actual
@@ -48,23 +35,35 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
   const cargarEmpresas = async (): Promise<void> => {
     try {
       console.log('🔄 TenantContext: Cargando empresas del usuario...');
+      console.log('🔑 TenantContext: Estado de autenticación:', isAuthenticated);
+      console.log('👤 TenantContext: Usuario actual:', user);
 
       // Obtener empresas desde el perfil del usuario
       const response = await apiClient.makeRequest('/usuarios/me/');
 
-      console.log('👤 TenantContext: Respuesta raw:', response);
+      console.log('👤 TenantContext: Respuesta raw completa:', response);
+      console.log('📊 TenantContext: Status:', response.status);
+      console.log('📄 TenantContext: Data:', response.data);
+      console.log('❌ TenantContext: Error:', response.error);
 
-      if (response.status !== 200) {
+      if (response.status !== 200 || response.error) {
         console.error('❌ TenantContext: Error en respuesta:', response.error);
+        console.error('❌ TenantContext: Status code:', response.status);
         setEmpresasDisponibles([]);
         return;
       }
 
       const userData = response.data;
-      console.log('👤 TenantContext: Datos del usuario:', userData);
+      console.log('👤 TenantContext: Datos del usuario completos:', userData);
+      console.log('👤 TenantContext: Tipo de userData:', typeof userData);
+      console.log('👤 TenantContext: Keys de userData:', Object.keys(userData || {}));
 
       // Extraer empresas del usuario con validación
-      const empresas = userData?.empresas;
+      const empresas = (userData as any)?.empresas || (userData as any)?.companies || [];
+
+      console.log('🏢 TenantContext: Empresas extraídas:', empresas);
+      console.log('🏢 TenantContext: Tipo de empresas:', typeof empresas);
+      console.log('🏢 TenantContext: Es array?:', Array.isArray(empresas));
 
       if (!Array.isArray(empresas)) {
         console.warn('⚠️ TenantContext: empresas no es un array:', empresas);
@@ -81,7 +80,7 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
         // Si hay empresas y no hay una seleccionada, seleccionar la primera
         if (!empresaActual) {
           const primeraEmpresa = empresas[0];
-          console.log('🎯 TenantContext: Seleccionando primera empresa:', primeraEmpresa.nombre);
+          console.log('🎯 TenantContext: Seleccionando primera empresa:', primeraEmpresa.name);
           try {
             await cambiarEmpresa(primeraEmpresa.slug);
           } catch (cambioError) {
@@ -120,7 +119,7 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
       // Cargar perfil del usuario en esta empresa
       await obtenerPerfilEnEmpresa();
 
-      console.log(`🏢 Empresa cambiada a: ${empresa.nombre} (${empresaSlug})`);
+      console.log(`🏢 Empresa cambiada a: ${empresa.name} (${empresaSlug})`);
     } catch (error) {
       console.error('Error cambiando empresa:', error);
       throw error;
@@ -137,17 +136,35 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      // El rol ya está en los datos de la empresa del usuario
+      // Buscar el rol en los perfiles de la empresa
       const empresaCompleta = empresasDisponibles.find(e => e.slug === empresaActual.slug);
-      if (empresaCompleta?.rol) {
-        const perfil: PerfilUsuario = {
-          rol: empresaCompleta.rol as any,
-          fecha_ingreso: new Date().toISOString(), // Temporal
-        };
-        setPerfilActual(perfil);
-        console.log(`👤 TenantContext: Perfil establecido:`, perfil);
+      console.log('🔍 TenantContext: Empresa completa encontrada:', empresaCompleta);
+
+      if (empresaCompleta) {
+        // Buscar perfil activo del usuario en esta empresa
+        const perfiles = empresaCompleta.perfiles || [];
+        console.log('📋 TenantContext: Perfiles en empresa:', perfiles);
+
+        const perfilActivo = perfiles.find((p: any) => p.is_active === true);
+        console.log('🎯 TenantContext: Perfil activo encontrado:', perfilActivo);
+
+        if (perfilActivo) {
+          const perfil: PerfilUsuario = {
+            id: perfilActivo.id || 1,
+            usuario: perfilActivo.usuario || 'current-user',
+            rol: perfilActivo.rol as any,
+            empresa: empresaCompleta.id,
+            fecha_ingreso: perfilActivo.fecha_ingreso || new Date().toISOString(),
+          };
+          setPerfilActual(perfil);
+          console.log(`✅ TenantContext: Perfil establecido correctamente:`, perfil);
+        } else {
+          console.warn('⚠️ TenantContext: No se encontró perfil activo para la empresa actual');
+          console.log('📋 TenantContext: Perfiles disponibles:', perfiles);
+          setPerfilActual(null);
+        }
       } else {
-        console.warn('⚠️ TenantContext: No se encontró rol para la empresa actual');
+        console.warn('⚠️ TenantContext: No se encontró empresa completa');
         setPerfilActual(null);
       }
     } catch (error) {
@@ -183,17 +200,23 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
   // Inicialización al montar el componente
   useEffect(() => {
     const inicializar = async () => {
-      console.log('🔄 TenantContext: Iniciando inicialización...');
+      console.log('🔄 TenantContext: === INICIANDO INICIALIZACIÓN ===');
       console.log('👤 TenantContext: Usuario autenticado:', isAuthenticated);
       console.log('📋 TenantContext: Datos de usuario:', user);
+      console.log('🏢 TenantContext: Empresas disponibles actuales:', empresasDisponibles.length);
+      console.log('⏳ TenantContext: Estado isLoading:', isLoading);
 
       // Intentar restaurar empresa desde localStorage
       const tenantSlug = localStorage.getItem('tenant-slug');
       const empresaGuardada = localStorage.getItem('empresa-actual');
 
+      console.log('💾 TenantContext: TenantSlug en localStorage:', tenantSlug);
+      console.log('💾 TenantContext: Empresa guardada en localStorage:', empresaGuardada);
+
       if (tenantSlug && empresaGuardada) {
         try {
           const empresa = JSON.parse(empresaGuardada);
+          console.log('🏢 TenantContext: Restaurando empresa:', empresa);
           setEmpresaActual(empresa);
           apiClient.setTenantSlug(tenantSlug);
 
@@ -207,14 +230,17 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
         }
       }
 
-      // Cargar empresas disponibles
+      // Cargar empresas disponibles (optimizado para evitar loops)
       await cargarEmpresas();
       setIsLoading(false);
     };
 
-    // Solo inicializar si el usuario está autenticado
-    if (isAuthenticated && user) {
-      console.log('✅ TenantContext: Usuario autenticado, iniciando...');
+    // Solo inicializar si el usuario está autenticado y no hemos cargado empresas
+    if (isAuthenticated && user && empresasDisponibles.length === 0) {
+      console.log('✅ TenantContext: === CONDICIÓN CUMPLIDA - INICIANDO ===');
+      console.log('✅ TenantContext: isAuthenticated:', isAuthenticated);
+      console.log('✅ TenantContext: user existe:', !!user);
+      console.log('✅ TenantContext: empresasDisponibles.length:', empresasDisponibles.length);
       inicializar();
     } else if (isAuthenticated === false) {
       // Usuario no autenticado, limpiar estado
@@ -228,7 +254,10 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(false);
     } else {
       // isAuthenticated puede ser null durante la carga inicial
-      console.log('⏳ TenantContext: Esperando estado de autenticación...');
+      console.log('⏳ TenantContext: === ESPERANDO ESTADO DE AUTENTICACIÓN ===');
+      console.log('⏳ TenantContext: isAuthenticated:', isAuthenticated);
+      console.log('⏳ TenantContext: user existe:', !!user);
+      console.log('⏳ TenantContext: empresasDisponibles.length:', empresasDisponibles.length);
       setIsLoading(true);
     }
   }, [isAuthenticated, user]);

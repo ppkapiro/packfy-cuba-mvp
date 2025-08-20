@@ -18,12 +18,19 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.http import JsonResponse
 from django.urls import include, path
 from django.views.generic import RedirectView
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from empresas.sistema_info import EmpresaInfoView
 from empresas.views import EmpresaViewSet
+
+
+def health_check(request):
+    """Endpoint simple de health check"""
+    return JsonResponse({"status": "ok", "message": "Packfy API is running"})
+
 
 # Importamos los ViewSets de nuestras apps
 from envios.views import EnvioViewSet, HistorialEstadoViewSet
@@ -65,6 +72,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     # API endpoints
     path("api/", include(router.urls)),
+    path("api/health/", health_check, name="health_check"),
     path(
         "api/auth/login/",
         TokenObtainPairView.as_view(),

@@ -29,8 +29,5 @@ ENTRYPOINT ["/app/scripts/entrypoint.sh"]
 # Puerto en el que escucha la aplicación
 EXPOSE 8000
 
-# Comando por defecto (se puede sobrescribir)
-CMD [""]
-
 # Usar runserver directo para evitar prompts interactivos de tenant_command
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

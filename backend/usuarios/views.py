@@ -25,12 +25,23 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         """
-        Personalización de permisos multi-tenant:
-        - Requiere permisos de empresa para todas las acciones
-        - El endpoint 'me' solo requiere autenticación
+        Personalización de permisos multi-tenant con restricciones por rol:
+        - Endpoint 'me': Solo autenticación
+        - Lista/vista de usuarios: Solo dueño y operadores
+        - Creación/modificación: Solo dueño
         """
         if self.action == "me":
             permission_classes = [permissions.IsAuthenticated]
+        elif self.action in ["list", "retrieve"]:
+            # Ver usuarios: Solo dueño y operadores
+            from empresas.permissions import EmpresaOperatorPermission
+
+            permission_classes = [TenantPermission, EmpresaOperatorPermission]
+        elif self.action in ["create", "update", "partial_update", "destroy"]:
+            # Gestionar usuarios: Solo dueño
+            from empresas.permissions import EmpresaOwnerPermission
+
+            permission_classes = [TenantPermission, EmpresaOwnerPermission]
         else:
             permission_classes = [TenantPermission]
         return [permission() for permission in permission_classes]
