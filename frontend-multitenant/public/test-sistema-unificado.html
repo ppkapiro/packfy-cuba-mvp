@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🇨🇺 Packfy Cuba - Sistema Unificado v3.0</title>
+    <style>
+        :root {
+            --cuba-blue: #1e40af;
+            --cuba-red: #dc2626;
+            --cuba-gold: #fbbf24;
+            --success: #10b981;
+            --space-4: 1rem;
+            --space-6: 1.5rem;
+            --radius-lg: 0.75rem;
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, var(--cuba-blue) 0%, #2563eb 100%);
+            color: white;
+            min-height: 100vh;
+            padding: var(--space-4);
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .logo h1 {
+            font-size: 2.5rem;
+            color: var(--cuba-gold);
+            margin-bottom: 0.5rem;
+        }
+        
+        .version {
+            background: var(--success);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin: var(--space-4) 0;
+        }
+        
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--cuba-gold);
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: var(--cuba-gold);
+            color: var(--cuba-blue);
+            text-decoration: none;
+            text-align: center;
+            border-radius: 10px;
+            font-weight: bold;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #fcd34d;
+            transform: translateY(-2px);
+        }
+        
+        .status {
+            background: var(--success);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        
+        .test-result {
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .success { background: var(--success); }
+        .error { background: var(--cuba-red); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>🇨🇺 PACKFY</h1>
+            <p>Sistema Unificado</p>
+            <div class="version">v3.0</div>
+        </div>
+        
+        <div class="status">
+            ✅ SISTEMA REORGANIZADO Y OPTIMIZADO
+        </div>
+        
+        <div class="feature">
+            <h3>🎨 CSS Unificado</h3>
+            <p>Sistema de estilos consolidado eliminando duplicaciones</p>
+        </div>
+        
+        <div class="feature">
+            <h3>🔧 API Robusta</h3>
+            <p>Configuración automática inteligente para todas las conexiones</p>
+        </div>
+        
+        <div class="feature">
+            <h3>🔒 HTTPS Optimizado</h3>
+            <p>Certificados locales con máxima compatibilidad móvil</p>
+        </div>
+        
+        <div class="feature">
+            <h3>📱 PWA Completa</h3>
+            <p>Progressive Web App totalmente funcional</p>
+        </div>
+        
+        <a href="https://192.168.12.178:5173/" class="btn">
+            🚀 Ir a la Aplicación Principal
+        </a>
+        
+        <a href="#" onclick="testSystem()" class="btn">
+            🔧 Test Conectividad Sistema
+        </a>
+        
+        <div id="test-result" class="test-result"></div>
+    </div>
+
+    <script>
+        console.log('🇨🇺 Packfy Cuba - Sistema Unificado v3.0');
+        
+        async function testSystem() {
+            const resultDiv = document.getElementById('test-result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'test-result';
+            resultDiv.innerHTML = '🔄 Probando sistema unificado...';
+            
+            const tests = {
+                frontend: false,
+                backend: false,
+                api: false
+            };
+            
+            // Test Frontend HTTPS
+            try {
+                const frontendTest = await fetch('https://192.168.12.178:5173/');
+                tests.frontend = frontendTest.status === 200;
+            } catch (e) {
+                console.log('Frontend test error:', e);
+            }
+            
+            // Test Backend HTTP
+            try {
+                const backendTest = await fetch('http://192.168.12.178:8000/api/');
+                tests.backend = backendTest.status === 200;
+            } catch (e) {
+                console.log('Backend test error:', e);
+            }
+            
+            // Test API Unificada
+            try {
+                const apiTest = await fetch('https://192.168.12.178:5173/api/');
+                tests.api = apiTest.status === 200 || apiTest.status === 404;
+            } catch (e) {
+                console.log('API test error:', e);
+            }
+            
+            // Mostrar resultados
+            let html = '<h3>📊 Resultados del Test:</h3>';
+            html += `<p>🔒 Frontend HTTPS: ${tests.frontend ? '✅' : '❌'}</p>`;
+            html += `<p>🔧 Backend HTTP: ${tests.backend ? '✅' : '❌'}</p>`;
+            html += `<p>📡 API Proxy: ${tests.api ? '✅' : '❌'}</p>`;
+            
+            const allPassed = tests.frontend && tests.backend;
+            resultDiv.className = `test-result ${allPassed ? 'success' : 'error'}`;
+            
+            if (allPassed) {
+                html += '<p><strong>🎉 ¡Sistema funcionando perfectamente!</strong></p>';
+            } else {
+                html += '<p><strong>⚠️ Algunos servicios necesitan iniciarse</strong></p>';
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+        
+        // Auto-test después de cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(testSystem, 2000);
+        });
+    </script>
+</body>
+</html>

@@ -1,4 +1,5 @@
 from django.db import transaction
+from empresas.permissions import TenantPermission, require_rol
 from rest_framework import filters, permissions, status, viewsets
 from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import AllowAny
@@ -16,10 +17,12 @@ from .serializers import (
 
 class EnvioViewSet(viewsets.ModelViewSet):
     """
-    API endpoint para gestionar envíos
+    API endpoint para gestionar envíos con soporte multi-tenant
     """
 
-    queryset = Envio.objects.all()
+    queryset = (
+        Envio.objects.all()
+    )  # Queryset base (será filtrado por get_queryset)
     serializer_class = EnvioSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = [
@@ -35,12 +38,22 @@ class EnvioViewSet(viewsets.ModelViewSet):
         "estado_actual",
     ]
 
+    def get_queryset(self):
+        """
+        Filtra envíos por empresa actual (multi-tenant)
+        """
+        # Si no hay empresa en el contexto (ej: endpoints públicos), devolver queryset vacío
+        if not hasattr(self.request, "tenant") or not self.request.tenant:
+            return Envio.objects.none()
+
+        # Filtrar por empresa del tenant actual
+        return Envio.objects.filter(empresa=self.request.tenant)
+
     def get_permissions(self):
         """
-        Personalización de permisos:
-        - El endpoint de rastreo es público
-        - Listar y ver detalles requiere autenticación
-        - Crear, actualizar y eliminar requiere ser administrador o el creador
+        Personalización de permisos multi-tenant:
+        - El endpoint de rastreo es público (sin filtro de empresa)
+        - Otros endpoints requieren permisos de empresa y rol
         """
         if self.action in [
             "rastrear",
@@ -48,8 +61,8 @@ class EnvioViewSet(viewsets.ModelViewSet):
             "buscar_por_destinatario",
         ]:
             permission_classes = [AllowAny]
-        elif self.action == "list" or self.action == "retrieve":
-            permission_classes = [permissions.IsAuthenticated]
+        elif self.action in ["list", "retrieve"]:
+            permission_classes = [TenantPermission]
         elif self.action in [
             "create",
             "update",
@@ -57,9 +70,9 @@ class EnvioViewSet(viewsets.ModelViewSet):
             "destroy",
             "cambiar_estado",
         ]:
-            permission_classes = [EsCreadorOAdministrador]
+            permission_classes = [TenantPermission]
         else:
-            permission_classes = [permissions.IsAuthenticated]
+            permission_classes = [TenantPermission]
         return [permission() for permission in permission_classes]
 
     def get_client_ip(self, request):
@@ -77,12 +90,14 @@ class EnvioViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """
         Al crear un envío, registramos el usuario que lo creó y
-        creamos el primer registro en el historial de estados
+        asignamos la empresa del contexto actual
         """
         with transaction.atomic():
-            # Guardar el envío con el usuario actual como creador
+            # Guardar el envío con el usuario actual como creador y la empresa del tenant
             envio = serializer.save(
-                creado_por=self.request.user, actualizado_por=self.request.user
+                creado_por=self.request.user,
+                actualizado_por=self.request.user,
+                empresa=self.request.tenant,  # Asignar empresa del contexto
             )
 
             # Crear el primer registro en el historial
@@ -142,7 +157,7 @@ class EnvioViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"])
     def buscar_por_guia(self, request):
         """
-        Endpoint para buscar un envío por su número de guía
+        Endpoint para buscar un envío por su número de guía (filtrado por empresa)
         """
         numero_guia = request.query_params.get("numero_guia", None)
 
@@ -153,7 +168,8 @@ class EnvioViewSet(viewsets.ModelViewSet):
             )
 
         try:
-            envio = Envio.objects.get(numero_guia=numero_guia)
+            # Usar el queryset filtrado por empresa
+            envio = self.get_queryset().get(numero_guia=numero_guia)
             serializer = self.get_serializer(envio)
             return Response(serializer.data)
         except Envio.DoesNotExist:
@@ -188,6 +204,7 @@ class EnvioViewSet(viewsets.ModelViewSet):
         numero_guia = numero_guia.strip()[:50]  # Limitar longitud
 
         try:
+            # Para el rastreo público, buscar en todas las empresas
             envio = Envio.objects.get(numero_guia=numero_guia)
             # Usar un serializer simplificado que solo incluye la información pública
             data = {
@@ -331,20 +348,30 @@ class EnvioViewSet(viewsets.ModelViewSet):
 
 class HistorialEstadoViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    API endpoint para consultar el historial de estados de los envíos
+    API endpoint para consultar el historial de estados de los envíos (multi-tenant)
     """
 
-    queryset = HistorialEstado.objects.all()
+    queryset = (
+        HistorialEstado.objects.all()
+    )  # Queryset base (será filtrado por get_queryset)
     serializer_class = HistorialEstadoSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [TenantPermission]
 
     def get_queryset(self):
         """
-        Permite filtrar el historial por envío usando el parámetro 'envio'
+        Filtra el historial por empresa y permite filtrar por envío específico
         """
-        queryset = HistorialEstado.objects.all()
-        envio_id = self.request.query_params.get("envio", None)
+        # Si no hay empresa en el contexto, devolver queryset vacío
+        if not hasattr(self.request, "tenant") or not self.request.tenant:
+            return HistorialEstado.objects.none()
 
+        # Filtrar historial de envíos de la empresa actual
+        queryset = HistorialEstado.objects.filter(
+            envio__empresa=self.request.tenant
+        )
+
+        # Permitir filtrar por envío específico
+        envio_id = self.request.query_params.get("envio", None)
         if envio_id:
             queryset = queryset.filter(envio_id=envio_id)
 

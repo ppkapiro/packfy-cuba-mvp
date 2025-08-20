@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test PWA - Packfy</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <meta name="theme-color" content="#3b82f6" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#3b82f6" media="(prefers-color-scheme: dark)">
+    <meta name="msapplication-navbutton-color" content="#3b82f6">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#3b82f6">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f3f4f6;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+        .success { background: #d1fae5; color: #065f46; }
+        .error { background: #fee2e2; color: #991b1b; }
+        .info { background: #dbeafe; color: #1e40af; }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin: 5px 0;
+        }
+        button:hover { background: #2563eb; }
+        #installBtn { display: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🧪 Test PWA - Packfy</h1>
+        <p>Página de diagnóstico para PWA</p>
+    </div>
+
+    <div class="card">
+        <h2>📱 Estado PWA</h2>
+        <div id="pwaStatus"></div>
+        <button id="installBtn">📥 Instalar App</button>
+        <button onclick="location.reload()">🔄 Recargar</button>
+    </div>
+
+    <div class="card">
+        <h2>🔧 Diagnósticos</h2>
+        <div id="diagnostics"></div>
+    </div>
+
+    <script>
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+        const statusDiv = document.getElementById('pwaStatus');
+        const diagnosticsDiv = document.getElementById('diagnostics');
+
+        function addStatus(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.textContent = message;
+            statusDiv.appendChild(div);
+        }
+
+        function addDiagnostic(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.textContent = message;
+            diagnosticsDiv.appendChild(div);
+        }
+
+        // Verificar soporte PWA
+        if ('serviceWorker' in navigator) {
+            addDiagnostic('✅ Service Worker soportado', 'success');
+        } else {
+            addDiagnostic('❌ Service Worker NO soportado', 'error');
+        }
+
+        // Verificar si está instalado
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            addStatus('🎉 App ya está instalada!', 'success');
+        } else {
+            addStatus('📱 App no instalada - listo para instalar', 'info');
+        }
+
+        // Registrar Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => {
+                    addDiagnostic('✅ Service Worker registrado', 'success');
+                    console.log('SW registrado:', registration);
+                })
+                .catch(error => {
+                    addDiagnostic('❌ Error registrando SW: ' + error, 'error');
+                    console.error('Error SW:', error);
+                });
+        }
+
+        // Escuchar evento de instalación
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('📱 Evento beforeinstallprompt detectado');
+            addStatus('✅ PWA lista para instalar!', 'success');
+            
+            // Prevenir que se muestre automáticamente
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Mostrar botón personalizado
+            installBtn.style.display = 'block';
+        });
+
+        // Manejar clic en instalar
+        installBtn.addEventListener('click', async () => {
+            if (!deferredPrompt) {
+                addStatus('❌ No hay prompt de instalación disponible', 'error');
+                return;
+            }
+
+            // Mostrar prompt
+            deferredPrompt.prompt();
+            
+            // Esperar respuesta del usuario
+            const { outcome } = await deferredPrompt.userChoice;
+            
+            if (outcome === 'accepted') {
+                addStatus('🎉 Usuario aceptó la instalación!', 'success');
+            } else {
+                addStatus('😔 Usuario rechazó la instalación', 'info');
+            }
+            
+            deferredPrompt = null;
+            installBtn.style.display = 'none';
+        });
+
+        // Verificar si la app fue instalada
+        window.addEventListener('appinstalled', () => {
+            addStatus('🎉 App instalada exitosamente!', 'success');
+            installBtn.style.display = 'none';
+        });
+
+        // Información del navegador
+        addDiagnostic(`🌐 Navegador: ${navigator.userAgent}`, 'info');
+        addDiagnostic(`📱 Plataforma: ${navigator.platform}`, 'info');
+        addDiagnostic(`🔒 HTTPS: ${location.protocol === 'https:' ? 'Sí' : 'No'}`, 
+                     location.protocol === 'https:' ? 'success' : 'error');
+    </script>
+</body>
+</html>

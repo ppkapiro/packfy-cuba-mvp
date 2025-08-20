@@ -38,21 +38,36 @@ class TenantMiddleware(MiddlewareMixin):
                 raise Http404(f"Empresa '{tenant_slug}' no encontrada")
 
         # Método 2: Usuario autenticado (fallback)
-        elif request.user.is_authenticated:
+        elif (
+            hasattr(request, "user")
+            and request.user
+            and request.user.is_authenticated
+        ):
             try:
-                perfil = PerfilUsuario.objects.select_related("empresa").get(
-                    usuario=request.user, activo=True, empresa__activo=True
+                # Obtener el primer perfil activo del usuario
+                perfil = (
+                    PerfilUsuario.objects.select_related("empresa")
+                    .filter(
+                        usuario=request.user, activo=True, empresa__activo=True
+                    )
+                    .first()
                 )
-                empresa = perfil.empresa
-                logger.info(f"Empresa detectada por usuario: {empresa.nombre}")
 
-                # Agregar perfil al request para fácil acceso
-                request.perfil_usuario = perfil
+                if perfil:
+                    empresa = perfil.empresa
+                    logger.info(
+                        f"Empresa detectada por usuario: {empresa.nombre}"
+                    )
 
-            except PerfilUsuario.DoesNotExist:
-                logger.warning(
-                    f"Usuario {request.user.username} sin empresa asignada"
-                )
+                    # Agregar perfil al request para fácil acceso
+                    request.perfil_usuario = perfil
+                else:
+                    logger.warning(
+                        f"Usuario {request.user.username} sin empresa activa"
+                    )
+
+            except Exception as e:
+                logger.warning(f"Error obteniendo empresa del usuario: {e}")
                 # Para usuarios sin empresa (superuser, etc), continuar sin empresa
 
         # Método 3: Empresa por defecto para requests no autenticados (opcional)

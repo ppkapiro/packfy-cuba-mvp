@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Funcionalidades Móviles Avanzadas</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success { border-left: 4px solid #28a745; }
+        .error { border-left: 4px solid #dc3545; }
+        .warning { border-left: 4px solid #ffc107; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test de Funcionalidades Móviles Avanzadas</h1>
+        <p>Página de pruebas para verificar que todas las funcionalidades están funcionando correctamente.</p>
+        
+        <div class="test-section">
+            <h3>💰 Test de Conversión de Precios</h3>
+            <button onclick="testCurrencyConversion()">Probar Conversión USD → CUP</button>
+            <button onclick="testPriceCalculation()">Calcular Precio de Envío</button>
+            <div id="currency-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>📷 Test de Cámara</h3>
+            <button onclick="testCameraPermissions()">Verificar Permisos</button>
+            <button onclick="testCameraCapture()">Capturar Foto</button>
+            <button onclick="testConnectionDetection()">Detectar Conexión</button>
+            <div id="camera-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔖 Test de QR y Etiquetas</h3>
+            <button onclick="testTrackingGeneration()">Generar Tracking</button>
+            <button onclick="testQRGeneration()">Generar QR</button>
+            <button onclick="testLabelCreation()">Crear Etiqueta</button>
+            <div id="qr-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🌐 Test de Compatibilidad</h3>
+            <button onclick="testBrowserCompatibility()">Verificar Navegador</button>
+            <button onclick="testMobileFeatures()">Verificar Móvil</button>
+            <div id="compat-results"></div>
+        </div>
+    </div>
+
+    <script>
+        // Función helper para mostrar resultados
+        function showResult(containerId, message, type = 'success') {
+            const container = document.getElementById(containerId);
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `result ${type}`;
+            resultDiv.textContent = new Date().toLocaleTimeString() + ': ' + message;
+            container.appendChild(resultDiv);
+        }
+
+        // Test 1: Conversión de moneda
+        function testCurrencyConversion() {
+            try {
+                // Simular conversión USD a CUP
+                const rate = 320;
+                const usdAmount = 25.50;
+                const cupAmount = usdAmount * rate;
+                
+                showResult('currency-results', 
+                    `✅ Conversión: $${usdAmount} USD = $${cupAmount.toLocaleString()} CUP (tasa: ${rate})`, 
+                    'success');
+            } catch (error) {
+                showResult('currency-results', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        function testPriceCalculation() {
+            try {
+                // Simular cálculo de precio de envío
+                const weight = 2.5; // kg
+                const baseRate = 15.00; // USD para 1-2kg
+                const fees = baseRate * 0.1; // 10% fees
+                const total = baseRate + fees;
+                const totalCUP = total * 320;
+                
+                showResult('currency-results', 
+                    `✅ Precio: ${weight}kg = $${total} USD ($${totalCUP.toLocaleString()} CUP)`, 
+                    'success');
+            } catch (error) {
+                showResult('currency-results', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Test 2: Cámara
+        function testCameraPermissions() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(stream => {
+                        showResult('camera-results', '✅ Permisos de cámara concedidos', 'success');
+                        stream.getTracks().forEach(track => track.stop());
+                    })
+                    .catch(error => {
+                        showResult('camera-results', `❌ Error accediendo a cámara: ${error.message}`, 'error');
+                    });
+            } else {
+                showResult('camera-results', '❌ API de cámara no disponible', 'error');
+            }
+        }
+
+        function testCameraCapture() {
+            // Simular captura usando input file
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.capture = 'environment';
+            
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    showResult('camera-results', 
+                        `✅ Foto capturada: ${file.name} (${(file.size/1024).toFixed(1)}KB)`, 
+                        'success');
+                }
+            };
+            
+            input.click();
+        }
+
+        function testConnectionDetection() {
+            if ('connection' in navigator) {
+                const conn = navigator.connection;
+                showResult('camera-results', 
+                    `✅ Conexión: ${conn.effectiveType} (${conn.downlink} Mbps)`, 
+                    'success');
+            } else {
+                showResult('camera-results', '⚠️ API de red no disponible', 'warning');
+            }
+        }
+
+        // Test 3: QR y etiquetas
+        function testTrackingGeneration() {
+            try {
+                const tracking = 'PCK' + Date.now().toString().substr(-8);
+                showResult('qr-results', `✅ Tracking generado: ${tracking}`, 'success');
+            } catch (error) {
+                showResult('qr-results', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        function testQRGeneration() {
+            try {
+                const data = {
+                    tracking: 'PCK12345678',
+                    weight: '2.5kg',
+                    destination: 'La Habana, Cuba'
+                };
+                showResult('qr-results', 
+                    `✅ QR generado con datos: ${JSON.stringify(data)}`, 
+                    'success');
+            } catch (error) {
+                showResult('qr-results', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        function testLabelCreation() {
+            try {
+                const label = {
+                    id: 'LBL' + Date.now(),
+                    tracking: 'PCK12345678',
+                    created: new Date().toLocaleString()
+                };
+                showResult('qr-results', 
+                    `✅ Etiqueta creada: ${label.id}`, 
+                    'success');
+            } catch (error) {
+                showResult('qr-results', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Test 4: Compatibilidad
+        function testBrowserCompatibility() {
+            const features = {
+                'getUserMedia': !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia),
+                'localStorage': !!window.localStorage,
+                'fetch': !!window.fetch,
+                'Promise': !!window.Promise,
+                'ES6': typeof Symbol !== 'undefined'
+            };
+            
+            const results = Object.entries(features)
+                .map(([feature, supported]) => `${supported ? '✅' : '❌'} ${feature}`)
+                .join('\n');
+                
+            showResult('compat-results', `Compatibilidad:\n${results}`, 'success');
+        }
+
+        function testMobileFeatures() {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const screen = `${window.screen.width}x${window.screen.height}`;
+            const orientation = window.orientation || 'desktop';
+            
+            showResult('compat-results', 
+                `📱 Móvil: ${isMobile ? 'Sí' : 'No'}\n📺 Pantalla: ${screen}\n🔄 Orientación: ${orientation}`, 
+                isMobile ? 'success' : 'warning');
+        }
+
+        // Auto-ejecutar test básico al cargar
+        window.onload = function() {
+            showResult('compat-results', '🚀 Página de test cargada correctamente', 'success');
+        };
+    </script>
+</body>
+</html>

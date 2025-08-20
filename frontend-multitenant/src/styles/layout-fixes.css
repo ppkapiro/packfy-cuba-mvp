@@ -1,0 +1,355 @@
+/* 🎨 PACKFY CUBA - ESTILOS COMPLEMENTARIOS */
+/* Asegura que los elementos principales se vean correctamente */
+
+/* Layout principal */
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--background-color, #f8fafc);
+}
+
+.app-content {
+  flex: 1;
+  padding: var(--spacing-lg, 1.5rem) 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.container {
+  padding: 0 var(--spacing-lg, 1.5rem);
+  max-width: 100%;
+}
+
+/* Sección de información del tenant en el layout */
+.layout-tenant-section {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-bottom: 1px solid #e2e8f0;
+  padding: 1rem 0;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.layout-tenant-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.layout-tenant-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.layout-tenant-logo {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.layout-tenant-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.layout-tenant-name {
+  font-weight: 600;
+  font-size: 1.125rem;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.layout-tenant-role {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.layout-tenant-role-badge {
+  background: #e0f2fe;
+  color: #0277bd;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.layout-tenant-selector {
+  flex-shrink: 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .layout-tenant-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .layout-tenant-info {
+    justify-content: center;
+  }
+
+  .layout-tenant-selector {
+    width: 100%;
+  }
+
+  .layout-tenant-name {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .layout-tenant-section {
+    padding: 0.75rem 0;
+  }
+
+  .layout-tenant-container {
+    padding: 0 1rem;
+  }
+
+  .layout-tenant-logo {
+    width: 36px;
+    height: 36px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Dashboard específico */
+.dashboard-loading,
+.dashboard-error {
+  text-align: center;
+  padding: var(--spacing-2xl, 3rem);
+  font-size: var(--font-size-lg, 1.125rem);
+  color: var(--text-muted, #64748b);
+}
+
+.dashboard-error {
+  color: var(--danger-cuba, #cc0000);
+  background: rgba(204, 0, 0, 0.1);
+  border: 1px solid rgba(204, 0, 0, 0.2);
+  border-radius: var(--border-radius-md, 0.5rem);
+  margin: var(--spacing-lg, 1.5rem) 0;
+}
+
+/* Estados de estadísticas por defecto */
+.status-bar-wrapper {
+  background: var(--background-light, #f1f5f9);
+  border-radius: var(--border-radius-full, 9999px);
+  height: 0.5rem;
+  overflow: hidden;
+  margin-top: var(--spacing-xs, 0.25rem);
+}
+
+.status-bar {
+  height: 100%;
+  border-radius: var(--border-radius-full, 9999px);
+  transition: width var(--transition-normal, 250ms ease-in-out);
+  background: var(
+    --gradient-cuba,
+    linear-gradient(135deg, #0f4c75, #1e88e5, #d4af37)
+  );
+}
+
+.status-bar-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: 500;
+  color: var(--text-primary, #1e293b);
+}
+
+.status-count {
+  color: var(--text-muted, #64748b);
+  font-weight: 400;
+}
+
+/* Estados específicos por color */
+.status-bar.status-pendiente {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+}
+
+.status-bar.status-en-transito,
+.status-bar.status-en-tránsito {
+  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+}
+
+.status-bar.status-entregado {
+  background: linear-gradient(135deg, #10b981, #34d399);
+}
+
+.status-bar.status-cancelado {
+  background: linear-gradient(135deg, #ef4444, #f87171);
+}
+
+.status-bar.status-devuelto {
+  background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+}
+
+/* Mejorar navegación responsive */
+@media (max-width: 768px) {
+  .nav-menu {
+    flex-direction: column;
+    gap: var(--spacing-xs, 0.25rem);
+  }
+
+  .nav-link span:last-child {
+    display: none;
+  }
+
+  .user-menu .user-name {
+    display: none;
+  }
+
+  .app-content {
+    padding: var(--spacing-md, 1rem) 0;
+  }
+
+  .container {
+    padding: 0 var(--spacing-md, 1rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .header-content {
+    flex-wrap: wrap;
+    gap: var(--spacing-sm, 0.5rem);
+  }
+
+  .nav-menu {
+    order: 3;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-top: var(--spacing-sm, 0.5rem);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .app-content {
+    padding: var(--spacing-sm, 0.5rem) 0;
+  }
+
+  .container {
+    padding: 0 var(--spacing-sm, 0.5rem);
+  }
+}
+
+/* Asegurar que las páginas de login se vean bien */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(
+    --gradient-cuba,
+    linear-gradient(135deg, #0f4c75, #1e88e5, #d4af37)
+  );
+  padding: var(--spacing-lg, 1.5rem);
+}
+
+/* Elementos de prueba para desarrollo */
+.test-credentials {
+  margin-top: var(--spacing-lg, 1.5rem);
+  padding: var(--spacing-lg, 1.5rem);
+  background: var(--background-light, #f1f5f9);
+  border-radius: var(--border-radius-md, 0.5rem);
+  border: 1px solid var(--border-color, #e2e8f0);
+}
+
+.test-credentials-title {
+  font-weight: 600;
+  margin-bottom: var(--spacing-md, 1rem);
+  color: var(--text-primary, #1e293b);
+  text-align: center;
+}
+
+.test-credential {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
+  margin-bottom: var(--spacing-xs, 0.25rem);
+  background: var(--surface-color, #ffffff);
+  border: 1px solid var(--border-light, #f1f5f9);
+  border-radius: var(--border-radius-sm, 0.375rem);
+  cursor: pointer;
+  transition: var(--transition-fast, 150ms ease-in-out);
+  font-size: var(--font-size-sm, 0.875rem);
+}
+
+.test-credential:hover {
+  background: var(--primary-cuba, #0f4c75);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
+}
+
+.login-divider {
+  height: 1px;
+  background: var(--border-color, #e2e8f0);
+  margin: var(--spacing-xl, 2rem) 0 var(--spacing-lg, 1.5rem) 0;
+}
+
+.login-footer {
+  margin-top: var(--spacing-lg, 1.5rem);
+  text-align: center;
+}
+
+.login-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm, 0.5rem);
+}
+
+.login-link {
+  color: var(--text-muted, #64748b);
+  text-decoration: none;
+  font-size: var(--font-size-sm, 0.875rem);
+  transition: var(--transition-fast, 150ms ease-in-out);
+}
+
+.login-link:hover {
+  color: var(--primary-cuba, #0f4c75);
+  text-decoration: underline;
+}
+
+/* Estados de error en formularios */
+.form-error {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 0.5rem);
+  padding: var(--spacing-md, 1rem);
+  background: rgba(204, 0, 0, 0.1);
+  border: 1px solid rgba(204, 0, 0, 0.2);
+  border-radius: var(--border-radius-md, 0.5rem);
+  color: var(--danger-cuba, #cc0000);
+  font-size: var(--font-size-sm, 0.875rem);
+  margin-bottom: var(--spacing-lg, 1.5rem);
+}
+
+/* Asegurar visibilidad de iconos */
+.icon:not([class*="icon-"]) {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%230f4c75' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3C/svg%3E");
+}

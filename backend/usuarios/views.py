@@ -1,44 +1,51 @@
-from rest_framework import viewsets, permissions
+from empresas.models import PerfilUsuario
+from empresas.permissions import TenantPermission
+from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
 from .models import Usuario
-from .serializers import UsuarioSerializer
 from .permissions import EsAdministrador, EsCreadorOAdministrador
+from .serializers import UsuarioSerializer
+
 
 class UsuarioViewSet(viewsets.ModelViewSet):
     """
     API endpoint para usuarios.
     """
+
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
-    
+
     def get_permissions(self):
         """
-        Personalización de permisos:
-        - Administradores pueden realizar todas las acciones
-        - Usuarios solo pueden ver/editar su propio perfil
+        Personalización de permisos multi-tenant:
+        - Requiere permisos de empresa para todas las acciones
+        - El endpoint 'me' solo requiere autenticación
         """
-        if self.action == 'me':
+        if self.action == "me":
             permission_classes = [permissions.IsAuthenticated]
-        elif self.action in ['create', 'destroy', 'list']:
-            permission_classes = [EsAdministrador]
         else:
-            permission_classes = [EsCreadorOAdministrador]
+            permission_classes = [TenantPermission]
         return [permission() for permission in permission_classes]
-    
+
     def get_queryset(self):
         """
-        Filtra los usuarios según los permisos del usuario actual:
-        - Administradores ven todos los usuarios
-        - Usuarios normales solo se ven a sí mismos
+        Filtra los usuarios por empresa actual (multi-tenant):
+        - Solo muestra usuarios que pertenecen a la empresa del contexto
         """
-        user = self.request.user
-        # Verificar si el usuario está autenticado y tiene los atributos necesarios
-        if user.is_authenticated and (user.is_staff or getattr(user, 'es_administrador_empresa', False)):
-            return Usuario.objects.all()
-        return Usuario.objects.filter(id=user.id)
-    
-    @action(detail=False, methods=['get'])
+        # Si no hay empresa en el contexto, devolver queryset vacío
+        if not hasattr(self.request, "tenant") or not self.request.tenant:
+            return Usuario.objects.none()
+
+        # Obtener usuarios que tienen perfil en la empresa actual
+        usuarios_empresa = PerfilUsuario.objects.filter(
+            empresa=self.request.tenant, activo=True
+        ).values_list("usuario_id", flat=True)
+
+        return Usuario.objects.filter(id__in=usuarios_empresa)
+
+    @action(detail=False, methods=["get"])
     def me(self, request):
         """
         Endpoint para obtener el perfil del usuario autenticado

@@ -1,0 +1,15 @@
+<svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad72" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="72" height="72" fill="url(#bgGrad72)" rx="12"/>
+  <circle cx="36" cy="28" r="8" fill="white" opacity="0.9"/>
+  <rect x="20" y="36" width="32" height="20" fill="white" opacity="0.9" rx="4"/>
+  <text x="36" y="50" font-family="Arial, sans-serif" font-size="8" font-weight="bold" text-anchor="middle" fill="#1e40af">📦</text>
+  <rect x="24" y="60" width="24" height="2" fill="#dc2626" rx="1"/>
+  <rect x="24" y="64" width="24" height="2" fill="#059669" rx="1"/>
+</svg>

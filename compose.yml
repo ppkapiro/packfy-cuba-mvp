@@ -26,7 +26,7 @@ services:
 
   # 🔧 Backend Django API
   backend:
-    build: 
+    build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: packfy-backend
@@ -52,10 +52,10 @@ services:
       timeout: 10s
       retries: 3
 
-  # 🌐 Frontend React
+  # 🌐 Frontend React Multi-tenant
   frontend:
     build:
-      context: ./frontend
+      context: ./frontend-multitenant
       dockerfile: Dockerfile
     container_name: packfy-frontend
     depends_on:
@@ -63,15 +63,26 @@ services:
         condition: service_healthy
     environment:
       - VITE_API_BASE_URL=http://192.168.12.178:8000
-      - VITE_APP_TITLE=Packfy MVP
+      - VITE_APP_TITLE=Packfy MVP Multi-tenant
     volumes:
-      - ./frontend:/app
+      - ./frontend-multitenant:/app
       - /app/node_modules
     ports:
       - "5173:5173"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5173", "||", "curl", "-k", "-f", "https://localhost:5173"]
+      test:
+        [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:5173",
+          "||",
+          "curl",
+          "-k",
+          "-f",
+          "https://localhost:5173",
+        ]
       interval: 30s
       timeout: 10s
       retries: 5

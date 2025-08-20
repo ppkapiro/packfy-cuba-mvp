@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { TenantProvider } from './contexts/TenantContext';
 import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
@@ -35,27 +36,28 @@ function App() {
 
   return (
     <AuthProvider>
-      <div className="app-container">
-        {/* Banner de estado de conexión */}
-        <NetworkStatusBanner />
+      <TenantProvider>
+        <div className="app-container">
+          {/* Banner de estado de conexión */}
+          <NetworkStatusBanner />
 
-        <BrowserRouter>
-          <div className="app-content">
-            <Routes>
-              {/* Rutas públicas */}
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/diagnostico" element={<DiagnosticPage />} />
-              <Route path="/rastrear" element={<PublicTrackingPage />} />
+          <BrowserRouter>
+            <div className="app-content">
+              <Routes>
+                {/* Rutas públicas */}
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/diagnostico" element={<DiagnosticPage />} />
+                <Route path="/rastrear" element={<PublicTrackingPage />} />
 
-              {/* Rutas protegidas */}
-              <Route
-                path="/"
-                element={
-                  <ProtectedRoute>
-                    <Layout />
-                  </ProtectedRoute>
-                }
-              >
+                {/* Rutas protegidas */}
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <Layout />
+                    </ProtectedRoute>
+                  }
+                >
                 <Route index element={<Navigate to="/dashboard" />} />
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="envios" element={<GestionEnvios />} />
@@ -77,6 +79,7 @@ function App() {
         {/* PWA Install Prompt */}
         <PWAInstallPrompt />
       </div>
+      </TenantProvider>
     </AuthProvider>
   );
 }

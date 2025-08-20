@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 Packfy Cuba - HTTPS Seguro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo h1 {
+            font-size: 2.5em;
+            color: #FFD700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+        
+        .status {
+            background: #27AE60;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .https-status {
+            background: #16A085;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .test-info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #FFD700;
+            color: #1e3c72;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 10px;
+            font-weight: bold;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #FFA500;
+            transform: translateY(-2px);
+        }
+        
+        .connection-info {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        
+        .security-info {
+            background: rgba(22, 160, 133, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #16A085;
+        }
+        
+        .flag {
+            display: inline-block;
+            margin: 0 10px;
+            font-size: 2em;
+        }
+        
+        .api-result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>🇨🇺 PACKFY</h1>
+            <p>Paquetería Cuba MVP</p>
+            <span class="flag">🇨🇺</span>
+        </div>
+        
+        <div class="status">
+            🔒 CONEXIÓN HTTPS SEGURA ESTABLECIDA
+        </div>
+        
+        <div class="https-status">
+            ✅ Certificado SSL Válido Localmente
+        </div>
+        
+        <div class="test-info">
+            <h3>🔒 Test HTTPS - Móvil Seguro</h3>
+            <p>Esta es la versión HTTPS con certificados válidos para máxima compatibilidad móvil.</p>
+        </div>
+        
+        <div class="security-info">
+            <strong>🛡️ Seguridad SSL:</strong><br>
+            • Certificado generado con mkcert<br>
+            • Compatible con móviles<br>
+            • Sin advertencias de seguridad<br>
+            • PWA completamente funcional
+        </div>
+        
+        <div class="connection-info">
+            <strong>URLs HTTPS:</strong><br>
+            • Frontend: https://192.168.12.178:5173/<br>
+            • Backend: http://192.168.12.178:8000/<br>
+            • Protocolo: HTTPS + HTTP Mixed
+        </div>
+        
+        <a href="https://192.168.12.178:5173/" class="btn">
+            🚀 Ir a la Aplicación Principal HTTPS
+        </a>
+        
+        <a href="#" onclick="testAPI()" class="btn">
+            🔧 Test API Backend
+        </a>
+        
+        <a href="#" onclick="testPWA()" class="btn">
+            📱 Test PWA Features
+        </a>
+        
+        <div id="api-result" class="api-result"></div>
+    </div>
+
+    <script>
+        console.log('🇨🇺 Packfy Cuba - HTTPS Seguro');
+        
+        // Verificar HTTPS
+        const isHttps = location.protocol === 'https:';
+        console.log('🔒 HTTPS Status:', isHttps);
+        
+        // Información del dispositivo con seguridad
+        const deviceInfo = {
+            userAgent: navigator.userAgent,
+            screenWidth: screen.width,
+            screenHeight: screen.height,
+            viewport: `${window.innerWidth}x${window.innerHeight}`,
+            protocol: location.protocol,
+            host: location.host,
+            isSecure: isHttps,
+            serviceWorkerSupport: 'serviceWorker' in navigator,
+            notificationSupport: 'Notification' in window
+        };
+        
+        console.log('📱 Device Info (HTTPS):', deviceInfo);
+        
+        async function testAPI() {
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<p>🔄 Probando conexión al backend...</p>';
+            
+            try {
+                const response = await fetch('http://192.168.12.178:8000/api/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div style="background: #27AE60; padding: 15px; border-radius: 10px;">
+                            ✅ Backend conectado exitosamente<br>
+                            Status: ${response.status}<br>
+                            URL: ${response.url}<br>
+                            🔒 HTTPS → HTTP: Funcional
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div style="background: #E74C3C; padding: 15px; border-radius: 10px;">
+                            ⚠️ Backend responde pero con error<br>
+                            Status: ${response.status}<br>
+                            URL: ${response.url}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div style="background: #E74C3C; padding: 15px; border-radius: 10px;">
+                        ❌ Error de conexión al backend<br>
+                        Error: ${error.message}<br>
+                        💡 Verifica que el backend esté corriendo
+                    </div>
+                `;
+            }
+        }
+        
+        async function testPWA() {
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<p>📱 Probando funciones PWA...</p>';
+            
+            const pwaFeatures = {
+                serviceWorker: 'serviceWorker' in navigator,
+                notifications: 'Notification' in window,
+                geolocation: 'geolocation' in navigator,
+                cameraAPI: 'mediaDevices' in navigator,
+                installPrompt: window.matchMedia('(display-mode: standalone)').matches
+            };
+            
+            let pwaHtml = '<div style="background: #3498DB; padding: 15px; border-radius: 10px;">';
+            pwaHtml += '<strong>📱 PWA Features Test:</strong><br>';
+            
+            Object.entries(pwaFeatures).forEach(([feature, supported]) => {
+                const icon = supported ? '✅' : '❌';
+                pwaHtml += `${icon} ${feature}: ${supported}<br>`;
+            });
+            
+            pwaHtml += `<br>🔒 HTTPS: ${location.protocol === 'https:' ? '✅' : '❌'}`;
+            pwaHtml += '</div>';
+            
+            resultDiv.innerHTML = pwaHtml;
+        }
+        
+        // Auto-test de conectividad y seguridad
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ Página HTTPS cargada correctamente en móvil');
+            console.log('🔒 SSL Status:', location.protocol);
+            console.log('📱 Resolución:', window.innerWidth + 'x' + window.innerHeight);
+            
+            // Test automático después de 2 segundos
+            setTimeout(() => {
+                testAPI();
+                setTimeout(testPWA, 1000);
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

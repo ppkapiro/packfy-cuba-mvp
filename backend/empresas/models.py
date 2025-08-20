@@ -80,10 +80,10 @@ class PerfilUsuario(models.Model):
         DESTINATARIO = "destinatario", "Destinatario"
 
     # Relaciones principales
-    usuario = models.OneToOneField(
+    usuario = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="perfil",
+        related_name="perfiles_empresa",
     )
     empresa = models.ForeignKey(
         Empresa, on_delete=models.CASCADE, related_name="usuarios"

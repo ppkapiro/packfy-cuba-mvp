@@ -1,0 +1,267 @@
+/* 🏢 Información de Empresa Multi-Tenant */
+.tenant-info {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.tenant-info.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 100px;
+  color: #666;
+}
+
+.tenant-info.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 100px;
+  background: #ffeaa7;
+  border-color: #fdcb6e;
+  color: #e17055;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e0e0e0;
+  border-top: 2px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.error-icon {
+  font-size: 20px;
+}
+
+/* Header */
+.tenant-info-header {
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.tenant-info-header h3 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.header-icon {
+  font-size: 20px;
+}
+
+/* Content */
+.tenant-info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Empresa Card */
+.empresa-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+}
+
+.empresa-header h4 {
+  margin: 0 0 4px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.empresa-slug {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: "Monaco", "Menlo", monospace;
+}
+
+.empresa-descripcion {
+  margin: 12px 0 8px 0;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+.empresa-meta {
+  margin-top: 12px;
+  opacity: 0.8;
+  font-size: 14px;
+}
+
+/* Perfil Card */
+.perfil-card {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.perfil-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.rol-icon {
+  font-size: 24px;
+}
+
+.perfil-details h4 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.rol-nombre {
+  font-weight: 600;
+  color: #007bff;
+  font-size: 14px;
+}
+
+.admin-badge {
+  display: inline-block;
+  background: #28a745;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-left: 8px;
+}
+
+.perfil-meta {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Permisos Card */
+.permisos-card {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.permisos-card h4 {
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: #333;
+}
+
+.permisos-icon {
+  font-size: 18px;
+}
+
+.permisos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+.permiso-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: background-color 0.15s ease;
+}
+
+.permiso-item.disponible {
+  background: #d4edda;
+  color: #155724;
+}
+
+.permiso-item.no-disponible {
+  background: #f8d7da;
+  color: #721c24;
+  opacity: 0.7;
+}
+
+.permiso-status {
+  font-size: 12px;
+}
+
+.permiso-nombre {
+  font-weight: 500;
+}
+
+/* Meta items */
+.meta-item {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.meta-item strong {
+  margin-right: 4px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .tenant-info {
+    padding: 16px;
+  }
+
+  .tenant-info-header h3 {
+    font-size: 16px;
+  }
+
+  .empresa-header h4 {
+    font-size: 16px;
+  }
+
+  .permisos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .perfil-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+/* Animación */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Efectos hover */
+.empresa-card:hover {
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+}
+
+.perfil-card:hover,
+.permisos-card:hover {
+  border-color: #007bff;
+  transition: border-color 0.2s ease;
+}
