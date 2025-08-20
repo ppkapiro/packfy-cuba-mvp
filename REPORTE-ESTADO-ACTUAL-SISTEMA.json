@@ -1,0 +1,14 @@
+{
+  "timestamp": "2025-08-19T19:09:27.352466",
+  "version": "sistema-multitenant-estable",
+  "estado": {
+    "logs_consola": "positivos",
+    "hot_reload": "deshabilitado",
+    "pwa_prompts": "deshabilitados",
+    "service_worker": "activo_en_navegador",
+    "multitenant": "operativo"
+  },
+  "logs_consola": true,
+  "acceso_actual": true,
+  "containers": true
+}

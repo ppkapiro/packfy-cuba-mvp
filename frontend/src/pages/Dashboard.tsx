@@ -6,6 +6,7 @@ import axios from 'axios';
 import { enviosAPI } from '../services/api';
 import Pagination from '../components/Pagination';
 import DashboardStats from '../components/DashboardStats';
+import TenantInfo from '../components/TenantInfo';
 import ErrorBoundary from '../components/ErrorBoundary';
 import ErrorFallback from '../components/ErrorFallback';
 import { Envio } from '../types';
@@ -263,6 +264,9 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
         )}
+
+        {/* Información del tenant actual */}
+        <TenantInfo />
 
         {/* Sección de estadísticas - Con manejo de errores */}
         <div className="stats-container">
