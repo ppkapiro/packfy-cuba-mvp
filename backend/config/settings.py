@@ -36,9 +36,9 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "empresas.middleware.TenantMiddleware",  # Multi-tenancy support
-    "usuarios.middleware.ProteccionUsuariosDemoMiddleware",  # Protección usuarios demo
     "django.contrib.messages.middleware.MessageMiddleware",
+    "empresas.middleware.TenantMiddleware",  # Multi-tenancy support - MOVIDO AQUÍ
+    "usuarios.middleware.ProteccionUsuariosDemoMiddleware",  # Protección usuarios demo
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
@@ -65,20 +65,20 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB", "packfy"),
+        "USER": os.getenv("POSTGRES_USER", "postgres"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
+        "HOST": os.getenv("POSTGRES_HOST", "database"),
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
     }
 }
 
-# Configuración PostgreSQL para producción (comentada)
+# Configuración SQLite para desarrollo local (comentada)
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.getenv('POSTGRES_DB', 'packfy'),
-#         'USER': os.getenv('POSTGRES_USER', 'postgres'),
-#         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'postgres'),
-#         'HOST': os.getenv('POSTGRES_HOST', 'database'),
-#         'PORT': os.getenv('POSTGRES_PORT', '5432'),
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
 #     }
 # }
 

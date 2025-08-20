@@ -1,9 +1,9 @@
 {
-  "name": "Packfy - Paqueteria Cuba",
-  "short_name": "Packfy",
-  "description": "Sistema de gestion de envios para Cuba",
+  "name": "Packfy - Paqueteria Cuba (DEV)",
+  "short_name": "Packfy Dev",
+  "description": "Sistema de gestion de envios para Cuba - Desarrollo",
   "start_url": "/",
-  "display": "standalone",
+  "display": "browser",
   "background_color": "#ffffff",
   "theme_color": "#3b82f6",
   "orientation": "portrait-primary",
@@ -16,21 +16,21 @@
       "purpose": "any"
     },
     {
-      "src": "/icon-512.svg", 
+      "src": "/icon-512.svg",
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
       "src": "/icon-192.svg",
-      "sizes": "192x192", 
+      "sizes": "192x192",
       "type": "image/svg+xml",
       "purpose": "maskable"
     },
     {
       "src": "/icon-512.svg",
       "sizes": "512x512",
-      "type": "image/svg+xml", 
+      "type": "image/svg+xml",
       "purpose": "maskable"
     }
   ],

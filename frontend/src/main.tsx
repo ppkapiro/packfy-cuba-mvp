@@ -7,13 +7,17 @@ import './styles/layout-fixes.css'
 import './styles/mobile-optimized.css'
 import './styles/mobile-pwa.css'
 
-// 📱 Service Worker PWA optimizado para móvil
-if ('serviceWorker' in navigator) {
+// 📱 Service Worker PWA - DESHABILITADO PARA DESARROLLO
+// Comentado temporalmente para evitar problemas en Chrome durante testing
+/*
+const PWA_ENABLED = process.env.REACT_APP_PWA_ENABLED !== 'false';
+
+if (PWA_ENABLED && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
       .then((registration) => {
         console.log('🚀 SW v2.0 registrado exitosamente:', registration.scope);
-        
+
         // Verificar actualizaciones del SW
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
@@ -30,15 +34,15 @@ if ('serviceWorker' in navigator) {
       .catch((error) => {
         console.log('❌ Error al registrar SW:', error);
       });
-    
-    // 📱 Detección de instalación PWA - MEJORADO PARA CHROME
+
+    // 📱 Detección de instalación PWA - Solo si está habilitado
     let deferredPrompt: any = null;
-    
+
     window.addEventListener('beforeinstallprompt', (e: Event) => {
       console.log('📱 PWA listo para instalación');
       e.preventDefault();
       deferredPrompt = e;
-      
+
       // Mostrar prompt INMEDIATAMENTE cuando esté disponible
       console.log('💡 Mostrando prompt de instalación INMEDIATO');
       setTimeout(() => {
@@ -62,7 +66,7 @@ if ('serviceWorker' in navigator) {
         }
       }, 1000); // Reducido a 1 segundo
     });
-    
+
     // Confirmar instalación exitosa
     window.addEventListener('appinstalled', () => {
       console.log('🎉 Packfy Cuba PWA instalada exitosamente');
@@ -71,6 +75,9 @@ if ('serviceWorker' in navigator) {
 } else {
   console.log('❌ Service Workers no soportados en este navegador');
 }
+*/
+
+console.log('🚫 PWA DESHABILITADO PARA DESARROLLO - Testing en progreso');
 
 // 📱 Optimizaciones para dispositivos móviles
 if (window.DeviceMotionEvent) {

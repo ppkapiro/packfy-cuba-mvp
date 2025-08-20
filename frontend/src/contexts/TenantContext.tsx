@@ -26,7 +26,7 @@ interface TenantContextData {
   isLoading: boolean;
 
   // Acciones
-  cambiarEmpresa: (empresaSlug: string) => Promise<void>;
+  cambiarEmpresa: (empresaSlug: string, empresaData?: Empresa) => Promise<void>;
   cargarEmpresas: () => Promise<void>;
   obtenerPerfilEnEmpresa: () => Promise<void>;
 
@@ -53,11 +53,9 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
       const empresas = empresasData?.results || empresasData || [];
       setEmpresasDisponibles(Array.isArray(empresas) ? empresas : []);
 
-      // Si hay empresas y no hay una seleccionada, seleccionar la primera
-      if (!empresaActual && Array.isArray(empresas) && empresas.length > 0) {
-        const primeraEmpresa = empresas[0];
-        await cambiarEmpresa(primeraEmpresa.slug);
-      }
+      // FIJO: Evitar loop infinito - solo auto-seleccionar en inicialización
+      // Esto se manejará en el useEffect de inicialización
+      console.log(`📊 Empresas cargadas: ${empresas.length}`, empresas);
     } catch (error) {
       console.error('Error cargando empresas:', error);
       setEmpresasDisponibles([]);
@@ -65,12 +63,16 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // Cambiar empresa actual
-  const cambiarEmpresa = async (empresaSlug: string): Promise<void> => {
+  const cambiarEmpresa = async (empresaSlug: string, empresaData?: Empresa): Promise<void> => {
     try {
       setIsLoading(true);
 
-      // Encontrar la empresa por slug
-      const empresa = empresasDisponibles.find(e => e.slug === empresaSlug);
+      // Encontrar la empresa por slug (usar empresaData si se proporciona)
+      let empresa = empresaData;
+      if (!empresa) {
+        empresa = empresasDisponibles.find(e => e.slug === empresaSlug);
+      }
+
       if (!empresa) {
         throw new Error(`Empresa con slug '${empresaSlug}' no encontrada`);
       }
@@ -141,6 +143,8 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
   // Inicialización al montar el componente
   useEffect(() => {
     const inicializar = async () => {
+      let empresaSeleccionada = false;
+
       // Intentar restaurar empresa desde localStorage
       const tenantSlug = localStorage.getItem('tenant-slug');
       const empresaGuardada = localStorage.getItem('empresa-actual');
@@ -150,6 +154,7 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
           const empresa = JSON.parse(empresaGuardada);
           setEmpresaActual(empresa);
           apiClient.setTenantSlug(tenantSlug);
+          empresaSeleccionada = true;
 
           // Cargar perfil
           await obtenerPerfilEnEmpresa();
@@ -163,6 +168,28 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
 
       // Cargar empresas disponibles
       await cargarEmpresas();
+
+      // Si no hay empresa seleccionada, seleccionar la primera disponible
+      if (!empresaSeleccionada) {
+        const response = await apiClient.makeRequest('/empresas/');
+        const empresasData = response.data as any;
+        const empresas = empresasData?.results || empresasData || [];
+
+        if (Array.isArray(empresas) && empresas.length > 0) {
+          const primeraEmpresa = empresas[0];
+          console.log('🏢 Auto-seleccionando primera empresa:', primeraEmpresa.nombre);
+          console.log('📊 Estructura completa de empresa:', primeraEmpresa);
+          console.log('🔑 Slug de empresa:', primeraEmpresa.slug);
+
+          if (primeraEmpresa.slug) {
+            // Pasar la empresa directamente para evitar problemas de timing
+            await cambiarEmpresa(primeraEmpresa.slug, primeraEmpresa);
+          } else {
+            console.error('❌ Empresa sin slug:', primeraEmpresa);
+          }
+        }
+      }
+
       setIsLoading(false);
     };
 

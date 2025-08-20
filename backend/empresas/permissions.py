@@ -135,6 +135,13 @@ class EmpresaOwnerPermission(permissions.BasePermission):
         if not request.user.is_authenticated:
             return False
 
+        # Configurar perfil_usuario si no existe
+        if (
+            not hasattr(request, "perfil_usuario")
+            or not request.perfil_usuario
+        ):
+            self._setup_user_profile(request)
+
         if (
             not hasattr(request, "perfil_usuario")
             or not request.perfil_usuario
@@ -142,6 +149,60 @@ class EmpresaOwnerPermission(permissions.BasePermission):
             return False
 
         return request.perfil_usuario.es_dueno
+
+    def _setup_user_profile(self, request):
+        """
+        Configura el perfil del usuario basado en el tenant y usuario autenticado.
+        """
+        try:
+            print(f"🔧 CONFIGURANDO PERFIL para {request.user.email}")
+
+            # Obtener empresa del tenant
+            empresa = getattr(request, "tenant", None)
+
+            if empresa:
+                # Buscar perfil específico para esta empresa
+                perfil = (
+                    PerfilUsuario.objects.select_related("empresa")
+                    .filter(
+                        usuario=request.user,
+                        empresa=empresa,
+                        activo=True,
+                    )
+                    .first()
+                )
+
+                if perfil:
+                    request.perfil_usuario = perfil
+                    print(
+                        f"✅ PERFIL CONFIGURADO: {perfil.rol} para {perfil.usuario.email}"
+                    )
+                    return
+
+            # Fallback: buscar cualquier perfil activo del usuario
+            perfil = (
+                PerfilUsuario.objects.select_related("empresa")
+                .filter(
+                    usuario=request.user, activo=True, empresa__activo=True
+                )
+                .first()
+            )
+
+            if perfil:
+                request.perfil_usuario = perfil
+                # También actualizar el tenant si no estaba configurado
+                if not hasattr(request, "tenant") or not request.tenant:
+                    request.tenant = perfil.empresa
+                print(
+                    f"✅ PERFIL FALLBACK: {perfil.rol} para {perfil.usuario.email}"
+                )
+            else:
+                print(
+                    f"❌ SIN PERFIL: Usuario {request.user.email} sin perfil activo"
+                )
+
+        except Exception as e:
+            print(f"❌ ERROR CONFIGURANDO PERFIL: {e}")
 
 
 class EmpresaOperatorPermission(permissions.BasePermission):
@@ -154,6 +215,13 @@ class EmpresaOperatorPermission(permissions.BasePermission):
         if not request.user.is_authenticated:
             return False
 
+        # Configurar perfil_usuario si no existe
+        if (
+            not hasattr(request, "perfil_usuario")
+            or not request.perfil_usuario
+        ):
+            self._setup_user_profile(request)
+
         if (
             not hasattr(request, "perfil_usuario")
             or not request.perfil_usuario
@@ -161,6 +229,60 @@ class EmpresaOperatorPermission(permissions.BasePermission):
             return False
 
         return request.perfil_usuario.puede_gestionar_envios
+
+    def _setup_user_profile(self, request):
+        """
+        Configura el perfil del usuario basado en el tenant y usuario autenticado.
+        """
+        try:
+            print(f"🔧 CONFIGURANDO PERFIL OPERATOR para {request.user.email}")
+
+            # Obtener empresa del tenant
+            empresa = getattr(request, "tenant", None)
+
+            if empresa:
+                # Buscar perfil específico para esta empresa
+                perfil = (
+                    PerfilUsuario.objects.select_related("empresa")
+                    .filter(
+                        usuario=request.user,
+                        empresa=empresa,
+                        activo=True,
+                    )
+                    .first()
+                )
+
+                if perfil:
+                    request.perfil_usuario = perfil
+                    print(
+                        f"✅ PERFIL OPERATOR CONFIGURADO: {perfil.rol} para {perfil.usuario.email}"
+                    )
+                    return
+
+            # Fallback: buscar cualquier perfil activo del usuario
+            perfil = (
+                PerfilUsuario.objects.select_related("empresa")
+                .filter(
+                    usuario=request.user, activo=True, empresa__activo=True
+                )
+                .first()
+            )
+
+            if perfil:
+                request.perfil_usuario = perfil
+                # También actualizar el tenant si no estaba configurado
+                if not hasattr(request, "tenant") or not request.tenant:
+                    request.tenant = perfil.empresa
+                print(
+                    f"✅ PERFIL OPERATOR FALLBACK: {perfil.rol} para {perfil.usuario.email}"
+                )
+            else:
+                print(
+                    f"❌ SIN PERFIL OPERATOR: Usuario {request.user.email} sin perfil activo"
+                )
+
+        except Exception as e:
+            print(f"❌ ERROR CONFIGURANDO PERFIL OPERATOR: {e}")
 
 
 class EmpresaClientPermission(permissions.BasePermission):
