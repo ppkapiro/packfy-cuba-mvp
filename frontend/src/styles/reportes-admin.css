@@ -1,0 +1,275 @@
+/* Estilos para Reportes Admin */
+.reportes-admin {
+  padding: 20px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.reportes-admin .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.reportes-admin .header-content h1 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 24px;
+}
+
+.reportes-admin .header-content p {
+  margin: 5px 0 0 0;
+  color: #7f8c8d;
+}
+
+.reportes-admin .header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.reportes-admin .btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.reportes-admin .btn-primary {
+  background-color: #3498db;
+  color: white;
+}
+
+.reportes-admin .btn-secondary {
+  background-color: #95a5a6;
+  color: white;
+}
+
+.reportes-admin .btn:hover {
+  opacity: 0.9;
+}
+
+.reportes-admin .reportes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.reportes-admin .reporte-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.reportes-admin .card-header {
+  padding: 20px 20px 10px 20px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.reportes-admin .card-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.reportes-admin .card-content {
+  padding: 20px;
+}
+
+.reportes-admin .metric-main {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.reportes-admin .metric-value {
+  display: block;
+  font-size: 32px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.reportes-admin .metric-label {
+  color: #7f8c8d;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.reportes-admin .metrics-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reportes-admin .breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.reportes-admin .breakdown-value {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.reportes-admin .breakdown-label {
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+.reportes-admin .breakdown-percentage {
+  font-size: 12px;
+  color: #27ae60;
+  font-weight: 500;
+}
+
+.reportes-admin .kpi-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.reportes-admin .kpi-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.reportes-admin .kpi-item:last-child {
+  border-bottom: none;
+}
+
+.reportes-admin .kpi-label {
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+.reportes-admin .kpi-value {
+  font-weight: bold;
+  color: #2c3e50;
+  font-size: 16px;
+}
+
+.reportes-admin .reportes-actions {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.reportes-admin .reportes-actions h2 {
+  margin: 0 0 20px 0;
+  color: #2c3e50;
+}
+
+.reportes-admin .actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.reportes-admin .action-card {
+  padding: 20px;
+  border: 1px solid #ecf0f1;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+  text-align: left;
+}
+
+.reportes-admin .action-card:hover {
+  border-color: #3498db;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.reportes-admin .action-card h3 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+  font-size: 16px;
+}
+
+.reportes-admin .action-card p {
+  margin: 0;
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+/* Colores específicos para cada tipo de reporte */
+.reportes-admin .reporte-card.envios .card-header {
+  background-color: #e8f5e8;
+}
+
+.reportes-admin .reporte-card.usuarios .card-header {
+  background-color: #e3f2fd;
+}
+
+.reportes-admin .reporte-card.ingresos .card-header {
+  background-color: #fff3e0;
+}
+
+.reportes-admin .reporte-card.rendimiento .card-header {
+  background-color: #f3e5f5;
+}
+
+.reportes-admin .loading,
+.reportes-admin .error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
+.reportes-admin .loading-container,
+.reportes-admin .error-container {
+  text-align: center;
+}
+
+.reportes-admin .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 10px auto;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.reportes-admin .retry-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.reportes-admin .retry-button:hover {
+  background-color: #c0392b;
+}

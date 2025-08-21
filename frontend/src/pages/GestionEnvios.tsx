@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, Package, Edit3, Trash2, Eye, Filter, Plus, RefreshCw, Star } from 'lucide-react';
-import api from '../services/api';
-
-// 🚀 PACKFY CUBA - GESTIÓN GRATUITA DE ENVÍOS
-// Página completa para administrar todos los envíos del sistema
+import { api } from '../services/api';
+import '../styles/gestion-envios.css';
 
 interface Envio {
   id: string;
@@ -12,104 +9,104 @@ interface Envio {
   descripcion: string;
   peso: number;
   valor_declarado: number;
-
   remitente_nombre: string;
   remitente_telefono: string;
-
   destinatario_nombre: string;
   destinatario_telefono: string;
-
   estado_actual: string;
   fecha_creacion: string;
   fecha_estimada_entrega: string | null;
-
   notas?: string;
 }
 
 const GestionEnvios: React.FC = () => {
-  // Estados del componente
   const [envios, setEnvios] = useState<Envio[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [filteredEnvios, setFilteredEnvios] = useState<Envio[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filtroEstado, setFiltroEstado] = useState('');
-  const [envioSeleccionado] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string>('all');
 
   const navigate = useNavigate();
 
-  // Determinar si es modo premium basado en la URL
-  const isPremium = window.location.pathname.includes('/gestion/premium');  // Estados disponibles para filtros
   const estadosDisponibles = [
-    { value: '', label: 'Todos los estados' },
-    { value: 'RECIBIDO', label: '📦 Recibido' },
-    { value: 'EN_TRANSITO', label: '🚚 En Tránsito' },
-    { value: 'EN_REPARTO', label: '🏃 En Reparto' },
-    { value: 'ENTREGADO', label: '✅ Entregado' },
-    { value: 'DEVUELTO', label: '↩️ Devuelto' },
-    { value: 'CANCELADO', label: '❌ Cancelado' }
+    { value: 'all', label: 'Todos los estados' },
+    { value: 'recibido', label: '📦 Recibido' },
+    { value: 'en_transito', label: '🚚 En Tránsito' },
+    { value: 'en_reparto', label: '🏃 En Reparto' },
+    { value: 'entregado', label: '✅ Entregado' },
+    { value: 'devuelto', label: '↩️ Devuelto' },
+    { value: 'cancelado', label: '❌ Cancelado' }
   ];
 
-  // Cargar envíos al montar el componente
   useEffect(() => {
-    cargarEnvios();
+    loadEnvios();
   }, []);
 
-  const cargarEnvios = async () => {
+  useEffect(() => {
+    filterEnvios();
+  }, [envios, searchTerm, statusFilter]);
+
+  const filterEnvios = () => {
+    let filtered = envios;
+
+    // Filtrar por búsqueda
+    if (searchTerm) {
+      filtered = filtered.filter(envio =>
+        envio.numero_guia.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        envio.remitente_nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        envio.destinatario_nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        envio.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Filtrar por estado
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter(envio =>
+        envio.estado_actual.toLowerCase() === statusFilter.toLowerCase()
+      );
+    }
+
+    setFilteredEnvios(filtered);
+  };
+
+  const loadEnvios = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       setError(null);
+      console.log('🔍 Cargando envíos...');
 
-      console.log('🔄 Cargando lista de envíos...');
-      const response = await api.getEnvios();
+      const response = await api.get('/envios/');
+      console.log('📡 Respuesta API envíos:', response);
 
-      console.log('✅ Envíos cargados:', response.data);
-      const data: any = response.data;
-      setEnvios(data?.results || data || []);
+      const data = response.data as any;
+      const enviosList = data?.results || data || [];
+      console.log('📦 Envíos obtenidos:', enviosList.length, 'envíos');
 
-    } catch (err: any) {
-      console.error('❌ Error al cargar envíos:', err);
+      setEnvios(enviosList);
+    } catch (error) {
+      console.error('❌ Error cargando envíos:', error);
       setError('Error al cargar la lista de envíos');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  // Filtrar envíos según criterios de búsqueda
-  const enviosFiltrados = envios.filter(envio => {
-    const coincideBusqueda = searchTerm === '' ||
-      envio.numero_guia.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      envio.remitente_nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      envio.destinatario_nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      envio.descripcion.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const coincideEstado = filtroEstado === '' || envio.estado_actual === filtroEstado;
-
-    return coincideBusqueda && coincideEstado;
-  });
-
-  // Manejar eliminación de envío
   const eliminarEnvio = async (id: string, numeroGuia: string) => {
-    if (!window.confirm(`¿Está seguro de eliminar el envío ${numeroGuia}? Esta acción no se puede deshacer.`)) {
+    if (!window.confirm(`¿Está seguro de eliminar el envío ${numeroGuia}?`)) {
       return;
     }
 
     try {
-      await api.deleteEnvio(parseInt(id));
-      console.log(`✅ Envío ${numeroGuia} eliminado correctamente`);
-
-      // Actualizar la lista
+      await api.delete(`/envios/${id}/`);
       setEnvios(envios.filter(e => e.id !== id));
-
-      // Notificación de éxito
       alert(`Envío ${numeroGuia} eliminado correctamente`);
-
-    } catch (err: any) {
-      console.error('❌ Error al eliminar envío:', err);
-      alert('Error al eliminar el envío. Inténtalo de nuevo.');
+    } catch (error) {
+      console.error('Error eliminando envío:', error);
+      alert('Error al eliminar el envío');
     }
   };
 
-  // Formatear fecha para mostrar
   const formatearFecha = (fecha: string) => {
     return new Date(fecha).toLocaleDateString('es-ES', {
       day: '2-digit',
@@ -120,127 +117,98 @@ const GestionEnvios: React.FC = () => {
     });
   };
 
-  // Obtener color según estado
-  const getEstadoColor = (estado: string) => {
-    const colores: { [key: string]: string } = {
-      'RECIBIDO': 'bg-blue-100 text-blue-800',
-      'EN_TRANSITO': 'bg-yellow-100 text-yellow-800',
-      'EN_REPARTO': 'bg-purple-100 text-purple-800',
-      'ENTREGADO': 'bg-green-100 text-green-800',
-      'DEVUELTO': 'bg-orange-100 text-orange-800',
-      'CANCELADO': 'bg-red-100 text-red-800'
-    };
-    return colores[estado] || 'bg-gray-100 text-gray-800';
+  const getEstadoClass = (estado: string) => {
+    return estado.toLowerCase().replace('_', '');
   };
 
-  if (loading) {
+  console.log('🎯 GestionEnvios render - isLoading:', isLoading, 'error:', error, 'envíos:', envios.length);
+
+  if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-96">
-        <div className="text-center">
-          <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <p className="text-gray-600">Cargando gestión de envíos...</p>
+      <div className="gestion-envios loading">
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Cargando envíos...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="gestion-envios error">
+        <div className="error-container">
+          <h2>❌ Error al cargar envíos</h2>
+          <p>{error}</p>
+          <button onClick={loadEnvios} className="retry-button">
+            🔄 Reintentar
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="gestion-envios-page p-6 max-w-7xl mx-auto">
-      {/* Header con acciones principales */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
-              {isPremium ? (
-                <>
-                  <Star className="w-8 h-8 text-yellow-600" />
-                  Gestión Premium
-                </>
-              ) : (
-                <>
-                  <Package className="w-8 h-8 text-blue-600" />
-                  Gestión Gratuita
-                </>
-              )}
-            </h1>
-            <p className="text-gray-600 mt-2">
-              {isPremium
-                ? `Gestión avanzada de envíos con herramientas profesionales • ${enviosFiltrados.length} de ${envios.length} envíos`
-                : `Administra todos los envíos de forma gratuita • ${enviosFiltrados.length} de ${envios.length} envíos`
-              }
-            </p>
-          </div>
-
-          <div className="flex gap-3">
-            <button
-              onClick={cargarEnvios}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-              title="Recargar lista"
-            >
-              <RefreshCw className="w-4 h-4" />
-              Recargar
-            </button>
-
-            {isPremium && (
-              <>
-                <button
-                  onClick={() => alert('🚀 Función Premium: Exportar a Excel')}
-                  className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
-                  title="Exportar datos"
-                >
-                  📊 Exportar
-                </button>
-
-                <button
-                  onClick={() => alert('🚀 Función Premium: Análisis de Rendimiento')}
-                  className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
-                  title="Análisis avanzado"
-                >
-                  📈 Análisis
-                </button>
-              </>
-            )}
-
-            <Link
-              to="/envios/nuevo"
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-              Nuevo Envío
-            </Link>
-          </div>
+    <div className="gestion-envios">
+      {/* Header de la página */}
+      <div className="page-header">
+        <div className="header-content">
+          <h1>📦 Gestión de Envíos</h1>
+          <p>Administra todos los envíos de la empresa</p>
+        </div>
+        <div className="header-actions">
+          <Link to="/envios/nuevo" className="btn btn-primary">
+            ➕ Nuevo Envío
+          </Link>
+          <button onClick={loadEnvios} className="btn btn-secondary">
+            🔄 Actualizar
+          </button>
         </div>
       </div>
 
-      {/* Filtros y búsqueda */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Búsqueda */}
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Search className="w-4 h-4 inline mr-2" />
-              Buscar envíos
-            </label>
+      {/* Stats rápidas */}
+      <div className="envios-stats">
+        <div className="stat-card">
+          <h3>Total Envíos</h3>
+          <span className="stat-number">{envios.length}</span>
+        </div>
+        <div className="stat-card">
+          <h3>Entregados</h3>
+          <span className="stat-number">
+            {envios.filter(e => e.estado_actual.toLowerCase() === 'entregado').length}
+          </span>
+        </div>
+        <div className="stat-card">
+          <h3>En Proceso</h3>
+          <span className="stat-number">
+            {envios.filter(e => ['recibido', 'en_transito', 'en_reparto'].includes(e.estado_actual.toLowerCase())).length}
+          </span>
+        </div>
+        <div className="stat-card">
+          <h3>Cancelados</h3>
+          <span className="stat-number">
+            {envios.filter(e => e.estado_actual.toLowerCase() === 'cancelado').length}
+          </span>
+        </div>
+      </div>
+
+      {/* Lista de envíos */}
+      <div className="envios-list">
+        <div className="list-header">
+          <h2>📋 Lista de Envíos</h2>
+          <div className="list-filters">
             <input
               type="text"
-              placeholder="Buscar por guía, remitente, destinatario o descripción..."
+              placeholder="🔍 Buscar por guía, remitente, destinatario..."
+              className="search-input"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
-          </div>
-
-          {/* Filtro por estado */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Filter className="w-4 h-4 inline mr-2" />
-              Filtrar por estado
-            </label>
             <select
-              value={filtroEstado}
-              onChange={(e) => setFiltroEstado(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              title="Filtrar envíos por estado"
+              className="filter-select"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              title="Filtrar por estado"
             >
               {estadosDisponibles.map(estado => (
                 <option key={estado.value} value={estado.value}>
@@ -250,137 +218,76 @@ const GestionEnvios: React.FC = () => {
             </select>
           </div>
         </div>
-      </div>
 
-      {/* Mostrar errores */}
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
-          <p className="font-medium">❌ Error</p>
-          <p>{error}</p>
-        </div>
-      )}
-
-      {/* Lista de envíos */}
-      {enviosFiltrados.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-md p-12 text-center">
-          <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-600 mb-2">
-            {envios.length === 0 ? 'No hay envíos registrados' : 'No se encontraron envíos'}
-          </h3>
-          <p className="text-gray-500 mb-6">
-            {envios.length === 0
-              ? 'Crea tu primer envío para comenzar'
-              : 'Intenta modificar los filtros de búsqueda'
-            }
-          </p>
-          {envios.length === 0 && (
-            <Link
-              to="/envios/nuevo"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-            >
-              <Plus className="w-5 h-5" />
-              Crear Primer Envío
-            </Link>
-          )}
-        </div>
-      ) : (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          {/* Tabla responsive */}
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
+        {filteredEnvios.length > 0 ? (
+          <div className="envios-table">
+            <table>
+              <thead>
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Guía / Descripción
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Remitente
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Destinatario
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Estado
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Fecha
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Acciones
-                  </th>
+                  <th>Envío</th>
+                  <th>Remitente</th>
+                  <th>Destinatario</th>
+                  <th>Estado</th>
+                  <th>Peso</th>
+                  <th>Fecha</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {enviosFiltrados.map((envio) => (
-                  <tr
-                    key={envio.id}
-                    className={`hover:bg-gray-50 transition-colors ${
-                      envioSeleccionado === envio.id ? 'bg-blue-50' : ''
-                    }`}
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div>
-                        <div className="text-sm font-medium text-gray-900">
-                          #{envio.numero_guia}
+              <tbody>
+                {filteredEnvios.map((envio) => (
+                  <tr key={envio.id}>
+                    <td>
+                      <div className="envio-info">
+                        <div className="envio-icon">
+                          {envio.numero_guia.slice(-3)}
                         </div>
-                        <div className="text-sm text-gray-500 truncate max-w-xs">
-                          {envio.descripcion}
-                        </div>
-                        <div className="text-xs text-gray-400">
-                          {envio.peso} kg • ${envio.valor_declarado}
+                        <div className="envio-details">
+                          <div className="envio-guia">#{envio.numero_guia}</div>
+                          <div className="envio-descripcion">{envio.descripcion}</div>
                         </div>
                       </div>
                     </td>
-
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{envio.remitente_nombre}</div>
-                      <div className="text-sm text-gray-500">{envio.remitente_telefono}</div>
+                    <td>
+                      <div>
+                        <div className="contact-name">{envio.remitente_nombre}</div>
+                        <div className="contact-phone">{envio.remitente_telefono}</div>
+                      </div>
                     </td>
-
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{envio.destinatario_nombre}</div>
-                      <div className="text-sm text-gray-500">{envio.destinatario_telefono}</div>
+                    <td>
+                      <div>
+                        <div className="contact-name">{envio.destinatario_nombre}</div>
+                        <div className="contact-phone">{envio.destinatario_telefono}</div>
+                      </div>
                     </td>
-
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getEstadoColor(envio.estado_actual)}`}>
+                    <td>
+                      <span className={`status-badge ${getEstadoClass(envio.estado_actual)}`}>
                         {envio.estado_actual.replace('_', ' ')}
                       </span>
                     </td>
-
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <div>{formatearFecha(envio.fecha_creacion)}</div>
-                      {envio.fecha_estimada_entrega && (
-                        <div className="text-xs text-gray-400">
-                          Est: {new Date(envio.fecha_estimada_entrega).toLocaleDateString()}
-                        </div>
-                      )}
-                    </td>
-
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex gap-2">
-                        <Link
-                          to={`/envios/${envio.id}`}
-                          className="text-blue-600 hover:text-blue-800 p-1 rounded"
+                    <td>{envio.peso} kg</td>
+                    <td>{formatearFecha(envio.fecha_creacion)}</td>
+                    <td>
+                      <div className="actions">
+                        <button
+                          className="btn-action view"
                           title="Ver detalles"
+                          onClick={() => navigate(`/envios/${envio.id}`)}
                         >
-                          <Eye className="w-4 h-4" />
-                        </Link>
-
-                        <button
-                          onClick={() => navigate(`/envios/${envio.id}/editar`)}
-                          className="text-green-600 hover:text-green-800 p-1 rounded"
-                          title="Editar envío"
-                        >
-                          <Edit3 className="w-4 h-4" />
+                          👁️
                         </button>
-
                         <button
-                          onClick={() => eliminarEnvio(envio.id, envio.numero_guia)}
-                          className="text-red-600 hover:text-red-800 p-1 rounded"
-                          title="Eliminar envío"
+                          className="btn-action edit"
+                          title="Editar"
+                          onClick={() => navigate(`/envios/${envio.id}/editar`)}
                         >
-                          <Trash2 className="w-4 h-4" />
+                          ✏️
+                        </button>
+                        <button
+                          className="btn-action delete"
+                          title="Eliminar"
+                          onClick={() => eliminarEnvio(envio.id, envio.numero_guia)}
+                        >
+                          🗑️
                         </button>
                       </div>
                     </td>
@@ -389,29 +296,23 @@ const GestionEnvios: React.FC = () => {
               </tbody>
             </table>
           </div>
-        </div>
-      )}
-
-      {/* Footer informativo */}
-      <div className="mt-8 text-center text-gray-500">
-        {isPremium ? (
-          <>
-            <p className="text-sm">
-              ⭐ <strong>Gestión Premium</strong> • Herramientas avanzadas desbloqueadas
-            </p>
-            <p className="text-xs mt-1">
-              Disfruta de todas las funciones profesionales • <Link to="/envios" className="text-blue-600 hover:underline">Volver al selector</Link>
-            </p>
-          </>
         ) : (
-          <>
-            <p className="text-sm">
-              🎉 <strong>Gestión Gratuita</strong> • Todas las funciones básicas sin costo
-            </p>
-            <p className="text-xs mt-1">
-              ¿Necesitas funciones avanzadas? <Link to="/envios" className="text-blue-600 hover:underline">Conoce el modo Premium</Link>
-            </p>
-          </>
+          <div className="no-data">
+            {envios.length === 0 ? (
+              <>
+                <h3>📭 No hay envíos registrados</h3>
+                <p>Todavía no se han creado envíos en el sistema.</p>
+                <Link to="/envios/nuevo" className="btn btn-primary">
+                  ➕ Crear Primer Envío
+                </Link>
+              </>
+            ) : (
+              <>
+                <h3>🔍 No se encontraron envíos</h3>
+                <p>No hay envíos que coincidan con los filtros aplicados.</p>
+              </>
+            )}
+          </div>
         )}
       </div>
     </div>

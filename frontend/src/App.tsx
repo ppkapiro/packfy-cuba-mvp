@@ -3,7 +3,6 @@ import { AuthProvider } from './contexts/AuthContext';
 import { TenantProvider } from './contexts/TenantContext';
 import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
-import Dashboard from './pages/Dashboard';
 import NewShipment from './pages/NewShipment';
 import ShipmentDetail from './pages/ShipmentDetail';
 import TrackingPageFixed from './pages/TrackingPageFixed';
@@ -15,6 +14,8 @@ import SimpleAdvancedPage from './pages/SimpleAdvancedPage';
 import ModernAdvancedPage from './pages/ModernAdvancedPage';
 import GestionEnvios from './pages/GestionEnvios';
 import EditarEnvio from './pages/EditarEnvio';
+import AdminRouter from './components/admin/AdminRouter';
+import DashboardRouter from './components/DashboardRouter';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import NetworkStatusBanner from './components/NetworkStatusBanner';
 
@@ -61,7 +62,12 @@ function App() {
                   }
                 >
                 <Route index element={<Navigate to="/dashboard" />} />
-                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="dashboard" element={<DashboardRouter />} />
+
+                {/* Rutas administrativas */}
+                <Route path="admin/*" element={<AdminRouter />} />
+
+                {/* Rutas de envíos */}
                 <Route path="envios" element={<GestionEnvios />} />
                 <Route path="envios/modo" element={<EnvioModePage />} />
                 <Route path="gestion/gratuita" element={<GestionEnvios />} />

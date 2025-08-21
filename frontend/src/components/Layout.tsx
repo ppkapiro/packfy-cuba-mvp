@@ -2,6 +2,8 @@ import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTenant } from '../contexts/TenantContext';
 import TenantSelector from './TenantSelector';
+import { AdminNavigation, StandardNavigation } from './navigation';
+import NavigationDebugInfo from './NavigationDebugInfo';
 
 const Layout = () => {
   const { user, logout } = useAuth();
@@ -10,6 +12,10 @@ const Layout = () => {
   const location = useLocation();
 
   console.log('Layout: Renderizando Layout, usuario:', user);
+  console.log('Layout: empresaActual:', empresaActual);
+  console.log('Layout: perfilActual:', perfilActual);
+  console.log('Layout: rol actual:', perfilActual?.rol);
+  console.log('Layout: ¿Es dueño?', perfilActual?.rol === 'dueno');
 
   const handleLogout = () => {
     logout();
@@ -23,55 +29,13 @@ const Layout = () => {
 
   return (
     <div className="app-layout">
+      <NavigationDebugInfo />
       <header className="header">
         <div className="header-content">
           <Link to="/dashboard" className="logo">
             <span className="icon icon-flag-cuba icon-lg"></span>
             <span>Packfy Cuba</span>
           </Link>
-
-          {/* Navegación principal */}
-          <nav className="nav-main">
-            <ul className="nav-menu">
-              <li className="nav-item">
-                <Link
-                  to="/dashboard"
-                  className={`nav-link ${isActiveRoute('/dashboard') ? 'active' : ''}`}
-                >
-                  <span className="icon icon-dashboard"></span>
-                  <span>Dashboard</span>
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link
-                  to="/envios/nuevo"
-                  className={`nav-link ${isActiveRoute('/envios/nuevo') ? 'active' : ''}`}
-                >
-                  <span className="icon icon-package"></span>
-                  <span>Nuevo</span>
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link
-                  to="/envios"
-                  className={`nav-link ${isActiveRoute('/envios') && !isActiveRoute('/envios/nuevo') ? 'active' : ''}`}
-                >
-                  <span className="icon icon-package"></span>
-                  <span>Gestión</span>
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link
-                  to="/rastreo"
-                  className={`nav-link ${isActiveRoute('/rastreo') ? 'active' : ''}`}
-                  onClick={() => console.log('🔍 Layout: Navegando a /rastreo')}
-                >
-                  <span className="icon icon-search"></span>
-                  <span>Rastrear</span>
-                </Link>
-              </li>
-            </ul>
-          </nav>
 
           {/* Selector de empresa */}
           <div className="tenant-section">
@@ -99,6 +63,21 @@ const Layout = () => {
           </div>
         </div>
       </header>
+
+      {/* Navegación contextual */}
+      <nav className="main-navigation">
+        {perfilActual?.rol === 'dueno' ? (
+          <>
+            {console.log('Layout: Renderizando AdminNavigation para dueño')}
+            <AdminNavigation isActiveRoute={isActiveRoute} />
+          </>
+        ) : (
+          <>
+            {console.log('Layout: Renderizando StandardNavigation para rol:', perfilActual?.rol)}
+            <StandardNavigation isActiveRoute={isActiveRoute} />
+          </>
+        )}
+      </nav>
 
       {/* Sección de información del tenant */}
       {empresaActual && (
