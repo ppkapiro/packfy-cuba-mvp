@@ -1,6 +1,7 @@
 import logging
+import re
 
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.deprecation import MiddlewareMixin
 
@@ -12,15 +13,18 @@ logger = logging.getLogger(__name__)
 class TenantMiddleware(MiddlewareMixin):
     """
     Middleware para manejar el contexto multi-tenant.
-    Detecta la empresa actual y proporciona contexto para toda la aplicación.
+    Detecta la empresa actual por:
+    1. Subdominio (empresa1.packfy.com)
+    2. Header X-Tenant-Slug (para APIs)
     """
 
     def process_request(self, request):
         """
         Procesa cada request para configurar contexto básico.
-        Solo se establece el tenant por header, la autenticación se maneja en process_view.
+        Prioriza detección por subdominio, fallback a header.
         """
         print(f"🚀 MIDDLEWARE process_request para {request.path}")
+        print(f"🌐 HOST: {request.get_host()}")
 
         # EXCLUIR RUTAS DEL ADMIN DJANGO - no requieren multitenancy
         admin_paths = ["/admin/", "/static/", "/media/"]
@@ -30,20 +34,53 @@ class TenantMiddleware(MiddlewareMixin):
             return None
 
         empresa = None
+        host = request.get_host()
 
-        # Método 1: Header X-Tenant-Slug (para APIs) - solo configurar empresa
-        tenant_slug = request.META.get("HTTP_X_TENANT_SLUG")
-        print(f"🔍 TENANT SLUG: {tenant_slug}")
+        # Método 1: Detección por Subdominio (NUEVO - PRIORIDAD)
+        empresa_slug = self._extract_tenant_from_subdomain(host)
+        print(f"🏢 SUBDOMAIN SLUG: {empresa_slug}")
 
-        if tenant_slug:
+        if empresa_slug:
             try:
-                empresa = Empresa.objects.get(slug=tenant_slug, activo=True)
-                logger.info(f"Empresa detectada por header: {empresa.nombre}")
+                empresa = Empresa.objects.get(slug=empresa_slug, activo=True)
+                logger.info(
+                    f"Empresa detectada por subdominio: {empresa.nombre}"
+                )
+                print(f"✅ EMPRESA POR SUBDOMAIN: {empresa.nombre}")
             except Empresa.DoesNotExist:
                 logger.warning(
-                    f"Empresa no encontrada con slug: {tenant_slug}"
+                    f"Empresa no encontrada con slug: {empresa_slug}"
                 )
-                raise Http404(f"Empresa '{tenant_slug}' no encontrada")
+                # Para subdominios inválidos, redirigir a dominio principal
+                if not self._is_main_domain(host):
+                    main_domain = self._get_main_domain(host)
+                    redirect_url = (
+                        f"http://{main_domain}{request.get_full_path()}"
+                    )
+                    logger.info(
+                        f"Redirigiendo a dominio principal: {redirect_url}"
+                    )
+                    return HttpResponseRedirect(redirect_url)
+
+        # Método 2: Header X-Tenant-Slug (para APIs) - fallback
+        if not empresa:
+            tenant_slug = request.META.get("HTTP_X_TENANT_SLUG")
+            print(f"🔍 HEADER TENANT SLUG: {tenant_slug}")
+
+            if tenant_slug:
+                try:
+                    empresa = Empresa.objects.get(
+                        slug=tenant_slug, activo=True
+                    )
+                    logger.info(
+                        f"Empresa detectada por header: {empresa.nombre}"
+                    )
+                    print(f"✅ EMPRESA POR HEADER: {empresa.nombre}")
+                except Empresa.DoesNotExist:
+                    logger.warning(
+                        f"Empresa no encontrada con slug: {tenant_slug}"
+                    )
+                    raise Http404(f"Empresa '{tenant_slug}' no encontrada")
 
         # Establecer contexto de empresa en el request
         request.tenant = empresa
@@ -55,6 +92,62 @@ class TenantMiddleware(MiddlewareMixin):
             )
         else:
             logger.debug("Sin contexto tenant - request sin empresa")
+
+    def _extract_tenant_from_subdomain(self, host):
+        """
+        Extrae el slug de la empresa del subdominio.
+
+        Ejemplos:
+        - empresa1.packfy.com → empresa1
+        - empresa2.localhost:5173 → empresa2
+        - app.packfy.com → None (dominio principal)
+        - packfy.com → None (dominio principal)
+        """
+        # Limpiar puerto si existe
+        host_clean = host.split(":")[0]
+
+        # Patrones para detectar subdominios
+        patterns = [
+            r"^([^.]+)\.packfy\.com$",  # empresa1.packfy.com
+            r"^([^.]+)\.localhost$",  # empresa1.localhost (desarrollo)
+            r"^([^.]+)\.127\.0\.0\.1$",  # empresa1.127.0.0.1 (desarrollo)
+        ]
+
+        for pattern in patterns:
+            match = re.match(pattern, host_clean)
+            if match:
+                subdomain = match.group(1)
+                # Excluir subdominios principales/administrativos
+                if subdomain not in ["app", "admin", "api", "www"]:
+                    return subdomain
+
+        return None
+
+    def _is_main_domain(self, host):
+        """
+        Verifica si el host es un dominio principal (sin subdominio específico).
+        """
+        host_clean = host.split(":")[0]
+        main_domains = [
+            "packfy.com",
+            "www.packfy.com",
+            "app.packfy.com",
+            "localhost",
+            "127.0.0.1",
+        ]
+        return host_clean in main_domains
+
+    def _get_main_domain(self, host):
+        """
+        Obtiene el dominio principal para redirección.
+        """
+        # En desarrollo, usar localhost
+        if "localhost" in host or "127.0.0.1" in host:
+            port = ":5173" if ":" in host else ""
+            return f"localhost{port}"
+
+        # En producción, usar app.packfy.com
+        return "app.packfy.com"
 
     def process_view(self, request, view_func, view_args, view_kwargs):
         """

@@ -25,10 +25,19 @@ interface TenantContextData {
   empresasDisponibles: Empresa[];
   isLoading: boolean;
 
+  // Estado de dominios
+  dominioActual: string;
+  esSubdominio: boolean;
+  esDominioAdmin: boolean;
+
   // Acciones
   cambiarEmpresa: (empresaSlug: string, empresaData?: Empresa) => Promise<void>;
   cargarEmpresas: () => Promise<void>;
   obtenerPerfilEnEmpresa: () => Promise<void>;
+
+  // Navegación por dominios
+  redirigirAEmpresa: (empresaSlug: string) => void;
+  redirigirAAdmin: () => void;
 
   // Utilidades
   puedeEjecutarAccion: (accion: string) => boolean;
@@ -45,6 +54,109 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
   const [empresasDisponibles, setEmpresasDisponibles] = useState<Empresa[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Estados de dominio
+  const [dominioActual, setDominioActual] = useState<string>('');
+  const [esSubdominio, setEsSubdominio] = useState<boolean>(false);
+  const [esDominioAdmin, setEsDominioAdmin] = useState<boolean>(false);
+
+  // FUNCIONES DE DETECCIÓN DE DOMINIOS
+  const detectarDominio = () => {
+    const hostname = window.location.hostname;
+    const port = window.location.port;
+    const fullHost = port ? `${hostname}:${port}` : hostname;
+
+    console.log('🌐 TenantContext: Detectando dominio:', fullHost);
+
+    setDominioActual(fullHost);
+
+    // Detectar si es subdominio específico de empresa
+    const empresaSlug = extraerEmpresaDeSubdominio(hostname);
+    if (empresaSlug) {
+      console.log('🏢 TenantContext: Subdominio de empresa detectado:', empresaSlug);
+      setEsSubdominio(true);
+      setEsDominioAdmin(false);
+      return empresaSlug;
+    }
+
+    // Detectar si es dominio administrativo
+    const esAdmin = esHostAdministrativo(hostname);
+    console.log('👨‍💼 TenantContext: ¿Es dominio admin?', esAdmin);
+    setEsSubdominio(false);
+    setEsDominioAdmin(esAdmin);
+
+    return null;
+  };
+
+  const extraerEmpresaDeSubdominio = (hostname: string): string | null => {
+    // Patrones para detectar subdominios de empresa
+    const patterns = [
+      /^([^.]+)\.packfy\.com$/,    // empresa1.packfy.com
+      /^([^.]+)\.localhost$/,      // empresa1.localhost (desarrollo)
+    ];
+
+    for (const pattern of patterns) {
+      const match = hostname.match(pattern);
+      if (match) {
+        const subdomain = match[1];
+        // Excluir subdominios administrativos
+        if (!['app', 'admin', 'api', 'www'].includes(subdomain)) {
+          return subdomain;
+        }
+      }
+    }
+
+    return null;
+  };
+
+  const esHostAdministrativo = (hostname: string): boolean => {
+    const adminHosts = [
+      'app.packfy.com',
+      'admin.packfy.com',
+      'localhost',
+      '127.0.0.1',
+    ];
+    return adminHosts.includes(hostname);
+  };
+
+  // FUNCIONES DE NAVEGACIÓN POR DOMINIOS
+  const redirigirAEmpresa = (empresaSlug: string) => {
+    const protocol = window.location.protocol;
+    let newHost = '';
+
+    // Determinar el host de destino según el entorno
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      // Desarrollo: empresa1.localhost:5173
+      const port = window.location.port;
+      newHost = port ? `${empresaSlug}.localhost:${port}` : `${empresaSlug}.localhost`;
+    } else {
+      // Producción: empresa1.packfy.com
+      newHost = `${empresaSlug}.packfy.com`;
+    }
+
+    const newUrl = `${protocol}//${newHost}${window.location.pathname}${window.location.search}`;
+    console.log('🔄 TenantContext: Redirigiendo a empresa:', newUrl);
+    window.location.href = newUrl;
+  };
+
+  const redirigirAAdmin = () => {
+    const protocol = window.location.protocol;
+    let newHost = '';
+
+    // Determinar el host administrativo según el entorno
+    if (window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')) {
+      // Desarrollo: localhost:5173
+      const port = window.location.port;
+      newHost = port ? `localhost:${port}` : 'localhost';
+    } else {
+      // Producción: app.packfy.com
+      newHost = 'app.packfy.com';
+    }
+
+    const newUrl = `${protocol}//${newHost}/admin`;
+    console.log('🔄 TenantContext: Redirigiendo a admin:', newUrl);
+    window.location.href = newUrl;
+  };
+
   // Cargar empresas disponibles para el usuario
   const cargarEmpresas = async (): Promise<void> => {
     try {
@@ -53,8 +165,6 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
       const empresas = empresasData?.results || empresasData || [];
       setEmpresasDisponibles(Array.isArray(empresas) ? empresas : []);
 
-      // FIJO: Evitar loop infinito - solo auto-seleccionar en inicialización
-      // Esto se manejará en el useEffect de inicialización
       console.log(`📊 Empresas cargadas: ${empresas.length}`, empresas);
     } catch (error) {
       console.error('Error cargando empresas:', error);
@@ -145,41 +255,82 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
     const inicializar = async () => {
       let empresaSeleccionada = false;
 
-      // Intentar restaurar empresa desde localStorage
-      const tenantSlug = localStorage.getItem('tenant-slug');
-      const empresaGuardada = localStorage.getItem('empresa-actual');
+      // 1. DETECTAR DOMINIO ACTUAL (NUEVO)
+      console.log('🌐 TenantContext: === INICIANDO DETECCIÓN DE DOMINIO ===');
+      const empresaDelDominio = detectarDominio();
 
-      if (tenantSlug && empresaGuardada) {
-        try {
-          const empresa = JSON.parse(empresaGuardada);
-          setEmpresaActual(empresa);
-          apiClient.setTenantSlug(tenantSlug);
+      if (empresaDelDominio) {
+        console.log('🏢 TenantContext: Empresa detectada por subdominio:', empresaDelDominio);
+
+        // Cargar empresas primero para validar
+        await cargarEmpresas();
+
+        // Buscar empresa por slug del subdominio
+        const empresaEncontrada = empresasDisponibles.find(e => e.slug === empresaDelDominio);
+
+        if (empresaEncontrada) {
+          console.log('✅ TenantContext: Empresa válida encontrada:', empresaEncontrada.nombre);
+          await cambiarEmpresa(empresaDelDominio, empresaEncontrada);
           empresaSeleccionada = true;
+        } else {
+          console.warn('⚠️ TenantContext: Empresa del subdominio no encontrada, cargando empresas...');
+          // Cargar empresas y buscar nuevamente
+          const response = await apiClient.makeRequest('/empresas/');
+          const empresasData = response.data as any;
+          const empresas = empresasData?.results || empresasData || [];
 
-          // Cargar perfil
-          await obtenerPerfilEnEmpresa();
-        } catch (error) {
-          console.error('Error restaurando empresa:', error);
-          // Limpiar localStorage si hay error
-          localStorage.removeItem('tenant-slug');
-          localStorage.removeItem('empresa-actual');
+          const empresaValidada = empresas.find((e: any) => e.slug === empresaDelDominio);
+          if (empresaValidada) {
+            console.log('✅ TenantContext: Empresa encontrada en segunda búsqueda:', empresaValidada.nombre);
+            await cambiarEmpresa(empresaDelDominio, empresaValidada);
+            empresaSeleccionada = true;
+          } else {
+            console.error('❌ TenantContext: Subdominio inválido, redirigiendo a admin...');
+            // Redirigir a dominio administrativo si el subdominio no es válido
+            setTimeout(() => redirigirAAdmin(), 2000);
+            setIsLoading(false);
+            return;
+          }
         }
       }
 
-      // Cargar empresas disponibles
-      await cargarEmpresas();
+      // 2. FALLBACK: Restaurar desde localStorage (solo si no es subdominio)
+      if (!empresaSeleccionada && !esSubdominio) {
+        const tenantSlug = localStorage.getItem('tenant-slug');
+        const empresaGuardada = localStorage.getItem('empresa-actual');
 
-      // Si no hay empresa seleccionada, seleccionar la primera disponible
-      if (!empresaSeleccionada) {
+        if (tenantSlug && empresaGuardada) {
+          try {
+            const empresa = JSON.parse(empresaGuardada);
+            setEmpresaActual(empresa);
+            apiClient.setTenantSlug(tenantSlug);
+            empresaSeleccionada = true;
+
+            // Cargar perfil
+            await obtenerPerfilEnEmpresa();
+          } catch (error) {
+            console.error('Error restaurando empresa:', error);
+            // Limpiar localStorage si hay error
+            localStorage.removeItem('tenant-slug');
+            localStorage.removeItem('empresa-actual');
+          }
+        }
+      }
+
+      // 3. Cargar empresas disponibles (si no se hizo antes)
+      if (empresasDisponibles.length === 0) {
+        await cargarEmpresas();
+      }
+
+      // 4. AUTO-SELECCIÓN: Solo si es dominio admin y no hay empresa
+      if (!empresaSeleccionada && esDominioAdmin) {
         const response = await apiClient.makeRequest('/empresas/');
         const empresasData = response.data as any;
         const empresas = empresasData?.results || empresasData || [];
 
         if (Array.isArray(empresas) && empresas.length > 0) {
           const primeraEmpresa = empresas[0];
-          console.log('🏢 Auto-seleccionando primera empresa:', primeraEmpresa.nombre);
-          console.log('📊 Estructura completa de empresa:', primeraEmpresa);
-          console.log('🔑 Slug de empresa:', primeraEmpresa.slug);
+          console.log('🏢 Auto-seleccionando primera empresa (admin):', primeraEmpresa.nombre);
 
           if (primeraEmpresa.slug) {
             // Pasar la empresa directamente para evitar problemas de timing
@@ -200,7 +351,7 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
     } else {
       setIsLoading(false);
     }
-  }, []);
+  }, [empresasDisponibles.length, esSubdominio, esDominioAdmin]);
 
   // Limpiar contexto al logout
   useEffect(() => {
@@ -220,9 +371,14 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
     perfilActual,
     empresasDisponibles,
     isLoading,
+    dominioActual,
+    esSubdominio,
+    esDominioAdmin,
     cambiarEmpresa,
     cargarEmpresas,
     obtenerPerfilEnEmpresa,
+    redirigirAEmpresa,
+    redirigirAAdmin,
     puedeEjecutarAccion,
     esAdministrador,
   };

@@ -1,0 +1,35 @@
+# 🌐 CONFIGURACIÓN DE HOSTS PARA MULTITENANCY LOCAL
+
+# Para Windows: Agregar estas líneas al archivo: C:\Windows\System32\drivers\etc\hosts
+# Para MacOS/Linux: Agregar estas líneas al archivo: /etc/hosts
+
+# Dominio principal administrativo
+127.0.0.1       localhost
+
+# SUBDOMINIOS PARA EMPRESAS EXISTENTES EN BD:
+127.0.0.1       packfy-express.localhost
+127.0.0.1       cuba-fast-delivery.localhost
+127.0.0.1       habana-cargo.localhost
+
+# Dominio administrativo alternativo
+127.0.0.1       app.localhost
+127.0.0.1       admin.localhost
+
+# INSTRUCCIONES DE USO:
+
+# 1. Copiar las líneas (sin el #) al archivo hosts del sistema
+# 2. Guardar el archivo como administrador
+# 3. Reiniciar el navegador
+# 4. Probar accediendo a:
+#    - http://localhost:5173 (admin general)
+#    - http://packfy-express.localhost:5173 (PackFy Express)
+#    - http://cuba-fast-delivery.localhost:5173 (Cuba Fast Delivery)
+#    - http://habana-cargo.localhost:5173 (Habana Cargo)
+
+# CREDENCIALES DE PRUEBA:
+# - admin@packfy.cu / admin123 (acceso a todas las empresas)
+# - dueno@packfy.com / admin123 (dueño principal)
+# - miami@packfy.com / admin123 (operador Miami)
+# - cuba@packfy.com / admin123 (operador Cuba)
+
+# NOTA: Los cambios en hosts requieren permisos de administrador
