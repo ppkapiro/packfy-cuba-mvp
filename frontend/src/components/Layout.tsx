@@ -77,9 +77,7 @@ const Layout = () => {
             <StandardNavigation isActiveRoute={isActiveRoute} />
           </>
         )}
-      </nav>
-
-      {/* Sección de información del tenant */}
+      </nav>      {/* Sección de información del tenant */}
       {empresaActual && (
         <section className="layout-tenant-section">
           <div className="layout-tenant-container">

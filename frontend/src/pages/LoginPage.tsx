@@ -6,14 +6,14 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
-    
+
     console.log('LoginPage: Iniciando sesión con email:', email);
     try {
       await login(email, password);
@@ -26,11 +26,11 @@ const LoginPage = () => {
       }, 300);
     } catch (err: any) {
       console.error('LoginPage: Error al iniciar sesión:', err);
-      
+
       if (err.response) {
         console.error('LoginPage: Error de respuesta:', err.response.status, err.response.statusText);
         console.error('LoginPage: Datos del error:', err.response.data);
-        
+
         // Mensajes de error más descriptivos según el código de respuesta
         if (err.response.status === 401) {
           setError('Credenciales incorrectas. Por favor, verifica tu correo y contraseña.');
@@ -70,14 +70,14 @@ const LoginPage = () => {
           <h1 className="form-title">Packfy Cuba</h1>
           <p className="form-subtitle">Sistema de Paquetería Moderno</p>
         </div>
-        
+
         {error && (
           <div className="form-error">
             <span className="icon icon-close"></span>
             <span>{error}</span>
           </div>
         )}
-        
+
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email" className="form-label">
@@ -145,24 +145,24 @@ const LoginPage = () => {
           <div className="test-credentials-title">
             🧪 Credenciales de Prueba
           </div>
-          
-          <div 
+
+          <div
             className="test-credential"
             onClick={() => fillTestCredentials('admin@packfy.cu', 'admin123')}
           >
             <span>👑 Administrador</span>
             <span>admin@packfy.cu</span>
           </div>
-          
-          <div 
+
+          <div
             className="test-credential"
             onClick={() => fillTestCredentials('empresa@test.cu', 'empresa123')}
           >
             <span>🏢 Empresa</span>
             <span>empresa@test.cu</span>
           </div>
-          
-          <div 
+
+          <div
             className="test-credential"
             onClick={() => fillTestCredentials('cliente@test.cu', 'cliente123')}
           >

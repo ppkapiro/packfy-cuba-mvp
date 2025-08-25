@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { api } from '../services/api';
 import '../styles/gestion-envios.css';
 
@@ -28,6 +28,10 @@ const GestionEnvios: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Detectar si estamos en contexto admin
+  const isAdminContext = location.pathname.startsWith('/admin');
 
   const estadosDisponibles = [
     { value: 'all', label: 'Todos los estados' },
@@ -157,8 +161,13 @@ const GestionEnvios: React.FC = () => {
           <p>Administra todos los envíos de la empresa</p>
         </div>
         <div className="header-actions">
-          <Link to="/envios/nuevo" className="btn btn-primary">
-            ➕ Nuevo Envío
+          <Link to={isAdminContext ? '/admin/envios/simple' : '/envios/nuevo'} className="btn btn-primary">
+            ➕ Envío Simple
+            <span className="badge badge-success">GRATIS</span>
+          </Link>
+          <Link to={isAdminContext ? '/admin/envios/premium' : '/envios/premium'} className="btn btn-premium">
+            ⭐ Envío Premium
+            <span className="badge badge-premium">$5 USD</span>
           </Link>
           <button onClick={loadEnvios} className="btn btn-secondary">
             🔄 Actualizar
@@ -302,9 +311,16 @@ const GestionEnvios: React.FC = () => {
               <>
                 <h3>📭 No hay envíos registrados</h3>
                 <p>Todavía no se han creado envíos en el sistema.</p>
-                <Link to="/envios/nuevo" className="btn btn-primary">
-                  ➕ Crear Primer Envío
-                </Link>
+                <div className="create-buttons">
+                  <Link to={isAdminContext ? '/admin/envios/simple' : '/envios/nuevo'} className="btn btn-primary">
+                    ➕ Crear Envío Simple
+                    <span className="badge badge-success">GRATIS</span>
+                  </Link>
+                  <Link to={isAdminContext ? '/admin/envios/premium' : '/envios/premium'} className="btn btn-premium">
+                    ⭐ Crear Envío Premium
+                    <span className="badge badge-premium">$5 USD</span>
+                  </Link>
+                </div>
               </>
             ) : (
               <>

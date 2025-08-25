@@ -171,11 +171,11 @@ const AdminDashboard: React.FC = () => {
             </div>
           </div>
           <div className="metric-actions">
-            <Link to="/envios" className="metric-link">
+            <Link to="/admin/envios" className="metric-link">
               <Eye size={16} />
               Ver todos
             </Link>
-            <Link to="/envios/nuevo" className="metric-link">
+            <Link to="/admin/envios/simple" className="metric-link">
               <Package size={16} />
               Crear nuevo
             </Link>
@@ -273,7 +273,7 @@ const AdminDashboard: React.FC = () => {
             <UserPlus className="action-icon" />
             <span>Agregar Usuario</span>
           </Link>
-          <Link to="/envios/nuevo" className="quick-action">
+          <Link to="/admin/envios/simple" className="quick-action">
             <Package className="action-icon" />
             <span>Crear Envío</span>
           </Link>

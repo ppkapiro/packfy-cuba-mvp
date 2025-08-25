@@ -1,7 +1,7 @@
-import { Link, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import {
-  BarChart3, Users, Settings, Package,
-  TrendingUp, UserPlus, Cog, ExternalLink
+  BarChart3, Users, Settings, Package, TrendingUp
 } from 'lucide-react';
 import '../../styles/admin-navigation.css';
 
@@ -25,7 +25,7 @@ const AdminNavigation: React.FC<AdminNavigationProps> = ({ isActiveRoute }) => {
       </li>
 
       {/* Gestión de Envíos */}
-      <li className="nav-item dropdown">
+      <li className="nav-item">
         <Link
           to="/admin/envios"
           className={`nav-link ${isActiveRoute('/admin/envios') ? 'active' : ''}`}
@@ -34,27 +34,10 @@ const AdminNavigation: React.FC<AdminNavigationProps> = ({ isActiveRoute }) => {
           <Package className="nav-icon" size={18} />
           <span>Envíos</span>
         </Link>
-        <ul className="dropdown-menu">
-          <li>
-            <Link to="/admin/envios" className="dropdown-link">
-              📋 Todos los Envíos
-            </Link>
-          </li>
-          <li>
-            <Link to="/admin/envios/nuevo" className="dropdown-link">
-              ➕ Crear Envío
-            </Link>
-          </li>
-          <li>
-            <Link to="/admin/envios/estadisticas" className="dropdown-link">
-              📊 Estadísticas
-            </Link>
-          </li>
-        </ul>
       </li>
 
       {/* Gestión de Usuarios */}
-      <li className="nav-item dropdown">
+      <li className="nav-item">
         <Link
           to="/admin/usuarios"
           className={`nav-link ${isActiveRoute('/admin/usuarios') ? 'active' : ''}`}
@@ -63,24 +46,6 @@ const AdminNavigation: React.FC<AdminNavigationProps> = ({ isActiveRoute }) => {
           <Users className="nav-icon" size={18} />
           <span>Usuarios</span>
         </Link>
-        <ul className="dropdown-menu">
-          <li>
-            <Link to="/admin/usuarios" className="dropdown-link">
-              👥 Ver Usuarios
-            </Link>
-          </li>
-          <li>
-            <Link to="/admin/usuarios/nuevo" className="dropdown-link">
-              <UserPlus className="nav-icon-small" size={14} />
-              Agregar Usuario
-            </Link>
-          </li>
-          <li>
-            <Link to="/admin/roles" className="dropdown-link">
-              🔐 Roles y Permisos
-            </Link>
-          </li>
-        </ul>
       </li>
 
       {/* Reportes y Analíticas */}
@@ -96,7 +61,7 @@ const AdminNavigation: React.FC<AdminNavigationProps> = ({ isActiveRoute }) => {
       </li>
 
       {/* Configuración */}
-      <li className="nav-item dropdown">
+      <li className="nav-item">
         <Link
           to="/admin/configuracion"
           className={`nav-link ${isActiveRoute('/admin/configuracion') ? 'active' : ''}`}
@@ -105,30 +70,6 @@ const AdminNavigation: React.FC<AdminNavigationProps> = ({ isActiveRoute }) => {
           <Settings className="nav-icon" size={18} />
           <span>Config</span>
         </Link>
-        <ul className="dropdown-menu">
-          <li>
-            <Link to="/admin/empresa" className="dropdown-link">
-              🏢 Datos de Empresa
-            </Link>
-          </li>
-          <li>
-            <Link to="/admin/configuracion/sistema" className="dropdown-link">
-              <Cog className="nav-icon-small" size={14} />
-              Sistema
-            </Link>
-          </li>
-          <li>
-            <a
-              href="/admin/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="dropdown-link"
-            >
-              <ExternalLink className="nav-icon-small" size={14} />
-              Admin Django
-            </a>
-          </li>
-        </ul>
       </li>
     </ul>
   );
