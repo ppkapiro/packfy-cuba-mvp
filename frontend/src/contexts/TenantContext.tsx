@@ -69,7 +69,17 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
 
     setDominioActual(fullHost);
 
-    // Detectar si es subdominio específico de empresa
+    // PRIMERA PRIORIDAD: Detectar parámetro de URL ?empresa=slug
+    const urlParams = new URLSearchParams(window.location.search);
+    const empresaParam = urlParams.get('empresa');
+    if (empresaParam) {
+      console.log('🔗 TenantContext: Empresa detectada por URL:', empresaParam);
+      setEsSubdominio(false);
+      setEsDominioAdmin(false);
+      return empresaParam;
+    }
+
+    // SEGUNDA PRIORIDAD: Detectar subdominio específico de empresa
     const empresaSlug = extraerEmpresaDeSubdominio(hostname);
     if (empresaSlug) {
       console.log('🏢 TenantContext: Subdominio de empresa detectado:', empresaSlug);
@@ -78,7 +88,7 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
       return empresaSlug;
     }
 
-    // Detectar si es dominio administrativo
+    // TERCERA PRIORIDAD: Detectar si es dominio administrativo
     const esAdmin = esHostAdministrativo(hostname);
     console.log('👨‍💼 TenantContext: ¿Es dominio admin?', esAdmin);
     setEsSubdominio(false);
