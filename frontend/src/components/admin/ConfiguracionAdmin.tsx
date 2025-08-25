@@ -158,32 +158,41 @@ const ConfiguracionAdmin: React.FC = () => {
 
             <div className="config-form">
               <div className="form-group">
-                <label>Nombre de la Empresa</label>
+                <label htmlFor="empresa-nombre">Nombre de la Empresa</label>
                 <input
+                  id="empresa-nombre"
                   type="text"
                   value={empresa.nombre}
                   onChange={(e) => setEmpresa({...empresa, nombre: e.target.value})}
                   className="form-input"
+                  placeholder="Ingrese el nombre de la empresa"
+                  title="Nombre de la empresa"
                 />
               </div>
 
               <div className="form-group">
-                <label>Slug de la Empresa</label>
+                <label htmlFor="empresa-slug">Slug de la Empresa</label>
                 <input
+                  id="empresa-slug"
                   type="text"
                   value={empresa.slug}
                   onChange={(e) => setEmpresa({...empresa, slug: e.target.value})}
                   className="form-input"
+                  placeholder="ej: mi-empresa"
+                  title="Identificador único de la empresa"
                 />
               </div>
 
               <div className="form-group">
-                <label>Dirección</label>
+                <label htmlFor="empresa-direccion">Dirección</label>
                 <textarea
+                  id="empresa-direccion"
                   value={empresa.direccion}
                   onChange={(e) => setEmpresa({...empresa, direccion: e.target.value})}
                   className="form-textarea"
                   rows={3}
+                  placeholder="Dirección completa de la empresa"
+                  title="Dirección de la empresa"
                 />
               </div>
 

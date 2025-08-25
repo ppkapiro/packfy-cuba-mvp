@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,8 +38,10 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "empresas.middleware.TenantMiddleware",  # Multi-tenancy support - MOVIDO AQUÍ
-    "usuarios.middleware.ProteccionUsuariosDemoMiddleware",  # Protección usuarios demo
+    # Multi-tenancy support - MOVIDO AQUÍ
+    "empresas.middleware.TenantMiddleware",
+    # Protección usuarios demo
+    "usuarios.middleware.ProteccionUsuariosDemoMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
@@ -138,7 +141,6 @@ REST_FRAMEWORK = {
 }
 
 # Simple JWT settings
-from datetime import timedelta
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),

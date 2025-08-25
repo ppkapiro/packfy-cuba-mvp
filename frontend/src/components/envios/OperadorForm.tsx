@@ -154,6 +154,8 @@ const OperadorForm: React.FC<OperadorFormProps> = ({ user, tenant, perfil }) => 
                   value={filtroEstado}
                   onChange={(e) => setFiltroEstado(e.target.value)}
                   className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  title="Filtrar por estado del envío"
+                  aria-label="Filtrar por estado del envío"
                 >
                   <option value="">Todos los estados</option>
                   <option value="RECIBIDO">Recibido</option>
@@ -256,10 +258,18 @@ const OperadorForm: React.FC<OperadorFormProps> = ({ user, tenant, perfil }) => 
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex space-x-2">
-                          <button className="text-blue-600 hover:text-blue-900">
+                          <button
+                            className="text-blue-600 hover:text-blue-900"
+                            title="Ver detalles del envío"
+                            aria-label="Ver detalles del envío"
+                          >
                             <Eye className="w-4 h-4" />
                           </button>
-                          <button className="text-green-600 hover:text-green-900">
+                          <button
+                            className="text-green-600 hover:text-green-900"
+                            title="Editar envío"
+                            aria-label="Editar envío"
+                          >
                             <Edit className="w-4 h-4" />
                           </button>
                         </div>

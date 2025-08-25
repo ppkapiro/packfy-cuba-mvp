@@ -1,8 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.core.exceptions import PermissionDenied
 from django.db import models
-from django.http import Http404
 from django.utils.html import format_html
 
 from .models import ClienteUsuario, PersonalEmpresa, Usuario
@@ -173,11 +171,13 @@ class UsuarioAdmin(UserAdmin):
         if perfil:
             if perfil.rol in ["dueno", "operador_miami", "operador_cuba"]:
                 return format_html(
-                    '<span style="color: #2e7d32; font-weight: bold;">👥 Personal</span>'
+                    '<span style="color: #2e7d32; font-weight: bold;">'
+                    "👥 Personal</span>"
                 )
             else:
                 return format_html(
-                    '<span style="color: #1976d2; font-weight: bold;">👤 Cliente</span>'
+                    '<span style="color: #1976d2; font-weight: bold;">'
+                    "👤 Cliente</span>"
                 )
         return "❓ Sin categoría"
 
@@ -205,10 +205,9 @@ class UsuarioAdmin(UserAdmin):
                 rol="dueno"
             ).values_list("empresa_id", flat=True)
 
-            # Verificar si el usuario objetivo pertenece a alguna empresa del dueño
-            if obj.perfiles_empresa.filter(
-                empresa_id__in=empresas_del_dueno
-            ).exists():
+            # Verificar si el usuario objetivo pertenece a alguna empresa
+            # del dueño
+            if obj.perfiles_empresa.filter(empresa_id__in=empresas_del_dueno).exists():
                 return True
 
         return False
@@ -236,9 +235,7 @@ class UsuarioAdmin(UserAdmin):
 
         # Si no es superuser, no puede modificar permisos de Django
         if not request.user.is_superuser:
-            readonly.extend(
-                ["is_superuser", "is_staff", "user_permissions", "groups"]
-            )
+            readonly.extend(["is_superuser", "is_staff", "user_permissions", "groups"])
 
         return readonly
 
@@ -475,9 +472,7 @@ class PersonalEmpresaAdmin(UsuarioAdmin):
         count = queryset.update(is_active=False)
         self.message_user(request, f"Se desactivaron {count} usuarios.")
 
-    desactivar_usuarios.short_description = (
-        "❌ Desactivar usuarios seleccionados"
-    )
+    desactivar_usuarios.short_description = "❌ Desactivar usuarios seleccionados"
 
 
 @admin.register(ClienteUsuario)
@@ -562,9 +557,7 @@ class ClientesAdmin(UsuarioAdmin):
         count = queryset.update(is_active=False)
         self.message_user(request, f"Se desactivaron {count} clientes.")
 
-    desactivar_clientes.short_description = (
-        "❌ Desactivar clientes seleccionados"
-    )
+    desactivar_clientes.short_description = "❌ Desactivar clientes seleccionados"
 
     def total_envios(self, obj):
         """Mostrar total de envíos del cliente"""
@@ -576,7 +569,7 @@ class ClientesAdmin(UsuarioAdmin):
                 | models.Q(destinatario__email=obj.email)
             ).count()
             return f"📦 {total}"
-        except:
+        except Exception:
             return "📦 0"
 
     total_envios.short_description = "Total Envíos"

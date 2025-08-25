@@ -11,21 +11,8 @@ const NavigationDebugInfo: React.FC = () => {
     return null;
   }
 
-  const debugStyle = {
-    position: 'fixed' as const,
-    top: 0,
-    right: 0,
-    background: 'rgba(0,0,0,0.8)',
-    color: 'white',
-    padding: '10px',
-    fontSize: '12px',
-    zIndex: 9999,
-    maxWidth: '300px',
-    fontFamily: 'monospace'
-  };
-
   return (
-    <div style={debugStyle}>
+    <div className="fixed top-0 right-0 bg-black bg-opacity-80 text-white p-2 text-xs z-50 max-w-xs rounded-bl-lg font-mono">
       <h4>🔍 DEBUG - NAVEGACIÓN</h4>
 
       <div><strong>Usuario:</strong></div>
