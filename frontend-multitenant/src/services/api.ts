@@ -37,13 +37,16 @@ class PackfyApiClient {
 
     // Estrategia de configuración inteligente
     if (hostname === "localhost" || hostname === "127.0.0.1") {
-      // Desarrollo local
-      this.baseURL = port === "5173" ? "/api" : "http://localhost:8000/api";
+      // Desarrollo local - siempre usar puerto 8000 para backend
+      this.baseURL = "http://localhost:8000/api";
+    } else if (hostname.endsWith(".localhost")) {
+      // Subdominios .localhost para multitenancy - usar puerto 8000
+      this.baseURL = "http://localhost:8000/api";
     } else if (
       hostname.match(/^192\.168\.|^10\.|^172\.(1[6-9]|2[0-9]|3[0-1])\./)
     ) {
-      // Red local (móvil/LAN) - usar proxy para evitar Mixed Content
-      this.baseURL = "/api";
+      // Red local (móvil/LAN) - usar backend Docker en red local
+      this.baseURL = `http://${hostname.split(":")[0]}:8000/api`;
     } else {
       // Producción o dominio externo
       this.baseURL = `${protocol}//${hostname}/api`;
