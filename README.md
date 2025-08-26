@@ -62,7 +62,8 @@ Password: 123456
 - **Django 5.2** - Framework web Python de alto nivel
 - **Django REST Framework** - API REST robusta
 - **JWT Authentication** - Autenticación segura con tokens
-- **PostgreSQL** - Base de datos relacional potente
+- **SQLite** - Base de datos optimizada para MVP (migración a PostgreSQL preparada)
+- **Multi-tenancy** - Sistema multiempresa implementado
 - **CORS** - Configurado para desarrollo y producción
 
 ### DevOps & Herramientas
@@ -106,7 +107,7 @@ Password: 123456
 4. **Acceder a la aplicación**
    - Frontend: <http://localhost:5173>
    - Backend API: <http://localhost:8000>
-   - Base de datos: localhost:5433
+   - Base de datos: SQLite (archivo local `backend/db.sqlite3`)
 
 ---
 
@@ -166,16 +167,52 @@ docker-compose down
 
 ### Base de Datos
 
+**📊 Configuración Actual: SQLite (Estándar MVP)**
+
+El sistema utiliza **SQLite** como base de datos estándar para la fase MVP, optimizado para desarrollo ágil y simplicidad.
+
 ```powershell
-# Acceder a la base de datos
-docker-compose exec database psql -U packfy_user -d packfy_db
+# Verificar estado de la base de datos
+cd backend
+python -c "import sqlite3; print(f'BD activa: {sqlite3.connect(\"db.sqlite3\").execute(\"SELECT COUNT(*) FROM usuarios_usuario\").fetchone()[0]} usuarios')"
 
-# Crear datos de prueba
-docker-compose exec backend python manage.py shell < scripts/create_demo_data.py
+# Crear backup de la base de datos
+Copy-Item db.sqlite3 "backups/backup_$(Get-Date -Format 'yyyyMMdd_HHmmss').sqlite3"
 
-# Migrations
-docker-compose exec backend python manage.py migrate
+# Acceder a la consola de Django
+python manage.py shell
+
+# Aplicar migraciones
+python manage.py migrate
+
+# Crear superusuario
+python manage.py createsuperuser
 ```
+
+#### 🎯 **¿Por qué SQLite?**
+
+- ✅ **Simplicidad**: Cero configuración, funciona inmediatamente
+- ✅ **Rendimiento**: Para MVPs es más rápido que PostgreSQL
+- ✅ **Portabilidad**: Un solo archivo, fácil backup/restore
+- ✅ **Desarrollo**: Sin dependencias externas ni configuración compleja
+
+#### 📋 **Datos Actuales**
+
+- **👥 Usuarios**: 10 usuarios con roles diversos
+- **🏢 Empresas**: 1 empresa (Packfy Express)
+- **👔 Perfiles**: 10 perfiles usuario-empresa configurados
+- **📦 Envíos**: Listo para crear datos de prueba
+
+#### 🚀 **Migración Futura a PostgreSQL**
+
+Cuando el sistema escale (>1000 usuarios), la migración está preparada:
+
+```powershell
+# Ver configuración PostgreSQL preparada
+Get-Content backend/config/settings.py | Select-String "postgresql" -A 5 -B 2
+```
+
+Para más detalles: [📚 Guía completa de BD](docs/database-configuration.md)
 
 ---
 
@@ -221,6 +258,22 @@ packfy-cuba-mvp/
 - ✅ **Multi-tenancy** para diferentes empresas
 - ✅ **Validación** de datos exhaustiva
 - ✅ **Health checks** para monitoreo
+
+### 🏢 **Sistema Multitenancy**
+
+El sistema implementa **multitenancy completo** para gestión de múltiples empresas:
+
+- **🔐 Aislamiento por empresa**: Cada empresa ve solo sus datos
+- **👥 Roles específicos**: Dueño, Operador Miami, Operador Cuba, Remitente, Destinatario
+- **🏷️ Identificación única**: Sistema de slugs para empresas (`packfy-express`)
+- **🔄 Cambio de contexto**: Frontend permite cambiar entre empresas
+- **🛡️ Seguridad**: Middleware asegura aislamiento de datos
+
+#### **Estado Actual del Sistema**:
+
+- **1 empresa activa**: Packfy Express
+- **10 usuarios configurados** con roles diversos
+- **10 perfiles empresa-usuario** funcionando
 
 ### Desarrollo Optimizado
 
@@ -425,7 +478,7 @@ Si este proyecto te ha sido útil, considera:
 
 - **Django 5.2** - Framework web Python de alto nivel
 - **Django REST Framework** - Toolkit para APIs REST
-- **PostgreSQL 16** - Base de datos relacional robusta
+- **SQLite** - Base de datos optimizada para MVP (escalable a PostgreSQL)
 - **JWT** - Autenticación basada en tokens
 - **Django CORS Headers** - Manejo de CORS
 - **Rate Limiting** - Protección contra abuso de API
@@ -479,7 +532,7 @@ Si este proyecto te ha sido útil, considera:
 | -------------------- | ------ | --------------------------- |
 | Frontend (React)     | 5173   | http://localhost:5173       |
 | Backend API (Django) | 8000   | http://localhost:8000       |
-| PostgreSQL           | 5433   | localhost:5433              |
+| Base de Datos        | -      | SQLite (archivo local)      |
 | Admin Django         | 8000   | http://localhost:8000/admin |
 
 ### Variables de Entorno

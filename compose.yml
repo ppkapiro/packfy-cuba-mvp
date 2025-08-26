@@ -4,25 +4,25 @@
 name: packfy-mvp
 
 services:
-  # 📊 Base de datos PostgreSQL
-  database:
-    image: postgres:16-alpine
-    container_name: packfy-database
-    environment:
-      POSTGRES_DB: packfy
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./backend/scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
-    ports:
-      - "5433:5432"
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d packfy"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+  # 📊 Base de datos PostgreSQL (comentado - usando SQLite)
+  # database:
+  #   image: postgres:16-alpine
+  #   container_name: packfy-database
+  #   environment:
+  #     POSTGRES_DB: packfy
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #     - ./backend/scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+  #   ports:
+  #     - "5433:5432"
+  #   restart: unless-stopped
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U postgres -d packfy"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
 
   # 🔧 Backend Django API
   backend:
@@ -30,14 +30,11 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: packfy-backend
-    depends_on:
-      - database
     environment:
       - DEBUG=1
       - SECRET_KEY=django-insecure-dev-key-only
-      - DATABASE_URL=postgresql://postgres:postgres@database:5432/packfy
-      - ALLOWED_HOSTS=localhost,127.0.0.1,backend,192.168.12.178
-      - CORS_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000,https://localhost:5173,https://192.168.12.178:5173,http://192.168.12.178:5173
+      - ALLOWED_HOSTS=localhost,127.0.0.1,backend,192.168.12.178,admin.localhost,cuba-express.localhost,habana-premium.localhost,miami-shipping.localhost,packfy-express.localhost
+      - CORS_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000,https://localhost:5173,https://192.168.12.178:5173,http://192.168.12.178:5173,http://admin.localhost:5173,http://cuba-express.localhost:5173,http://habana-premium.localhost:5173,http://miami-shipping.localhost:5173,http://packfy-express.localhost:5173
     volumes:
       - ./backend:/app
       - static_files:/app/static
@@ -58,8 +55,7 @@ services:
       dockerfile: Dockerfile
     container_name: packfy-frontend
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
     environment:
       - VITE_API_BASE_URL=http://192.168.12.178:8000
       - VITE_APP_TITLE=Packfy MVP Multi-tenant
@@ -71,8 +67,8 @@ services:
     restart: unless-stopped
 
 volumes:
-  postgres_data:
-    name: packfy_postgres_data
+  # postgres_data:
+  #   name: packfy_postgres_data
   static_files:
     name: packfy_static_files
   media_files:

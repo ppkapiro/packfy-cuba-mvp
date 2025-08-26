@@ -9,13 +9,14 @@ import sys
 import django
 
 # Configurar Django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-sys.path.append("/app")
-django.setup()
+if __name__ == "__main__":
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+    sys.path.append("/app")
+    django.setup()
 
-from django.contrib.auth import get_user_model
-from empresas.models import Empresa, PerfilEmpresa
-from envios.models import Envio
+    from django.contrib.auth import get_user_model
+    from empresas.models import Empresa, PerfilEmpresa
+    from envios.models import Envio
 
 
 def arreglar_usuario_dueno():
@@ -72,9 +73,7 @@ def arreglar_usuario_dueno():
         perfil.rol = "dueno"
         perfil.activo = True
         perfil.save()
-        print(
-            f"✅ Perfil actualizado: {perfil.rol} en {perfil.empresa.nombre}"
-        )
+        print(f"✅ Perfil actualizado: {perfil.rol} en {perfil.empresa.nombre}")
 
     # 5. Crear algunos envíos de prueba si no existen
     envios_count = Envio.objects.count()

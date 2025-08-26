@@ -6,14 +6,14 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
-    
+
     console.log('LoginPage: Iniciando sesión con email:', email);
     try {
       await login(email, password);
@@ -26,11 +26,11 @@ const LoginPage = () => {
       }, 300);
     } catch (err: any) {
       console.error('LoginPage: Error al iniciar sesión:', err);
-      
+
       if (err.response) {
         console.error('LoginPage: Error de respuesta:', err.response.status, err.response.statusText);
         console.error('LoginPage: Datos del error:', err.response.data);
-        
+
         // Mensajes de error más descriptivos según el código de respuesta
         if (err.response.status === 401) {
           setError('Credenciales incorrectas. Por favor, verifica tu correo y contraseña.');
@@ -70,14 +70,14 @@ const LoginPage = () => {
           <h1 className="form-title">Packfy Cuba</h1>
           <p className="form-subtitle">Sistema de Paquetería Moderno</p>
         </div>
-        
+
         {error && (
           <div className="form-error">
             <span className="icon icon-close"></span>
             <span>{error}</span>
           </div>
         )}
-        
+
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email" className="form-label">
@@ -143,31 +143,55 @@ const LoginPage = () => {
         {/* Credenciales de prueba para desarrollo */}
         <div className="test-credentials">
           <div className="test-credentials-title">
-            🧪 Credenciales de Prueba
+            🧪 Credenciales de Prueba Validadas
           </div>
-          
-          <div 
+
+          <div
             className="test-credential"
-            onClick={() => fillTestCredentials('admin@packfy.cu', 'admin123')}
+            onClick={() => fillTestCredentials('admin@packfy.com', 'admin123')}
           >
-            <span>👑 Administrador</span>
-            <span>admin@packfy.cu</span>
+            <span>👑 Superadmin</span>
+            <span>admin@packfy.com</span>
           </div>
-          
-          <div 
+
+          <div
             className="test-credential"
-            onClick={() => fillTestCredentials('empresa@test.cu', 'empresa123')}
+            onClick={() => fillTestCredentials('dueno@packfy.com', 'password123')}
           >
-            <span>🏢 Empresa</span>
-            <span>empresa@test.cu</span>
+            <span>🏢 Dueño Principal</span>
+            <span>dueno@packfy.com</span>
           </div>
-          
-          <div 
+
+          <div
             className="test-credential"
-            onClick={() => fillTestCredentials('cliente@test.cu', 'cliente123')}
+            onClick={() => fillTestCredentials('consultor@packfy.com', 'password123')}
           >
-            <span>🇨🇺 Cliente</span>
-            <span>cliente@test.cu</span>
+            <span>� Multi-empresa</span>
+            <span>consultor@packfy.com</span>
+          </div>
+
+          <div
+            className="test-credential"
+            onClick={() => fillTestCredentials('demo@packfy.com', 'demo123')}
+          >
+            <span>🧪 Demo Multi</span>
+            <span>demo@packfy.com</span>
+          </div>
+
+          <div
+            className="test-credential"
+            onClick={() => fillTestCredentials('miami@packfy.com', 'password123')}
+          >
+            <span>🚚 Operador Miami</span>
+            <span>miami@packfy.com</span>
+          </div>
+
+          <div
+            className="test-credential"
+            onClick={() => fillTestCredentials('cuba@packfy.com', 'password123')}
+          >
+            <span>🇨🇺 Operador Cuba</span>
+            <span>cuba@packfy.com</span>
           </div>
         </div>
 

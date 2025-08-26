@@ -13,7 +13,7 @@ interface Empresa {
 }
 
 interface PerfilUsuario {
-  rol: 'dueno' | 'operador_miami' | 'operador_cuba' | 'remitente' | 'destinatario';
+  rol: 'admin_empresa' | 'operador_miami' | 'operador_cuba' | 'remitente' | 'destinatario';
   fecha_ingreso: string;
   configuracion?: Record<string, any>;
 }
@@ -96,6 +96,17 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
 
     return null;
   };
+
+  // Efecto para sincronizar con la detección automática del API client
+  useEffect(() => {
+    const detectedTenant = detectarDominio();
+    const apiTenant = apiClient.getTenantSlug();
+
+    // Si el API client ya detectó un tenant y coincide, usarlo
+    if (apiTenant && detectedTenant === apiTenant) {
+      console.log('🔄 TenantContext: Sincronizando con API client:', apiTenant);
+    }
+  }, []);
 
   const extraerEmpresaDeSubdominio = (hostname: string): string | null => {
     // Patrones para detectar subdominios de empresa
@@ -257,7 +268,7 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
 
   // Verificar si es administrador
   const esAdministrador = (): boolean => {
-    return perfilActual?.rol === 'dueno';
+    return perfilActual?.rol === 'admin_empresa';
   };
 
   // Inicialización al montar el componente
@@ -339,14 +350,17 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
         const empresas = empresasData?.results || empresasData || [];
 
         if (Array.isArray(empresas) && empresas.length > 0) {
-          const primeraEmpresa = empresas[0];
-          console.log('🏢 Auto-seleccionando primera empresa (admin):', primeraEmpresa.nombre);
+          // Para dominios admin, priorizar packfy-express para superadmins
+          const packfyExpress = empresas.find((e: any) => e.slug === 'packfy-express');
+          const empresaSeleccionada = packfyExpress || empresas[0];
 
-          if (primeraEmpresa.slug) {
+          console.log('🏢 Auto-seleccionando empresa para admin:', empresaSeleccionada.nombre);
+
+          if (empresaSeleccionada.slug) {
             // Pasar la empresa directamente para evitar problemas de timing
-            await cambiarEmpresa(primeraEmpresa.slug, primeraEmpresa);
+            await cambiarEmpresa(empresaSeleccionada.slug, empresaSeleccionada);
           } else {
-            console.error('❌ Empresa sin slug:', primeraEmpresa);
+            console.error('❌ Empresa sin slug:', empresaSeleccionada);
           }
         }
       }
@@ -372,7 +386,8 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
       setEmpresasDisponibles([]);
       localStorage.removeItem('tenant-slug');
       localStorage.removeItem('empresa-actual');
-      apiClient.clearTenantSlug();
+      // NO limpiar el tenant del API client si fue detectado automáticamente
+      // apiClient.clearTenantSlug();
     }
   }, []);
 

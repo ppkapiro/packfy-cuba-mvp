@@ -5,10 +5,8 @@ Proporciona decoradores y clases de permisos basados en empresa y rol.
 
 from functools import wraps
 
-from django.core.exceptions import PermissionDenied
 from django.http import JsonResponse
 from rest_framework import permissions
-from rest_framework.exceptions import PermissionDenied as DRFPermissionDenied
 
 from .models import PerfilUsuario
 
@@ -43,10 +41,7 @@ def require_rol(*roles_permitidos):
     def decorator(func):
         @wraps(func)
         def wrapper(request, *args, **kwargs):
-            if (
-                not hasattr(request, "perfil_usuario")
-                or not request.perfil_usuario
-            ):
+            if not hasattr(request, "perfil_usuario") or not request.perfil_usuario:
                 return JsonResponse(
                     {
                         "error": "Acceso denegado",
@@ -59,7 +54,7 @@ def require_rol(*roles_permitidos):
                 return JsonResponse(
                     {
                         "error": "Permisos insuficientes",
-                        "detail": f'Rol requerido: {", ".join(roles_permitidos)}',
+                        "detail": (f'Rol requerido: {", ".join(roles_permitidos)}'),
                     },
                     status=403,
                 )
@@ -75,16 +70,15 @@ def require_empresa_permission(permission_check):
     """
     Decorador genérico para verificar permisos basados en empresa.
 
-    Uso: @require_empresa_permission(lambda perfil: perfil.puede_gestionar_empresa)
+    Uso: @require_empresa_permission(
+        lambda perfil: perfil.puede_gestionar_empresa
+    )
     """
 
     def decorator(func):
         @wraps(func)
         def wrapper(request, *args, **kwargs):
-            if (
-                not hasattr(request, "perfil_usuario")
-                or not request.perfil_usuario
-            ):
+            if not hasattr(request, "perfil_usuario") or not request.perfil_usuario:
                 return JsonResponse(
                     {
                         "error": "Acceso denegado",
@@ -136,23 +130,18 @@ class EmpresaOwnerPermission(permissions.BasePermission):
             return False
 
         # Configurar perfil_usuario si no existe
-        if (
-            not hasattr(request, "perfil_usuario")
-            or not request.perfil_usuario
-        ):
+        if not hasattr(request, "perfil_usuario") or not request.perfil_usuario:
             self._setup_user_profile(request)
 
-        if (
-            not hasattr(request, "perfil_usuario")
-            or not request.perfil_usuario
-        ):
+        if not hasattr(request, "perfil_usuario") or not request.perfil_usuario:
             return False
 
-        return request.perfil_usuario.es_dueno
+        return request.perfil_usuario.es_admin_empresa
 
     def _setup_user_profile(self, request):
         """
-        Configura el perfil del usuario basado en el tenant y usuario autenticado.
+        Configura el perfil del usuario basado en el tenant y
+        usuario autenticado.
         """
         try:
             print(f"🔧 CONFIGURANDO PERFIL para {request.user.email}")
@@ -175,16 +164,15 @@ class EmpresaOwnerPermission(permissions.BasePermission):
                 if perfil:
                     request.perfil_usuario = perfil
                     print(
-                        f"✅ PERFIL CONFIGURADO: {perfil.rol} para {perfil.usuario.email}"
+                        f"✅ PERFIL CONFIGURADO: {perfil.rol} "
+                        f"para {perfil.usuario.email}"
                     )
                     return
 
             # Fallback: buscar cualquier perfil activo del usuario
             perfil = (
                 PerfilUsuario.objects.select_related("empresa")
-                .filter(
-                    usuario=request.user, activo=True, empresa__activo=True
-                )
+                .filter(usuario=request.user, activo=True, empresa__activo=True)
                 .first()
             )
 
@@ -194,12 +182,10 @@ class EmpresaOwnerPermission(permissions.BasePermission):
                 if not hasattr(request, "tenant") or not request.tenant:
                     request.tenant = perfil.empresa
                 print(
-                    f"✅ PERFIL FALLBACK: {perfil.rol} para {perfil.usuario.email}"
+                    f"✅ PERFIL FALLBACK: {perfil.rol} " f"para {perfil.usuario.email}"
                 )
             else:
-                print(
-                    f"❌ SIN PERFIL: Usuario {request.user.email} sin perfil activo"
-                )
+                print(f"❌ SIN PERFIL: Usuario {request.user.email} sin perfil activo")
 
         except Exception as e:
             print(f"❌ ERROR CONFIGURANDO PERFIL: {e}")
@@ -216,23 +202,18 @@ class EmpresaOperatorPermission(permissions.BasePermission):
             return False
 
         # Configurar perfil_usuario si no existe
-        if (
-            not hasattr(request, "perfil_usuario")
-            or not request.perfil_usuario
-        ):
+        if not hasattr(request, "perfil_usuario") or not request.perfil_usuario:
             self._setup_user_profile(request)
 
-        if (
-            not hasattr(request, "perfil_usuario")
-            or not request.perfil_usuario
-        ):
+        if not hasattr(request, "perfil_usuario") or not request.perfil_usuario:
             return False
 
         return request.perfil_usuario.puede_gestionar_envios
 
     def _setup_user_profile(self, request):
         """
-        Configura el perfil del usuario basado en el tenant y usuario autenticado.
+        Configura el perfil del usuario basado en el tenant y
+        usuario autenticado.
         """
         try:
             print(f"🔧 CONFIGURANDO PERFIL OPERATOR para {request.user.email}")
@@ -255,16 +236,15 @@ class EmpresaOperatorPermission(permissions.BasePermission):
                 if perfil:
                     request.perfil_usuario = perfil
                     print(
-                        f"✅ PERFIL OPERATOR CONFIGURADO: {perfil.rol} para {perfil.usuario.email}"
+                        f"✅ PERFIL OPERATOR CONFIGURADO: {perfil.rol} "
+                        f"para {perfil.usuario.email}"
                     )
                     return
 
             # Fallback: buscar cualquier perfil activo del usuario
             perfil = (
                 PerfilUsuario.objects.select_related("empresa")
-                .filter(
-                    usuario=request.user, activo=True, empresa__activo=True
-                )
+                .filter(usuario=request.user, activo=True, empresa__activo=True)
                 .first()
             )
 
@@ -274,11 +254,13 @@ class EmpresaOperatorPermission(permissions.BasePermission):
                 if not hasattr(request, "tenant") or not request.tenant:
                     request.tenant = perfil.empresa
                 print(
-                    f"✅ PERFIL OPERATOR FALLBACK: {perfil.rol} para {perfil.usuario.email}"
+                    f"✅ PERFIL OPERATOR FALLBACK: {perfil.rol} "
+                    f"para {perfil.usuario.email}"
                 )
             else:
                 print(
-                    f"❌ SIN PERFIL OPERATOR: Usuario {request.user.email} sin perfil activo"
+                    f"❌ SIN PERFIL OPERATOR: Usuario "
+                    f"{request.user.email} sin perfil activo"
                 )
 
         except Exception as e:
@@ -295,10 +277,7 @@ class EmpresaClientPermission(permissions.BasePermission):
         if not request.user.is_authenticated:
             return False
 
-        if (
-            not hasattr(request, "perfil_usuario")
-            or not request.perfil_usuario
-        ):
+        if not hasattr(request, "perfil_usuario") or not request.perfil_usuario:
             return False
 
         return request.perfil_usuario.activo
@@ -313,7 +292,7 @@ class EmpresaSpecificPermission(permissions.BasePermission):
         if not hasattr(request, "tenant") or not request.tenant:
             return False
 
-        # Verificar que el objeto pertenece a la empresa del usuario
+        # Verificar que el objeto pertenece a la empresa
         if hasattr(obj, "empresa"):
             return obj.empresa == request.tenant
 
@@ -321,29 +300,27 @@ class EmpresaSpecificPermission(permissions.BasePermission):
         if hasattr(obj, "remitente") and hasattr(obj.remitente, "empresa"):
             return obj.remitente.empresa == request.tenant
 
-        if hasattr(obj, "destinatario") and hasattr(
-            obj.destinatario, "empresa"
-        ):
+        if hasattr(obj, "destinatario") and hasattr(obj.destinatario, "empresa"):
             return obj.destinatario.empresa == request.tenant
 
         return False
 
 
 # Decoradores de conveniencia
-require_dueno = require_rol(PerfilUsuario.RolChoices.DUENO)
+require_admin = require_rol(PerfilUsuario.RolChoices.ADMIN_EMPRESA)
 require_operador = require_rol(
-    PerfilUsuario.RolChoices.DUENO,
+    PerfilUsuario.RolChoices.ADMIN_EMPRESA,
     PerfilUsuario.RolChoices.OPERADOR_MIAMI,
     PerfilUsuario.RolChoices.OPERADOR_CUBA,
 )
 require_operador_miami = require_rol(
-    PerfilUsuario.RolChoices.DUENO, PerfilUsuario.RolChoices.OPERADOR_MIAMI
+    PerfilUsuario.RolChoices.ADMIN_EMPRESA, PerfilUsuario.RolChoices.OPERADOR_MIAMI
 )
 require_operador_cuba = require_rol(
-    PerfilUsuario.RolChoices.DUENO, PerfilUsuario.RolChoices.OPERADOR_CUBA
+    PerfilUsuario.RolChoices.ADMIN_EMPRESA, PerfilUsuario.RolChoices.OPERADOR_CUBA
 )
 require_cliente = require_rol(
-    PerfilUsuario.RolChoices.DUENO,
+    PerfilUsuario.RolChoices.ADMIN_EMPRESA,
     PerfilUsuario.RolChoices.OPERADOR_MIAMI,
     PerfilUsuario.RolChoices.OPERADOR_CUBA,
     PerfilUsuario.RolChoices.REMITENTE,

@@ -1,9 +1,0 @@
-{
-  "timestamp": "2025-08-19T18:33:37.689360",
-  "verificaciones": {
-    "archivos_legacy": true,
-    "estructura_container": true,
-    "componentes_multitenant": true,
-    "acceso_frontend": true
-  }
-}

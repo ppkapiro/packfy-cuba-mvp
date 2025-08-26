@@ -1,26 +1,26 @@
-from rest_framework import permissions, viewsets
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Empresa, PerfilUsuario
-from .permissions import TenantPermission, require_rol
+from .permissions import TenantPermission
 from .serializers import EmpresaSerializer
 
 
 class EmpresaViewSet(viewsets.ModelViewSet):
     """
-    API endpoint para empresas con soporte multi-tenant y restricciones por rol.
+    API endpoint para empresas con soporte multi-tenant y
+    restricciones por rol.
     """
 
-    queryset = (
-        Empresa.objects.all()
-    )  # Queryset base (será filtrado por get_queryset)
+    queryset = Empresa.objects.all()  # Queryset base (será filtrado por get_queryset)
     serializer_class = EmpresaSerializer
 
     def get_permissions(self):
         """
         Personalización de permisos por acción:
-        - Lectura (list, retrieve, mi_empresa, mis_perfiles): Todos los usuarios
+        - Lectura (list, retrieve, mi_empresa, mis_perfiles):
+          Todos los usuarios
         - Modificación (update, partial_update): Solo dueño
         - Creación/eliminación: Solo dueño
         """
@@ -39,13 +39,18 @@ class EmpresaViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """
         Filtra empresas según el contexto multi-tenant:
-        - Usuarios solo ven la empresa actual
+        - Superusuarios ven todas las empresas
+        - Usuarios normales solo ven la empresa actual
         """
+        # Si el usuario es superusuario, mostrar todas las empresas
+        if self.request.user.is_superuser:
+            return Empresa.objects.all()
+
         # Si no hay empresa en el contexto, devolver queryset vacío
         if not hasattr(self.request, "tenant") or not self.request.tenant:
             return Empresa.objects.none()
 
-        # Solo mostrar la empresa actual
+        # Solo mostrar la empresa actual para usuarios normales
         return Empresa.objects.filter(id=self.request.tenant.id)
 
     @action(detail=False, methods=["get"])
@@ -54,9 +59,7 @@ class EmpresaViewSet(viewsets.ModelViewSet):
         Endpoint para obtener información de la empresa actual
         """
         if not hasattr(request, "tenant") or not request.tenant:
-            return Response(
-                {"error": "No hay empresa en el contexto"}, status=400
-            )
+            return Response({"error": "No hay empresa en el contexto"}, status=400)
 
         serializer = self.get_serializer(request.tenant)
         return Response(serializer.data)
@@ -67,9 +70,7 @@ class EmpresaViewSet(viewsets.ModelViewSet):
         Endpoint para obtener los perfiles del usuario en la empresa actual
         """
         if not hasattr(request, "tenant") or not request.tenant:
-            return Response(
-                {"error": "No hay empresa en el contexto"}, status=400
-            )
+            return Response({"error": "No hay empresa en el contexto"}, status=400)
 
         perfiles = PerfilUsuario.objects.filter(
             usuario=request.user, empresa=request.tenant, activo=True

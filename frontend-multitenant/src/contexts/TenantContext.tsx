@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { Empresa, PerfilUsuario } from '../types';
 import { useAuth } from './AuthContext';
 import apiClient from '../services/api';
+import { detectTenantFromHostname } from '../utils/tenantDetector';
 
 interface TenantContextData {
   // Estado actual
@@ -203,8 +204,16 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
       console.log('🔄 TenantContext: === INICIANDO INICIALIZACIÓN ===');
       console.log('👤 TenantContext: Usuario autenticado:', isAuthenticated);
       console.log('📋 TenantContext: Datos de usuario:', user);
-      console.log('🏢 TenantContext: Empresas disponibles actuales:', empresasDisponibles.length);
-      console.log('⏳ TenantContext: Estado isLoading:', isLoading);
+
+      // 🔥 DETECCIÓN AUTOMÁTICA DE TENANT DESDE HOSTNAME
+      const tenantDetectado = detectTenantFromHostname();
+      console.log('🏢 TenantContext: Tenant detectado desde hostname:', tenantDetectado);
+
+      if (tenantDetectado) {
+        // Configurar inmediatamente el tenant en el apiClient
+        apiClient.setTenantSlug(tenantDetectado);
+        console.log('✅ TenantContext: Tenant configurado automáticamente en API:', tenantDetectado);
+      }
 
       // Intentar restaurar empresa desde localStorage
       const tenantSlug = localStorage.getItem('tenant-slug');

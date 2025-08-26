@@ -18,7 +18,7 @@ export default defineConfig({
 
   server: {
     port: 5173,
-    host: "localhost",
+    host: "0.0.0.0", // Permite acceso desde subdominios
 
     // HTTPS opcional con certificados locales
     // Descomentado para permitir acceso HTTP directo
@@ -26,6 +26,16 @@ export default defineConfig({
     //   key: './certs/cert.key',
     //   cert: './certs/cert.crt',
     // },
+
+    // 🌐 SOPORTE MULTITENANCY SUBDOMINIOS
+    allowedHosts: [
+      "localhost",
+      "admin.localhost",
+      "cuba-express.localhost",
+      "habana-premium.localhost",
+      "miami-shipping.localhost",
+      "packfy-express.localhost",
+    ],
 
     // Configuración optimizada para desarrollo móvil
     watch: {
@@ -36,12 +46,10 @@ export default defineConfig({
 
     hmr: {
       clientPort: 5173,
-      host: "0.0.0.0",
+      host: "localhost", // Cambiado de 0.0.0.0 a localhost
       timeout: 30000,
       overlay: false,
-    },
-
-    // Proxy para desarrollo local
+    }, // Proxy para desarrollo Docker
     proxy: {
       "/api": {
         target: "http://backend:8000",

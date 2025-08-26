@@ -1,6 +1,8 @@
 // 🇨🇺 PACKFY CUBA - API UNIFICADA Y ROBUSTA v3.0
 // Sistema único de configuración de API para todas las conexiones
 
+import { initializeTenantFromHostname } from "../utils/tenantDetector";
+
 interface ApiResponse<T = any> {
   data?: T;
   error?: string;
@@ -37,7 +39,7 @@ class PackfyApiClient {
 
     // Estrategia de configuración inteligente
     if (hostname === "localhost" || hostname === "127.0.0.1") {
-      // Desarrollo local
+      // Desarrollo local - usar proxy para evitar problemas de CORS
       this.baseURL = port === "5173" ? "/api" : "http://localhost:8000/api";
     } else if (
       hostname.match(/^192\.168\.|^10\.|^172\.(1[6-9]|2[0-9]|3[0-1])\./)
@@ -49,8 +51,15 @@ class PackfyApiClient {
       this.baseURL = `${protocol}//${hostname}/api`;
     }
 
+    // Inicializar tenant automáticamente desde hostname
+    const autoTenantSlug = initializeTenantFromHostname();
+    if (autoTenantSlug && !this.tenantSlug) {
+      this.setTenantSlug(autoTenantSlug);
+    }
+
     this.isConfigured = true;
     console.log("✅ Packfy API configurada:", this.baseURL);
+    console.log("🏢 Tenant configurado:", this.tenantSlug);
   }
 
   getBaseURL(): string {

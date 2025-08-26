@@ -2,7 +2,6 @@ import logging
 import re
 
 from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
 from django.utils.deprecation import MiddlewareMixin
 
 from .models import Empresa, PerfilUsuario
@@ -43,23 +42,15 @@ class TenantMiddleware(MiddlewareMixin):
         if empresa_slug:
             try:
                 empresa = Empresa.objects.get(slug=empresa_slug, activo=True)
-                logger.info(
-                    f"Empresa detectada por subdominio: {empresa.nombre}"
-                )
+                logger.info(f"Empresa detectada por subdominio: {empresa.nombre}")
                 print(f"✅ EMPRESA POR SUBDOMAIN: {empresa.nombre}")
             except Empresa.DoesNotExist:
-                logger.warning(
-                    f"Empresa no encontrada con slug: {empresa_slug}"
-                )
+                logger.warning(f"Empresa no encontrada con slug: {empresa_slug}")
                 # Para subdominios inválidos, redirigir a dominio principal
                 if not self._is_main_domain(host):
                     main_domain = self._get_main_domain(host)
-                    redirect_url = (
-                        f"http://{main_domain}{request.get_full_path()}"
-                    )
-                    logger.info(
-                        f"Redirigiendo a dominio principal: {redirect_url}"
-                    )
+                    redirect_url = f"http://{main_domain}{request.get_full_path()}"
+                    logger.info(f"Redirigiendo a dominio principal: {redirect_url}")
                     return HttpResponseRedirect(redirect_url)
 
         # Método 2: Header X-Tenant-Slug (para APIs) - fallback
@@ -69,17 +60,11 @@ class TenantMiddleware(MiddlewareMixin):
 
             if tenant_slug:
                 try:
-                    empresa = Empresa.objects.get(
-                        slug=tenant_slug, activo=True
-                    )
-                    logger.info(
-                        f"Empresa detectada por header: {empresa.nombre}"
-                    )
+                    empresa = Empresa.objects.get(slug=tenant_slug, activo=True)
+                    logger.info(f"Empresa detectada por header: {empresa.nombre}")
                     print(f"✅ EMPRESA POR HEADER: {empresa.nombre}")
                 except Empresa.DoesNotExist:
-                    logger.warning(
-                        f"Empresa no encontrada con slug: {tenant_slug}"
-                    )
+                    logger.warning(f"Empresa no encontrada con slug: {tenant_slug}")
                     raise Http404(f"Empresa '{tenant_slug}' no encontrada")
 
         # Establecer contexto de empresa en el request
@@ -125,7 +110,8 @@ class TenantMiddleware(MiddlewareMixin):
 
     def _is_main_domain(self, host):
         """
-        Verifica si el host es un dominio principal (sin subdominio específico).
+        Verifica si el host es un dominio principal
+        (sin subdominio específico).
         """
         host_clean = host.split(":")[0]
         main_domains = [
@@ -151,12 +137,11 @@ class TenantMiddleware(MiddlewareMixin):
 
     def process_view(self, request, view_func, view_args, view_kwargs):
         """
-        Se ejecuta DESPUÉS de la autenticación DRF para configurar el perfil del usuario.
+        Se ejecuta DESPUÉS de la autenticación DRF para configurar
+        el perfil del usuario.
         """
         print(f"🎯 MIDDLEWARE process_view para {request.path}")
-        print(
-            f"🔍 USER EN PROCESS_VIEW: {getattr(request, 'user', 'NO USER')}"
-        )
+        print(f"🔍 USER EN PROCESS_VIEW: {getattr(request, 'user', 'NO USER')}")
 
         # EXCLUIR RUTAS DEL ADMIN DJANGO - no requieren multitenancy
         admin_paths = ["/admin/", "/static/", "/media/"]
@@ -187,10 +172,12 @@ class TenantMiddleware(MiddlewareMixin):
                 if perfil:
                     request.perfil_usuario = perfil
                     print(
-                        f"🎯 PERFIL CONFIGURADO: {perfil.rol} para {perfil.usuario.email}"
+                        f"🎯 PERFIL CONFIGURADO: {perfil.rol} "
+                        f"para {perfil.usuario.email}"
                     )
                 else:
-                    # Si no tiene perfil en esta empresa, buscar su perfil principal
+                    # Si no tiene perfil en esta empresa,
+                    # buscar su perfil principal
                     perfil_principal = (
                         PerfilUsuario.objects.select_related("empresa")
                         .filter(
@@ -207,11 +194,13 @@ class TenantMiddleware(MiddlewareMixin):
                         if request.tenant != perfil_principal.empresa:
                             request.tenant = perfil_principal.empresa
                         print(
-                            f"🎯 PERFIL PRINCIPAL: {perfil_principal.rol} para {perfil_principal.usuario.email}"
+                            f"🎯 PERFIL PRINCIPAL: {perfil_principal.rol} "
+                            f"para {perfil_principal.usuario.email}"
                         )
                     else:
                         print(
-                            f"⚠️ SIN PERFIL: Usuario {request.user.username} sin perfil activo"
+                            f"⚠️ SIN PERFIL: Usuario "
+                            f"{request.user.username} sin perfil activo"
                         )
 
             except Exception as e:
@@ -241,6 +230,6 @@ class EmpresaContextMiddleware(MiddlewareMixin):
     def process_request(self, request):
         # Compatibilidad con versión anterior
         logger.warning(
-            "EmpresaContextMiddleware is deprecated, use TenantMiddleware instead"
+            "EmpresaContextMiddleware is deprecated, " "use TenantMiddleware instead"
         )
         pass

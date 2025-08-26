@@ -1,9 +1,0 @@
-{
-  "mcpServers": {
-    "packfy-dev": {
-      "command": "python",
-      "args": ["mcp-server.py"],
-      "cwd": "C:\\Users\\pepec\\Projects\\Packfy\\paqueteria-cuba-mvp"
-    }
-  }
-}

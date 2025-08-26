@@ -35,10 +35,8 @@ def health_check(request):
 # Importamos los ViewSets de nuestras apps
 from envios.views import EnvioViewSet, HistorialEstadoViewSet
 from rest_framework import permissions, routers
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from usuarios.auth_views import CustomTokenObtainPairView, HealthCheckView
 from usuarios.views import UsuarioViewSet
 
 # Configuración de Swagger/OpenAPI
@@ -72,15 +70,13 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     # API endpoints
     path("api/", include(router.urls)),
-    path("api/health/", health_check, name="health_check"),
+    path("api/health/", HealthCheckView.as_view(), name="health_check"),
     path(
         "api/auth/login/",
-        TokenObtainPairView.as_view(),
+        CustomTokenObtainPairView.as_view(),
         name="token_obtain_pair",
     ),
-    path(
-        "api/auth/refresh/", TokenRefreshView.as_view(), name="token_refresh"
-    ),
+    path("api/auth/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     # Endpoint para información del sistema
     path("api/sistema-info/", EmpresaInfoView.as_view(), name="sistema_info"),
     # Swagger UI
@@ -103,9 +99,5 @@ urlpatterns = [
 
 # Configuración para servir archivos estáticos y media en entorno de desarrollo
 if settings.DEBUG:
-    urlpatterns += static(
-        settings.STATIC_URL, document_root=settings.STATIC_ROOT
-    )
-    urlpatterns += static(
-        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
-    )
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -36,9 +36,13 @@ class PackfyApiClient {
     });
 
     // Estrategia de configuración inteligente
-    if (hostname === "localhost" || hostname === "127.0.0.1") {
-      // Desarrollo local
-      this.baseURL = port === "5173" ? "/api" : "http://localhost:8000/api";
+    if (
+      hostname === "localhost" ||
+      hostname === "127.0.0.1" ||
+      hostname.endsWith(".localhost")
+    ) {
+      // Desarrollo local - siempre usar proxy
+      this.baseURL = "/api";
     } else if (
       hostname.match(/^192\.168\.|^10\.|^172\.(1[6-9]|2[0-9]|3[0-1])\./)
     ) {
@@ -49,10 +53,16 @@ class PackfyApiClient {
       this.baseURL = `${protocol}//${hostname}/api`;
     }
 
-    // Configurar tenant por defecto para desarrollo
+    // Configurar tenant automáticamente basado en subdominio
     if (!this.tenantSlug) {
-      this.tenantSlug = "packfy-express";
-      console.log("🏢 Tenant por defecto configurado: packfy-express");
+      const detectedTenant = this.detectTenantFromHostname(hostname);
+      if (detectedTenant) {
+        this.tenantSlug = detectedTenant;
+        console.log("🏢 Tenant detectado automáticamente:", detectedTenant);
+      } else {
+        // Solo para admin.localhost o localhost, no configurar tenant por defecto
+        console.log("🏢 Panel admin detectado - sin tenant específico");
+      }
     }
 
     this.isConfigured = true;
@@ -79,6 +89,32 @@ class PackfyApiClient {
 
   getTenantSlug(): string | null {
     return this.tenantSlug;
+  }
+
+  // Detectar tenant desde hostname
+  detectTenantFromHostname(hostname: string): string | null {
+    // Patrones para detectar subdominios de empresa
+    const patterns = [
+      /^cuba-express\.localhost$/,
+      /^habana-premium\.localhost$/,
+      /^miami-shipping\.localhost$/,
+      /^packfy-express\.localhost$/,
+      /^([^.]+)\.packfy\.com$/, // Para producción
+    ];
+
+    for (const pattern of patterns) {
+      const match = hostname.match(pattern);
+      if (match) {
+        // Para .localhost, retornar el subdominio completo
+        if (hostname.endsWith(".localhost")) {
+          return hostname.replace(".localhost", "");
+        }
+        // Para .packfy.com, retornar el subdominio
+        return match[1];
+      }
+    }
+
+    return null;
   }
 
   async makeRequest<T>(

@@ -33,9 +33,7 @@ class Empresa(models.Model):
     logo = models.ImageField(upload_to="logos/", blank=True, null=True)
 
     # Estado y configuración
-    activo = models.BooleanField(
-        default=True, help_text="Empresa activa en el sistema"
-    )
+    activo = models.BooleanField(default=True, help_text="Empresa activa en el sistema")
     dominio = models.CharField(
         max_length=100,
         blank=True,
@@ -73,9 +71,14 @@ class PerfilUsuario(models.Model):
     """
 
     class RolChoices(models.TextChoices):
-        DUENO = "dueno", "Dueño"
+        # Administración
+        ADMIN_EMPRESA = "admin_empresa", "Administrador de Empresa"
+
+        # Personal operativo
         OPERADOR_MIAMI = "operador_miami", "Operador Miami"
         OPERADOR_CUBA = "operador_cuba", "Operador Cuba"
+
+        # Clientes
         REMITENTE = "remitente", "Remitente"
         DESTINATARIO = "destinatario", "Destinatario"
 
@@ -91,9 +94,7 @@ class PerfilUsuario(models.Model):
 
     # Información del rol
     rol = models.CharField(max_length=20, choices=RolChoices.choices)
-    activo = models.BooleanField(
-        default=True, help_text="Usuario activo en la empresa"
-    )
+    activo = models.BooleanField(default=True, help_text="Usuario activo en la empresa")
 
     # Información adicional
     telefono = models.CharField(max_length=20, blank=True, null=True)
@@ -113,11 +114,12 @@ class PerfilUsuario(models.Model):
         ordering = ["empresa__nombre", "rol", "usuario__first_name"]
 
     def __str__(self):
-        return f"{self.usuario.get_full_name() or self.usuario.username} - {self.get_rol_display()} ({self.empresa.nombre})"
+        nombre = self.usuario.get_full_name() or self.usuario.username
+        return f"{nombre} - {self.get_rol_display()} ({self.empresa.nombre})"
 
     @property
-    def es_dueno(self):
-        return self.rol == self.RolChoices.DUENO
+    def es_admin_empresa(self):
+        return self.rol == self.RolChoices.ADMIN_EMPRESA
 
     @property
     def es_operador(self):
@@ -135,12 +137,12 @@ class PerfilUsuario(models.Model):
 
     @property
     def puede_gestionar_empresa(self):
-        return self.rol == self.RolChoices.DUENO
+        return self.rol == self.RolChoices.ADMIN_EMPRESA
 
     @property
     def puede_gestionar_envios(self):
         return self.rol in [
-            self.RolChoices.DUENO,
+            self.RolChoices.ADMIN_EMPRESA,
             self.RolChoices.OPERADOR_MIAMI,
             self.RolChoices.OPERADOR_CUBA,
         ]

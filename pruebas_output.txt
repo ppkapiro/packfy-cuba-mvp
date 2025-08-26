@@ -1,0 +1,202 @@
+Empresa no encontrada con slug: empresa-inexistente
+Empresa no encontrada con slug: any-tenant
+Not Found: /api/auth/login/
+Unauthorized: /api/auth/login/
+🧪 INICIANDO PRUEBAS AUTOMATIZADAS LOGIN MULTITENANCY
+================================================================================
+
+🧪 TEST 1: AUTENTICACIÓN BÁSICA
+--------------------------------------------------
+   ✅ Auth admin@packfy.com: Autenticación exitosa
+      📊 user_id: 61
+      📊 is_active: True
+   ✅ Auth dueno@packfy.com: Autenticación exitosa
+      📊 user_id: 52
+      📊 is_active: True
+   ✅ Auth consultor@packfy.com: Autenticación exitosa
+      📊 user_id: 64
+      📊 is_active: True
+   ✅ Auth demo@packfy.com: Autenticación exitosa
+      📊 user_id: 65
+      📊 is_active: True
+   ✅ Auth miami@packfy.com: Autenticación exitosa
+      📊 user_id: 53
+      📊 is_active: True
+   ✅ Auth cuba@packfy.com: Autenticación exitosa
+      📊 user_id: 54
+      📊 is_active: True
+   ✅ Auth fake@user.com: Autenticación rechazada correctamente
+
+🧪 TEST 2: MIDDLEWARE TENANT
+--------------------------------------------------
+   ✅ Middleware packfy-express.localhost:5173: Tenant detectado correctamente: packfy-express
+      📊 expected: packfy-express
+      📊 actual: packfy-express
+   ✅ Middleware cuba-express.localhost:5173: Tenant detectado correctamente: cuba-express
+      📊 expected: cuba-express
+      📊 actual: cuba-express
+   ✅ Middleware habana-premium.localhost:5173: Tenant detectado correctamente: habana-premium
+      📊 expected: habana-premium
+      📊 actual: habana-premium
+   ✅ Middleware miami-shipping.localhost:5173: Tenant detectado correctamente: miami-shipping
+      📊 expected: miami-shipping
+      📊 actual: miami-shipping
+   ✅ Middleware empresa-inexistente.localhost:5173: Tenant detectado correctamente: None
+      📊 expected: None
+      📊 actual: None
+   ✅ Middleware localhost:5173: Tenant detectado correctamente: None
+      📊 expected: None
+      📊 actual: None
+
+🧪 TEST 3: API LOGIN CON TENANT
+--------------------------------------------------
+🚀 MIDDLEWARE process_request para /api/auth/login/
+🌐 HOST: testserver
+🏢 SUBDOMAIN SLUG: None
+🔍 HEADER TENANT SLUG: packfy-express
+✅ EMPRESA POR HEADER: Packfy Express
+🎯 MIDDLEWARE process_view para /api/auth/login/
+🔍 USER EN PROCESS_VIEW: AnonymousUser
+   ✅ API Login dueno@packfy.com@packfy-express: Respuesta correcta: 200
+      📊 expected_pass: True
+      📊 actual_status: 200
+🚀 MIDDLEWARE process_request para /api/auth/login/
+🌐 HOST: testserver
+🏢 SUBDOMAIN SLUG: None
+🔍 HEADER TENANT SLUG: cuba-express
+✅ EMPRESA POR HEADER: Cuba Express Cargo
+🎯 MIDDLEWARE process_view para /api/auth/login/
+🔍 USER EN PROCESS_VIEW: AnonymousUser
+   ✅ API Login consultor@packfy.com@cuba-express: Respuesta correcta: 200
+      📊 expected_pass: True
+      📊 actual_status: 200
+🚀 MIDDLEWARE process_request para /api/auth/login/
+🌐 HOST: testserver
+🏢 SUBDOMAIN SLUG: None
+🔍 HEADER TENANT SLUG: any-tenant
+   ❌ API Login admin@packfy.com@any-tenant: Respuesta incorrecta: 404
+      📊 expected_pass: True
+      📊 actual_status: 404
+🚀 MIDDLEWARE process_request para /api/auth/login/
+🌐 HOST: testserver
+🏢 SUBDOMAIN SLUG: None
+🔍 HEADER TENANT SLUG: packfy-express
+✅ EMPRESA POR HEADER: Packfy Express
+🎯 MIDDLEWARE process_view para /api/auth/login/
+🔍 USER EN PROCESS_VIEW: AnonymousUser
+   ✅ API Login dueno@packfy.com@packfy-express: Respuesta correcta: 401
+      📊 expected_pass: False
+      📊 actual_status: 401
+
+🧪 TEST 4: ACCESO USUARIO-EMPRESA
+--------------------------------------------------
+   ✅ Acceso dueno@packfy.com → packfy-express: Acceso permitido correctamente
+      📊 has_access: True
+      📊 expected: True
+   ✅ Acceso dueno@packfy.com → cuba-express: Acceso denegado correctamente
+      📊 has_access: False
+      📊 expected: False
+   ✅ Acceso consultor@packfy.com → packfy-express: Acceso permitido correctamente
+      📊 has_access: True
+      📊 expected: True
+   ✅ Acceso consultor@packfy.com → cuba-express: Acceso permitido correctamente
+      📊 has_access: True
+      📊 expected: True
+   ✅ Acceso demo@packfy.com → miami-shipping: Acceso permitido correctamente
+      📊 has_access: True
+      📊 expected: True
+
+🧪 TEST 5: USUARIOS MULTI-EMPRESA
+--------------------------------------------------
+   ✅ Multi-empresa consultor@packfy.com: Usuario con acceso a 4 empresas
+      📊 empresas_count: 4
+      📊 empresas: ['Cuba Express Cargo', 'Habana Premium Logistics', 'Miami Shipping Express', 'Packfy Express']
+   ✅ Multi-empresa demo@packfy.com: Usuario con acceso a 4 empresas
+      📊 empresas_count: 4
+      📊 empresas: ['Cuba Express Cargo', 'Habana Premium Logistics', 'Miami Shipping Express', 'Packfy Express']
+
+🧪 TEST 6: CREDENCIALES FRONTEND
+--------------------------------------------------
+   ✅ Frontend superadmin: Credencial válida: admin@packfy.com
+      📊 password: admin123
+      📊 user_type: superadmin
+   ✅ Frontend owner: Credencial válida: dueno@packfy.com
+      📊 password: password123
+      📊 user_type: owner
+   ✅ Frontend multi-enterprise: Credencial válida: consultor@packfy.com
+      📊 password: password123
+      📊 user_type: multi-enterprise
+   ✅ Frontend demo: Credencial válida: demo@packfy.com
+      📊 password: demo123
+      📊 user_type: demo
+   ✅ Frontend operator: Credencial válida: miami@packfy.com
+      📊 password: password123
+      📊 user_type: operator
+   ✅ Frontend operator: Credencial válida: cuba@packfy.com
+      📊 password: password123
+      📊 user_type: operator
+
+📱 CONFIGURACIÓN PARA FRONTEND:
+--------------------------------------------------
+   📋 Configuración generada para LoginPage.tsx:
+   {
+  "api_base_url": "http://localhost:8000/api",
+  "tenant_header": "X-Tenant-Slug",
+  "test_credentials": [
+    {
+      "label": "👑 Superadmin",
+      "email": "admin@packfy.com",
+      "password": "admin123",
+      "description": "Acceso total al sistema"
+    },
+    {
+      "label": "🏢 Dueño Principal",
+      "email": "dueno@packfy.com",
+      "password": "password123",
+      "description": "Solo Packfy Express"
+    },
+    {
+      "label": "🌐 Multi-empresa",
+      "email": "consultor@packfy.com",
+      "password": "password123",
+      "description": "Todas las empresas"
+    },
+    {
+      "label": "🧪 Demo",
+      "email": "demo@packfy.com",
+      "password": "demo123",
+      "description": "Usuario de demostración"
+    }
+  ],
+  "tenant_urls": {
+    "cuba-express": {
+      "local": "http://cuba-express.localhost:5173",
+      "production": "https://cuba-express.packfy.com"
+    },
+    "habana-premium": {
+      "local": "http://habana-premium.localhost:5173",
+      "production": "https://habana-premium.packfy.com"
+    },
+    "miami-shipping": {
+      "local": "http://miami-shipping.localhost:5173",
+      "production": "https://miami-shipping.packfy.com"
+    },
+    "packfy-express": {
+      "local": "http://packfy-express.localhost:5173",
+      "production": "https://packfy-express.packfy.com"
+    }
+  }
+}
+
+📊 RESUMEN DE PRUEBAS:
+--------------------------------------------------
+   ✅ Pruebas exitosas: 29
+   ❌ Pruebas fallidas: 1
+   📈 Tasa de éxito: 96.7%
+
+⚠️ Algunas pruebas fallaron, revisar resultados arriba
+
+================================================================================
+🎯 PRUEBAS COMPLETADAS
+   Sistema de login multitenancy validado completamente
+================================================================================
